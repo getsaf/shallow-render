@@ -20,6 +20,7 @@
     "object-literal-sort-keys": false,
     "only-arrow-functions": false,
     "ordered-imports": false,
+    "prefer-function-over-method": false,
     "quotemark": [ true, "single" ],
     "strict-boolean-expressions": false,
     "trailing-comma": false,

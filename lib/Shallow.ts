@@ -1,4 +1,4 @@
-import { NgModule, Component, Type, DebugElement } from '@angular/core';
+import { NgModule, Component, Provider, Type, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
@@ -7,28 +7,99 @@ export class ShallowContainer {}
 
 export interface RenderOptions {
   skipDetectChanges: boolean;
-  mockEverything: boolean;
+}
+
+export interface Mocks<T> {
+  class: Type<T>;
+  stubs: Partial<T>;
+}
+
+export interface CopiedTestModuleMetadata {
+  imports: Array<Type<any>>;
+  declarations: Array<Type<any>>;
+  providers: Array<{
+    provide: Type<any>;
+    useValue: object;
+  }>;
 }
 
 export class Shallow<T> {
-  private readonly _moduleProps = this._copyModule();
   constructor(private readonly _testComponentClass: Type<T>, private readonly _fromModuleClass: Type<any>) {}
 
-  private _copyModule(): NgModule {
-    const moduleProps = ((this._fromModuleClass as any).__annotations__[0]) as NgModule;
-    if (moduleProps.declarations) {
-      moduleProps.declarations = moduleProps.declarations.filter(i => this._testComponentClass);
+  private _copyTestModule(): CopiedTestModuleMetadata {
+    const {imports = [], providers = [], declarations = []} =
+      ((this._fromModuleClass as any).__annotations__[0]) as NgModule;
+    const copy: CopiedTestModuleMetadata = {
+      imports: [],
+      declarations: [],
+      providers: [],
+    };
+
+    if (Array.isArray(imports)) {
+      copy.imports = imports.map(m => this._mockModule(m as Type<any>));
     }
-    if (moduleProps.exports) {
-      moduleProps.exports = moduleProps.exports.filter(i => this._testComponentClass);
+    if (Array.isArray(declarations)) {
+      copy.declarations = declarations
+        .map(d => d === this._testComponentClass ? d : this._mockDeclaration(d as Type<any>));
     }
-    return moduleProps;
+    if (Array.isArray(providers)) {
+      copy.providers = providers.map(p => this._mockProvider(p));
+    }
+
+    return copy;
+  }
+
+  private _mocks = [] as Array<Mocks<any>>;
+  mock<TMock>(mockClass: Type<TMock>, stubs: Partial<TMock>) {
+    const mock = this._mocks.find(m => m.class === mockClass) || {class: mockClass, stubs: {}};
+    Object.assign(mock.stubs, stubs);
+    this._mocks = [...this._mocks.filter(m => m.class !== mockClass), mock];
+    return this;
+  }
+
+  private _mockDeclaration(declarationClass: Type<any>) {
+    // TODO: Mock the component, pipe, directive
+    return declarationClass;
+  }
+
+  private _mockModule(ngModule: Type<any>) {
+    // TODO: MockModule??
+    return ngModule;
+  }
+
+  private _spyOnProvider(provider: {provide: Type<any>; useValue: any}) {
+    const {provide, useValue} = provider;
+    Object.keys(useValue).forEach(key => {
+      const value = useValue[key];
+      if (typeof value === 'function') {
+        spyOn(useValue, key).and.callThrough();
+      }
+    });
+
+    return {provide, useValue};
+  }
+
+  private _mockProvider(provider: Provider) {
+    const mockProvider: Provider = {provide: undefined, useValue: {}};
+    if (typeof provider === 'function') {
+      mockProvider.provide = provider;
+    } else if (Array.isArray(provider)) {
+      throw new Error(`Array providers are not supported: ${provider}`);
+    } else {
+      mockProvider.provide = provider.provide;
+    }
+
+    const userProvidedMock = this._mocks.find(m => m.class === mockProvider.provide);
+    if (userProvidedMock) {
+      mockProvider.useValue = userProvidedMock.stubs;
+    }
+
+    return mockProvider;
   }
 
   async render(html: string, renderOptions?: Partial<RenderOptions>) {
     const options: RenderOptions = {
       skipDetectChanges: false,
-      mockEverything: true,
       ...renderOptions,
     };
 
@@ -38,33 +109,42 @@ export class Shallow<T> {
     })
     class ProxyShallowContainer extends ShallowContainer {}
 
-    await TestBed.configureTestingModule({
-      imports: this._moduleProps.imports,
-      providers: this._moduleProps.providers,
-      declarations: [...this._moduleProps.declarations as any[], ProxyShallowContainer],
-    }).compileComponents();
+    const {imports, providers, declarations} = this._copyTestModule();
+    await TestBed
+      .configureTestingModule({
+        imports,
+        providers: providers.map(p => this._spyOnProvider(p)),
+        declarations: [...declarations, ProxyShallowContainer],
+      })
+      .compileComponents();
 
     const fixture = TestBed.createComponent(ProxyShallowContainer) as ComponentFixture<ShallowContainer>;
+
+    const element = fixture.debugElement.query(By.directive(this._testComponentClass));
+    if (!element) {
+      throw new Error(`${this._testComponentClass.name} was not found in test template: ${html}`);
+    }
+    const instance = element.injector.get(this._testComponentClass);
 
     const find = (cssOrDirective: string | Type<any>) => {
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
         : By.directive(cssOrDirective);
-      return fixture.debugElement.query(query);
+      return element.query(query);
     };
-
-    const element = find(this._testComponentClass);
-    const instance = element.injector.get(this._testComponentClass);
 
     if (!options.skipDetectChanges) {
       fixture.detectChanges();
     }
+
+    const get = <TClass>(queryClass: Type<TClass>): TClass => element.injector.get(queryClass);
 
     return {
       TestBed,
       fixture,
       element,
       find,
+      get,
       instance,
     };
   }

@@ -1,11 +1,13 @@
-import { ExampleComponent } from './ExampleComponent';
-import { ExampleDirective } from './ExampleDirective';
-import { ExampleModule } from './ExampleModule';
-import { Shallow } from './Shallow';
+import { ExampleComponent } from './example.component';
+import { ExampleDirective } from './example.directive';
+import { ExampleModule } from './example.module';
+import { Shallow } from './shallow';
+import { ExampleService } from './example.service';
 
 describe('Shallow', () => {
   describe('rendering a component', () => {
-    const shallow = new Shallow(ExampleComponent, ExampleModule);
+    const shallow = new Shallow(ExampleComponent, ExampleModule)
+      .mock(ExampleService, {foo: () => 'mocked foo'});
 
     it('returns the instance of the test component', async () => {
       const {instance} = await shallow.render('<example></example>');
@@ -39,10 +41,19 @@ describe('Shallow', () => {
     });
 
     it('can find by directive', async () => {
-      const {instance, find} = await shallow.render('<example></example>');
-      const found = find(ExampleComponent);
+      const {find} = await shallow.render('<example exampleDirective></example>');
+      const found = find(ExampleDirective);
 
-      expect(found.componentInstance).toBe(instance);
+      expect(found).toBeDefined();
+    });
+
+    it('throws an error when the HTML does not render the test component', async () => {
+      try {
+        await shallow.render('<label>Forgot to render the test component</label>');
+        fail('Render should have thrown an error but did not');
+      } catch (e) {
+        expect(e.message).toMatch(/ExampleComponent/);
+      }
     });
   });
 
@@ -60,6 +71,16 @@ describe('Shallow', () => {
       const {element} = await shallow.render('<label exampleDirective></label>');
 
       expect(element.nativeElement.tagName).toBe('LABEL');
+    });
+  });
+
+  xdescribe('mocks', () => {
+    const shallow = new Shallow(ExampleComponent, ExampleModule);
+    it('can mock a thing', async () => {
+      shallow.mock(ExampleService, {foo: () => 'mocked'});
+      const {find} = await shallow.render('<example></example>');
+
+      expect(find('h1').nativeElement.className).toBe('mocked');
     });
   });
 });

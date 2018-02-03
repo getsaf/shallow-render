@@ -1,1 +1,1 @@
-export { Shallow } from './lib/Shallow';
+export { Shallow } from './lib/shallow';
