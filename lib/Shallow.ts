@@ -1,6 +1,7 @@
 import { NgModule, Component, Provider, Type, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { QueryMatch, EmptyQueryMatch } from './query-match';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
 
 export class ShallowContainer {}
@@ -130,7 +131,11 @@ export class Shallow<T> {
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
         : By.directive(cssOrDirective);
-      return element.query(query);
+      const matches = element.queryAll(query);
+      if (matches.length === 0) {
+        return (new EmptyQueryMatch() as any) as QueryMatch;
+      }
+      return new QueryMatch(matches);
     };
 
     if (!options.skipDetectChanges) {

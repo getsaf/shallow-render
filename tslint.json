@@ -24,6 +24,7 @@
     "quotemark": [ true, "single" ],
     "strict-boolean-expressions": false,
     "trailing-comma": false,
+    "max-line-length": false,
     "typedef": false,
     "variable-name": false
   }
