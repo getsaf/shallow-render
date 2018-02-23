@@ -27,6 +27,7 @@
     "max-line-length": false,
     "typedef": false,
     "variable-name": false,
-    "no-object-literal-type-assertion": false
+    "no-object-literal-type-assertion": false,
+    "array-type": false
   }
 }

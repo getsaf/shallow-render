@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Provider, Type, DebugElement } from '@angular/core';
+import { NgModule, Component, Provider, Type, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { QueryMatch, EmptyQueryMatch } from './query-match';
@@ -18,12 +18,12 @@ export interface Mocks<T> {
 }
 
 export interface CopiedTestModuleMetadata {
-  imports: Array<Type<any>>;
-  declarations: Array<Type<any>>;
-  providers: Array<{
+  imports: Type<any>[];
+  declarations: Type<any>[];
+  providers: {
     provide: Type<any>;
     useValue: object;
-  }>;
+  }[];
 }
 
 export class Shallow<T> {
@@ -52,7 +52,7 @@ export class Shallow<T> {
     return copy;
   }
 
-  private _mocks = [] as Array<Mocks<any>>;
+  private _mocks = [] as Mocks<any>[];
   mock<TMock>(mockClass: Type<TMock>, stubs: Partial<TMock>) {
     const mock = this._mocks.find(m => m.class === mockClass) || {class: mockClass, stubs: {}};
     Object.assign(mock.stubs, stubs);

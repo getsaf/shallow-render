@@ -11,16 +11,12 @@ interface Person {
 @Component({
   selector: 'born-in',
   template: `
-    <label (click)="handleClick()">{{person.firstName}} {{person.lastName}} was born in {{person.birthDate.getFullYear()}}</label>
+    <label (click)="select.emit(person)">{{person.firstName}} {{person.lastName}} was born in {{person.birthDate.getFullYear()}}</label>
   `,
 })
 class BornInComponent {
   @Input() person: Person;
   @Output() select = new EventEmitter<Person>();
-
-  handleClick() {
-    this.select.emit(this.person);
-  }
 }
 
 @NgModule({
@@ -29,7 +25,7 @@ class BornInComponent {
 class PersonModule {}
 //////////////////////////
 
-describe('component with bindings', () => {
+fdescribe('component with bindings', () => {
   const shallow = new Shallow(BornInComponent, PersonModule);
   const testPerson: Person = {
     firstName: 'Brandon',
