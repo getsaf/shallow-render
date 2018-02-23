@@ -19,12 +19,12 @@ class ListItemComponent {
 @Component({
   selector: 'awesome-list',
   template: `
-        <list-container>
-          <list-item class="top-item" *ngIf="topItem !== undefined" [bold]="boldTopItem">{{topItem}}</list-item>
-          <list-item [bold]="true">Chuck Norris</list-item>
-          <list-item>Tom Hanks</list-item>
-        </list-container>
-      `,
+    <list-container>
+      <list-item class="top-item" *ngIf="topItem !== undefined" [bold]="boldTopItem">{{topItem}}</list-item>
+      <list-item [bold]="true">Chuck Norris</list-item>
+      <list-item>Tom Hanks</list-item>
+    </list-container>
+  `,
 })
 class AwesomeListComponent {
   @Input() topItem: string;
@@ -38,37 +38,36 @@ class ListModule {}
 //////////////////////////
 
 describe('multiple components', () => {
-  describe('can test rendering of other mocked components', () => {
-    const shallow = new Shallow(AwesomeListComponent, ListModule);
+  const shallow = new Shallow(AwesomeListComponent, ListModule);
 
-    it('renders Chuck and Tom', async () => {
-      const {find} = await shallow.render('<awesome-list></awesome-list>');
+  it('renders Chuck and Tom', async () => {
+    const {find} = await shallow.render('<awesome-list></awesome-list>');
 
-      expect(find('list-item').map(li => li.nativeElement.innerText.trim()))
-        .toEqual(['Chuck Norris', 'Tom Hanks']);
-    });
+    // Note we query by the component here
+    expect(find(ListItemComponent).map(li => li.nativeElement.innerText.trim()))
+      .toEqual(['Chuck Norris', 'Tom Hanks']);
+  });
 
-    it('renders a top-item when provided', async () => {
-      const {find} = await shallow.render('<awesome-list topItem="Brandon"></awesome-list>');
+  it('renders a top-item when provided', async () => {
+    const {find} = await shallow.render('<awesome-list topItem="Brandon"></awesome-list>');
 
-      expect(find('.top-item').nativeElement.innerText.trim()).toBe('Brandon');
-    });
+    expect(find('.top-item').nativeElement.innerText.trim()).toBe('Brandon');
+  });
 
-    it('renders the top-item as bold', async () => {
-      const {find} = await shallow.render(`
-        <awesome-list [boldTopItem]="true" topItem="Bolded"></awesome-list>
-      `);
+  it('renders the top-item as bold', async () => {
+    const {find} = await shallow.render(`
+      <awesome-list [boldTopItem]="true" topItem="Bolded"></awesome-list>
+    `);
 
-      expect(find('.top-item').componentInstance.bold).toBe(true);
-    });
+    expect(find('.top-item').componentInstance.bold).toBe(true);
+  });
 
-    it('does not add a top-item when not provided', async () => {
-      const {find} = await shallow.render('<awesome-list></awesome-list>');
+  it('does not add a top-item when not provided', async () => {
+    const {find} = await shallow.render('<awesome-list></awesome-list>');
 
-      const li = find('list-item');
-      expect(li.length).toBe(2);
-      expect(find('.top-item').length).toBe(0);
-    });
+    const li = find('list-item');
+    expect(li.length).toBe(2);
+    expect(find('.top-item').length).toBe(0);
   });
 });
 

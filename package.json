@@ -19,7 +19,8 @@
     "build": "npm run clean && tsc",
     "release": "npm run lint && npm run test && npm run build && standard-version",
     "test": "karma start",
-    "test:fix": "npm run lint:fix && npm run test"
+    "test:fix": "npm run lint:fix && npm run test",
+    "test:watch": "npm test -- --auto-watch=true --single-run=false --browsers=Chrome"
   },
   "repository": {
     "type": "git",
@@ -57,11 +58,14 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-typescript": "^3.0.9",
+    "mock-directive": "^5.0.1",
+    "mock-module": "file://../mock_module/dist",
+    "ng-mocks": "^5.0.0-rc1",
     "rxjs": ">= 5.0.0-beta.12",
     "standard-version": "^4.2.0",
     "ts-node": "^4.1.0",
     "tslint": "^5.5.0",
-    "typescript": "2.6.x",
+    "typescript": "2.7.x",
     "zone.js": ">= 0.6.25"
   }
 }

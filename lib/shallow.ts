@@ -1,13 +1,15 @@
-import { NgModule, Component, Provider, Type, DebugElement } from '@angular/core';
+import { NgModule, Component, Input, Provider, Type, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { QueryMatch, EmptyQueryMatch } from './query-match';
+import { MockModule, mockDeclaration } from 'mock-module';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
 
 export class ShallowContainer {}
 
-export interface RenderOptions {
+export interface RenderOptions<TBindings> {
   skipDetectChanges: boolean;
+  bind: TBindings
 }
 
 export interface Mocks<T> {
@@ -37,11 +39,11 @@ export class Shallow<T> {
     };
 
     if (Array.isArray(imports)) {
-      copy.imports = imports.map(m => this._mockModule(m as Type<any>));
+      copy.imports = imports.map(m => MockModule(m as Type<any>));
     }
     if (Array.isArray(declarations)) {
       copy.declarations = declarations
-        .map(d => d === this._testComponentClass ? d : this._mockDeclaration(d as Type<any>));
+        .map(d => d === this._testComponentClass ? d : mockDeclaration(d as Type<any>));
     }
     if (Array.isArray(providers)) {
       copy.providers = providers.map(p => this._mockProvider(p));
@@ -56,16 +58,6 @@ export class Shallow<T> {
     Object.assign(mock.stubs, stubs);
     this._mocks = [...this._mocks.filter(m => m.class !== mockClass), mock];
     return this;
-  }
-
-  private _mockDeclaration(declarationClass: Type<any>) {
-    // TODO: Mock the component, pipe, directive
-    return declarationClass;
-  }
-
-  private _mockModule(ngModule: Type<any>) {
-    // TODO: MockModule??
-    return ngModule;
   }
 
   private _spyOnProvider(provider: {provide: Type<any>; useValue: any}) {
@@ -98,28 +90,50 @@ export class Shallow<T> {
     return mockProvider;
   }
 
-  async render(html: string, renderOptions?: Partial<RenderOptions>) {
-    const options: RenderOptions = {
-      skipDetectChanges: false,
-      ...renderOptions,
-    };
-
+  private _createContainerClass(html: string, bindings?: any) {
     @Component({
       selector: 'shallow-container',
       template: html,
     })
     class ProxyShallowContainer extends ShallowContainer {}
+    Object.assign(ShallowContainer.prototype, this._spyOnMethods(bindings));
 
+    return ProxyShallowContainer;
+  }
+
+  private _spyOnMethods<TObj>(obj: TObj): TObj {
+    const anyObj = obj as any;
+    Object.keys(anyObj).forEach(key => {
+      const value = anyObj[key];
+      if (typeof value === 'function') {
+        spyOn(anyObj, key).and.callThrough();
+      } else if (typeof value === 'object') {
+        // NOTE: Recursion, too dangerous? Possible endless-loops
+        // if a child referneces it's parent.
+        this._spyOnMethods(value);
+      }
+    });
+    return obj;
+  }
+
+  async render<TBindings>(html: string, renderOptions?: Partial<RenderOptions<TBindings>>) {
+    const options: RenderOptions<TBindings> = {
+      skipDetectChanges: false,
+      bind: {} as RenderOptions<TBindings>,
+      ...renderOptions,
+    } as any;
+
+    const containerClass = this._createContainerClass(html, options.bind);
     const {imports, providers, declarations} = this._copyTestModule();
     await TestBed
       .configureTestingModule({
         imports,
         providers: providers.map(p => this._spyOnProvider(p)),
-        declarations: [...declarations, ProxyShallowContainer],
+        declarations: [...declarations, containerClass],
       })
       .compileComponents();
 
-    const fixture = TestBed.createComponent(ProxyShallowContainer) as ComponentFixture<ShallowContainer>;
+    const fixture = TestBed.createComponent(containerClass) as ComponentFixture<ShallowContainer>;
 
     const element = fixture.debugElement.query(By.directive(this._testComponentClass));
     if (!element) {
@@ -130,7 +144,7 @@ export class Shallow<T> {
     const find = (cssOrDirective: string | Type<any>) => {
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
-        : By.directive(cssOrDirective);
+        : By.directive(cssOrDirective === this._testComponentClass ? cssOrDirective : mockDeclaration(cssOrDirective));
       const matches = element.queryAll(query);
       if (matches.length === 0) {
         return (new EmptyQueryMatch() as any) as QueryMatch;
@@ -151,6 +165,7 @@ export class Shallow<T> {
       find,
       get,
       instance,
+      bindings: options.bind
     };
   }
 }

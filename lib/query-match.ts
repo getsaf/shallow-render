@@ -18,7 +18,6 @@ export class QueryMatch extends DebugElement {
   map(fn: <T>(item: DebugElement, index: number, array: DebugElement[]) => T, thisArg?: any) {
     return this._matches.map(fn, thisArg);
   }
-
 }
 
 export class NoMatchesError extends Error {
