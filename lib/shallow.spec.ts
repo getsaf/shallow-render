@@ -74,13 +74,13 @@ describe('Shallow', () => {
     });
   });
 
-  xdescribe('mocks', () => {
+  describe('mock', () => {
     const shallow = new Shallow(ExampleComponent, ExampleModule);
-    it('can mock a thing', async () => {
+    it('mocks a thing', async () => {
       shallow.mock(ExampleService, {foo: () => 'mocked'});
       const {find} = await shallow.render('<example></example>');
 
-      expect(find('h1').nativeElement.className).toBe('mocked');
+      expect(find('h1').nativeElement.getAttribute('title')).toBe('mocked');
     });
   });
 });

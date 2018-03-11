@@ -1,4 +1,5 @@
-import { NgModule, Component, Provider, Type, DebugElement } from '@angular/core';
+import { NgModule, Component, ValueProvider, Provider, Type, DebugElement } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { QueryMatch, EmptyQueryMatch } from './query-match';
@@ -20,36 +21,53 @@ export interface Mocks<T> {
 export interface CopiedTestModuleMetadata {
   imports: Type<any>[];
   declarations: Type<any>[];
-  providers: {
-    provide: Type<any>;
-    useValue: object;
-  }[];
+  providers: Provider[];
 }
 
-export class Shallow<T> {
-  constructor(private readonly _testComponentClass: Type<T>, private readonly _fromModuleClass: Type<any>) {}
+const getAnnotations = (ngModule: Type<any>) => {
+  const {imports = [], providers = [], declarations = []} =
+    ((ngModule as any).__annotations__[0]) as NgModule;
+
+  return {imports, providers, declarations};
+};
+
+export class MockProvider {
+  constructor(public provider: any) {}
+}
+
+export class Shallow<TTestComponent> {
+  // Never mock the Angular Common Module, it includes things like *ngIf and basic
+  // template directives.
+  private static _neverMock: any[] = [CommonModule];
+  static neverMock(...things: any[]) {
+    this._neverMock.push(...things);
+    return Shallow;
+  }
+
+  constructor(private readonly _testComponentClass: Type<TTestComponent>, private readonly _fromModuleClass: Type<any>) {}
+
+  private _dontMock: any[] = [];
+  dontMock(...things: any[]) {
+    this._dontMock.push(...things);
+    return this;
+  }
+
+  private get _allUnmocked(): Type<any>[] { return [this._testComponentClass, ...Shallow._neverMock, ...this._dontMock]; }
+
+  private _shouldMock(thing: any) {
+    return !this._allUnmocked.includes(thing);
+  }
 
   private _copyTestModule(): CopiedTestModuleMetadata {
-    const {imports = [], providers = [], declarations = []} =
-      ((this._fromModuleClass as any).__annotations__[0]) as NgModule;
-    const copy: CopiedTestModuleMetadata = {
-      imports: [],
-      declarations: [],
-      providers: [],
-    };
-
-    if (Array.isArray(imports)) {
-      copy.imports = imports.map(m => MockModule(m as Type<any>));
+    const ngModule = getAnnotations(this._fromModuleClass);
+    return {
+      imports: ngModule.imports
+        .map(m => this._shouldMock(m) ? MockModule(m as Type<any>) : m as Type<any>),
+      declarations: ngModule.declarations
+        .map(d => this._shouldMock(d) ? MockDeclaration(d as Type<any>) : d),
+      providers: ngModule.providers
+        .map(p => this._mockProvider(p)),
     }
-    if (Array.isArray(declarations)) {
-      copy.declarations = declarations
-        .map(d => d === this._testComponentClass ? d : MockDeclaration(d as Type<any>));
-    }
-    if (Array.isArray(providers)) {
-      copy.providers = providers.map(p => this._mockProvider(p));
-    }
-
-    return copy;
   }
 
   private _mocks = [] as Mocks<any>[];
@@ -60,34 +78,40 @@ export class Shallow<T> {
     return this;
   }
 
-  private _spyOnProvider(provider: {provide: Type<any>; useValue: any}) {
-    const {provide, useValue} = provider;
-    Object.keys(useValue).forEach(key => {
-      const value = useValue[key];
-      if (typeof value === 'function') {
-        spyOn(useValue, key).and.callThrough();
-      }
-    });
+  private _spyOnProvider(provider: Provider) {
+    const {provide, useValue} = provider as ValueProvider;
+    if (provide && this._shouldMock(provide)) {
+      Object.keys(useValue).forEach(key => {
+        const value = useValue[key];
+        if (typeof value === 'function') {
+          spyOn(useValue, key).and.callThrough();
+        }
+      });
 
-    return {provide, useValue};
+      return {provide, useValue};
+    }
+    return provider;
   }
 
-  private _mockProvider(provider: Provider) {
-    const mockProvider: Provider = {provide: undefined, useValue: {}};
+  private _mockProvider(provider: Provider): Provider {
+    let provide: any;
+
     if (typeof provider === 'function') {
-      mockProvider.provide = provider;
+      provide = provider;
     } else if (Array.isArray(provider)) {
       throw new Error(`Array providers are not supported: ${provider}`);
     } else {
-      mockProvider.provide = provider.provide;
+      provide = provider.provide;
     }
 
-    const userProvidedMock = this._mocks.find(m => m.class === mockProvider.provide);
+    const userProvidedMock = this._mocks.find(m => m.class === provide);
     if (userProvidedMock) {
-      mockProvider.useValue = userProvidedMock.stubs;
+      return {provide, useValue: Object.assign(new MockProvider(provide), userProvidedMock.stubs)};
+    } else if (this._shouldMock(provider)) {
+      return {provide, useValue: new MockProvider(provide)};
+    } else {
+      return provider;
     }
-
-    return mockProvider;
   }
 
   private _createContainerClass(html: string, bindings?: any) {
