@@ -1,28 +1,30 @@
 import { Input, Component, Directive, NgModule } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { Shallow } from '../shallow';
-import { MockDirective } from 'mock-directive';
+import { MockDirective } from 'ng-mocks';
+import { By } from '@angular/platform-browser';
 
 ////// Module Setup //////
 @Component({
   selector: 'heading',
   template: `
-    <ng-container *ngIf="fancy">
-      <h1 magic="abracadabra"><ng-content></ng-content></h1>
+    <ng-container *ngIf="withTooltip">
+      <h1 tooltip="My tooltip text"><ng-content></ng-content></h1>
     </ng-container>
-    <ng-container *ngIf="!fancy">
+    <ng-container *ngIf="!withTooltip">
       <h1><ng-content></ng-content></h1>
     </ng-container>
   `,
 })
 class HeadingComponent {
-  @Input() fancy = false;
+  @Input() withTooltip = false;
 }
 
 @Directive({
-  selector: 'magic',
+  selector: '[tooltip]',
 })
-class MagicDirective {
-  @Input() magic: string;
+class TooltipDirective {
+  @Input() tooltip: string;
 
   constructor() {
     throw new Error('THIS SHOULD BE MOCKED');
@@ -30,7 +32,7 @@ class MagicDirective {
 }
 
 @NgModule({
-  declarations: [HeadingComponent, MagicDirective]
+  declarations: [HeadingComponent, TooltipDirective]
 })
 class HeadingModule {}
 //////////////////////////
@@ -38,29 +40,28 @@ class HeadingModule {}
 describe('component with directive', () => {
   const shallow = new Shallow(HeadingComponent, HeadingModule);
 
-  it('renders with magic when fancy = true', async () => {
-    const {find} = await shallow.render('<heading [fancy]="true"></heading>');
+  it('renders with a tooltip when tooltip = true', async () => {
+    const {find} = await shallow.render('<heading [withTooltip]="true"></heading>');
 
-    expect(find('h1[magic]').length).toBe(1);
+    expect(find('h1[tooltip]').length).toBe(1);
   });
 
-  it('renders with magic=abracadabra when fancy = true', async () => {
-    const {find} = await shallow.render('<heading [fancy]="true"></heading>');
+  it('renders with tooltip text when tooltip = true', async () => {
+    const {findDirective} = await shallow.render('<heading [withTooltip]="true"></heading>');
 
     // TODO: For some reason, this directive query won't return a match?
-    const magicElement = find(MagicDirective);
-    const magicDirective = magicElement.injector.get(MockDirective(MagicDirective));
+    const tooltipDirective = findDirective(TooltipDirective);
 
-    expect(magicDirective.magic).toBe('abracadabra');
+    expect(tooltipDirective.tooltip).toBe('My tooltip text');
   });
 
-  it('renders without magic by default', async () => {
+  it('renders without tooltip by default', async () => {
     const {find} = await shallow.render('<heading></heading>');
-    const magic = find('h1[magic]');
-    const notMagic = find('h1');
+    const tooltip = find('h1[tooltip]');
+    const noTooltip = find('h1');
 
-    expect(magic.length).toBe(0);
-    expect(notMagic.length).toBe(1);
+    expect(tooltip.length).toBe(0);
+    expect(noTooltip.length).toBe(1);
   });
 });
 

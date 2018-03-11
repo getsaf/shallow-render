@@ -25,7 +25,7 @@ class BornInComponent {
 class PersonModule {}
 //////////////////////////
 
-fdescribe('component with bindings', () => {
+describe('component with bindings', () => {
   const shallow = new Shallow(BornInComponent, PersonModule);
   const testPerson: Person = {
     firstName: 'Brandon',
@@ -48,7 +48,7 @@ fdescribe('component with bindings', () => {
       '<born-in [person]="testPerson" (select)="handleSelect($event)"></born-in>',
       {bind: {testPerson, handleSelect: () => undefined}}
     );
-    find('label').triggerEventHandler('click', {});
+    find('label').nativeElement.click();
 
     expect(bindings.handleSelect).toHaveBeenCalledWith(testPerson);
   });

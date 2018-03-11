@@ -2,7 +2,7 @@ import { NgModule, Component, Provider, Type, DebugElement } from '@angular/core
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { QueryMatch, EmptyQueryMatch } from './query-match';
-import { MockModule, mockDeclaration } from 'mock-module';
+import { MockModule, MockDeclaration } from 'ng-mocks';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
 
 export class ShallowContainer {}
@@ -43,7 +43,7 @@ export class Shallow<T> {
     }
     if (Array.isArray(declarations)) {
       copy.declarations = declarations
-        .map(d => d === this._testComponentClass ? d : mockDeclaration(d as Type<any>));
+        .map(d => d === this._testComponentClass ? d : MockDeclaration(d as Type<any>));
     }
     if (Array.isArray(providers)) {
       copy.providers = providers.map(p => this._mockProvider(p));
@@ -142,15 +142,28 @@ export class Shallow<T> {
     const instance = element.injector.get(this._testComponentClass);
 
     const find = (cssOrDirective: string | Type<any>) => {
+      if (cssOrDirective === this._testComponentClass) {
+        throw new Error(`
+          Don\'t use 'find' to search for your test component, it is automatically returned by the shallow renderer:
+            `)
+      }
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
-        : By.directive(cssOrDirective === this._testComponentClass ? cssOrDirective : mockDeclaration(cssOrDirective));
+        : By.directive(cssOrDirective === this._testComponentClass ? cssOrDirective : MockDeclaration(cssOrDirective));
       const matches = element.queryAll(query);
       if (matches.length === 0) {
         return (new EmptyQueryMatch() as any) as QueryMatch;
       }
       return new QueryMatch(matches);
     };
+
+    const findDirective = <TDirective>(directive: Type<TDirective>): TDirective | undefined => {
+      const found = find(directive);
+      if (found.length === 0) {
+        return undefined;
+      }
+      return found.injector.get(directive as any === this._testComponentClass ? directive : MockDeclaration(directive)) as TDirective;
+    }
 
     if (!options.skipDetectChanges) {
       fixture.detectChanges();
@@ -163,6 +176,7 @@ export class Shallow<T> {
       fixture,
       element,
       find,
+      findDirective,
       get,
       instance,
       bindings: options.bind
