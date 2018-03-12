@@ -1,9 +1,17 @@
-import { NgModule, Component, ValueProvider, Provider, Type, DebugElement } from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ModuleWithProviders,
+  NgModule,
+  Provider,
+  Type,
+  ValueProvider,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { QueryMatch, EmptyQueryMatch } from './query-match';
-import { MockModule, MockDeclaration } from 'ng-mocks';
+import { MockDeclaration } from 'ng-mocks';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
 
 export class ShallowContainer {}
@@ -19,16 +27,24 @@ export interface Mocks<T> {
 }
 
 export interface CopiedTestModuleMetadata {
-  imports: Type<any>[];
-  declarations: Type<any>[];
+  imports: (any[] | Type<any> | ModuleWithProviders)[];
+  declarations: (any[] | Type<any>)[];
   providers: Provider[];
+  exports: (Provider | Type<any> | any[])[];
+  entryComponents: (any[] | Type<any>)[];
 }
 
-const getAnnotations = (ngModule: Type<any>) => {
-  const {imports = [], providers = [], declarations = []} =
-    ((ngModule as any).__annotations__[0]) as NgModule;
+const getAnnotations = (ngModule: Type<any>): CopiedTestModuleMetadata => {
+  const {
+    imports = [] as (any[] | Type<any> | ModuleWithProviders)[],
+    providers = [] as Provider[],
+    declarations = [] as (any[] | Type<any>)[],
+    exports = [] as (Provider | Type<any> | any[])[],
+    entryComponents = [] as (any[] | Type<any>)[],
 
-  return {imports, providers, declarations};
+  } = ((ngModule as any).__annotations__[0]) as NgModule;
+
+  return {imports, providers, declarations, exports, entryComponents};
 };
 
 export class MockProvider {
@@ -62,12 +78,40 @@ export class Shallow<TTestComponent> {
     const ngModule = getAnnotations(this._fromModuleClass);
     return {
       imports: ngModule.imports
-        .map(m => this._shouldMock(m) ? MockModule(m as Type<any>) : m as Type<any>),
+        .map(m => this._shouldMock(m) ? this._copyModule(m) : m),
       declarations: ngModule.declarations
         .map(d => this._shouldMock(d) ? MockDeclaration(d as Type<any>) : d),
       providers: ngModule.providers
         .map(p => this._mockProvider(p)),
+    } as CopiedTestModuleMetadata;
+  }
+
+  private _copyModule(mod: any[] | Type<any> | ModuleWithProviders): any[] | Type<any> {
+    let ngModule: CopiedTestModuleMetadata;
+    let moduleClass: Type<any>;
+    let providers: Provider[] = [];
+    if (Array.isArray(mod)) {
+      return mod.map(i => this._copyModule(i));
+    } else if ((mod as ModuleWithProviders).ngModule) {
+      const modWithProviders = mod as ModuleWithProviders;
+      moduleClass = modWithProviders.ngModule;
+      if (modWithProviders.providers) {
+        providers = modWithProviders.providers;
+      }
+    } else {
+      moduleClass = mod as Type<any>;
     }
+    ngModule = getAnnotations(moduleClass);
+    const mockedModule: NgModule = {
+      imports: ngModule.imports.map(i => this._shouldMock(i) ? this._copyModule(i) : i),
+      declarations: ngModule.declarations.map(i => this._shouldMock(i) ? MockDeclaration(i as Type<any>) : i),
+      providers: ngModule.providers.concat(providers).map(i => this._mockProvider(i)),
+      exports: ngModule.exports.map((i: any) => this._shouldMock(i) ? MockDeclaration(i) : i),
+      entryComponents: ngModule.entryComponents.map((i: any) => this._shouldMock(i) ? MockDeclaration(i) : i),
+    };
+    @NgModule(mockedModule)
+    class MockModule {}
+    return MockModule;
   }
 
   private _mocks = [] as Mocks<any>[];
@@ -99,7 +143,7 @@ export class Shallow<TTestComponent> {
     if (typeof provider === 'function') {
       provide = provider;
     } else if (Array.isArray(provider)) {
-      throw new Error(`Array providers are not supported: ${provider}`);
+      return provider.map(i => this._mockProvider(i));
     } else {
       provide = provider.provide;
     }
