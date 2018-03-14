@@ -50,5 +50,3 @@ describe('using neverMock', () => {
     expect(element.nativeElement.innerText).toBe('MOCKED VALUE');
   });
 });
-
-

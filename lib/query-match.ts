@@ -1,18 +1,22 @@
 import { DebugElement } from '@angular/core';
 
-export class QueryMatch extends DebugElement {
-  length = this._matches.length;
+export type QueryMatch = DebugElement[] & DebugElement;
 
-  constructor(private _matches: DebugElement[]) {
-    super(
-      _matches[0] && _matches[0].nativeNode,
-      _matches[0] && _matches[0].parent,
-      _matches[0] && (_matches[0] as any)._debugContext
-    );
+export class QueryMatchClass {
+  static fromMatches(_matches: DebugElement[]): QueryMatch {
+    return (new QueryMatchClass(_matches) as any) as QueryMatch;
+  }
+  readonly length = this._matches.length;
+
+  constructor(private readonly _matches: DebugElement[]) {
+    const match: any = _matches[0];
+    return new Proxy(this, {
+      get: (obj: any, key: string) => key in match ? match[key] : (this as any)[key]
+    });
   }
 
   forEach(fn: (item: DebugElement, index: number, array: DebugElement[]) => void, thisArg?: any) {
-    return this._matches.forEach(fn, thisArg);
+    this._matches.forEach(fn, thisArg);
   }
 
   map(fn: <T>(item: DebugElement, index: number, array: DebugElement[]) => T, thisArg?: any) {
@@ -65,7 +69,7 @@ const debugElementProps: {[key in keyof DebugElement]: undefined} = {
   queryAllNodes: undefined,
   removeChild: undefined,
   triggerEventHandler: undefined,
-}
+};
 Object.keys(debugElementProps).forEach(key => {
   Object.defineProperty(
     EmptyQueryMatch.prototype,

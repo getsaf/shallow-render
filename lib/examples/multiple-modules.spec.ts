@@ -70,4 +70,3 @@ describe('multi module', () => {
     expect(find('bar').length).toBe(0);
   });
 });
-

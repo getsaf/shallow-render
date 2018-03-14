@@ -2,19 +2,19 @@
   "name": "shallow",
   "version": "0.0.1",
   "description": "Shallow rendering test utility for Angular",
-  "main": "dist/js/index.js",
+  "main": "build/dist/index.js",
   "files": [
-    "dist",
+    "build",
     "LICENSE",
     "README"
   ],
-  "typings": "dist/types/index",
+  "typings": "build/types/index",
   "typescript": {
-    "definition": "dist/types/index"
+    "definition": "build/types/index"
   },
   "scripts": {
-    "clean": "rm -rf dist coverage",
-    "lint": "tslint --project tsconfig.json",
+    "clean": "rm -rf build coverage",
+    "lint": "tslint -t stylish --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "build": "npm run clean && tsc",
     "release": "npm run lint && npm run test && npm run build && standard-version",
@@ -39,13 +39,12 @@
     "url": "https://github.com/getsaf/shallow/issues"
   },
   "homepage": "https://github.com/getsaf/shallow#readme",
-  "devDependencies": {
+  "dependencies": {
     "@angular/common": "5.x",
-    "@angular/compiler": "5.x",
     "@angular/core": "5.x",
-    "@angular/forms": "5.x",
-    "@angular/platform-browser": "5.x",
-    "@angular/platform-browser-dynamic": "5.x",
+    "@angular/platform-browser": "5.x"
+  },
+  "devDependencies": {
     "@types/core-js": "^0.9.43",
     "@types/jasmine": "^2.5.53",
     "@types/node": "^8.0.17",
@@ -58,7 +57,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-typescript": "^3.0.9",
-    "ng-mocks": "file://../ng-mocks/dist",
+    "ng-mocks": "file://../ng-mocks",
     "rxjs": ">= 5.0.0-beta.12",
     "standard-version": "^4.2.0",
     "ts-node": "^4.1.0",

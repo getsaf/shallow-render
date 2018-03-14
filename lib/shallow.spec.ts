@@ -28,7 +28,7 @@ describe('Shallow', () => {
     });
 
     it('skips detectChanges when asked', async () => {
-      const {instance} = await shallow.render('<example label="not set"></example>', {skipDetectChanges: true});
+      const {instance} = await shallow.render('<example label="not set"></example>', {detectChanges: false});
 
       expect(instance.label).not.toBeDefined();
     });

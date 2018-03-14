@@ -1,8 +1,5 @@
 import { Input, Component, Directive, NgModule } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
 import { Shallow } from '../shallow';
-import { MockDirective } from 'ng-mocks';
-import { By } from '@angular/platform-browser';
 
 ////// Module Setup //////
 @Component({
@@ -52,7 +49,7 @@ describe('component with directive', () => {
     // TODO: For some reason, this directive query won't return a match?
     const tooltipDirective = findDirective(TooltipDirective);
 
-    expect(tooltipDirective.tooltip).toBe('My tooltip text');
+    expect(tooltipDirective && tooltipDirective.tooltip).toBe('My tooltip text');
   });
 
   it('renders without tooltip by default', async () => {
@@ -64,4 +61,3 @@ describe('component with directive', () => {
     expect(noTooltip.length).toBe(1);
   });
 });
-

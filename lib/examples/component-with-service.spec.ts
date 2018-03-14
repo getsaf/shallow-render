@@ -34,4 +34,3 @@ describe('component with service', () => {
     expect(element.nativeElement.innerText).toBe('MOCKED COLOR');
   });
 });
-

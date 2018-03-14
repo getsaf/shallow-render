@@ -53,4 +53,3 @@ describe('component with bindings', () => {
     expect(bindings.handleSelect).toHaveBeenCalledWith(testPerson);
   });
 });
-

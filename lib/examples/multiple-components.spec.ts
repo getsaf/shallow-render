@@ -70,4 +70,3 @@ describe('multiple components', () => {
     expect(find('.top-item').length).toBe(0);
   });
 });
-

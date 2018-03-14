@@ -7,18 +7,19 @@ import {
   Type,
   ValueProvider,
 } from '@angular/core';
+
+import { By, BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { QueryMatch, EmptyQueryMatch } from './query-match';
-import { MockDeclaration } from 'ng-mocks';
+import { QueryMatch, QueryMatchClass, EmptyQueryMatch } from './query-match';
+import { MockPipe, MockComponent, MockDirective } from 'ng-mocks';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
 
 export class ShallowContainer {}
 
 export interface RenderOptions<TBindings> {
-  skipDetectChanges: boolean;
-  bind: TBindings
+  detectChanges: boolean;
+  bind: TBindings;
 }
 
 export interface Mocks<T> {
@@ -30,19 +31,60 @@ export interface CopiedTestModuleMetadata {
   imports: (any[] | Type<any> | ModuleWithProviders)[];
   declarations: (any[] | Type<any>)[];
   providers: Provider[];
-  exports: (Provider | Type<any> | any[])[];
+  exports: (Type<any> | any[])[];
   entryComponents: (any[] | Type<any>)[];
 }
 
+type MockCache = {
+  key: any;
+  value: any;
+}[];
+
+const getType = (klass: any) => {
+  if (Array.isArray(klass.__annotations__)
+    && klass.__annotations__[0]
+    && klass.__annotations__[0].__proto__
+    && klass.__annotations__[0].__proto__.ngMetadataName
+  ) {
+    return klass.__annotations__[0].__proto__.ngMetadataName;
+  }
+
+  if (Array.isArray(klass.decorators)) {
+    const fount = klass.decorators.find((d: any) => d.type && d.type.prototype && d.type.prototype.ngMetadataName);
+    if (fount) {
+      return fount.type.prototype.ngMetadataName;
+    }
+  }
+
+  if (isModuleWithProviders(klass)) {
+    return 'NgModule';
+  }
+  throw new Error(`Cannot find the declaration type for class ${klass.name || klass}`);
+};
+
+const isModuleWithProviders = (thing: any): thing is ModuleWithProviders => {
+  const key: keyof ModuleWithProviders = 'ngModule';
+  return key in thing;
+}
+
 const getAnnotations = (ngModule: Type<any>): CopiedTestModuleMetadata => {
+  let annotations: NgModule;
+  const ngModuleAsAny = ngModule as any;
+  if (Array.isArray(ngModuleAsAny.__annotations__)) {
+    annotations = ngModuleAsAny.__annotations__[0];
+  } else if (Array.isArray(ngModuleAsAny.decorators)) {
+    annotations = ngModuleAsAny.decorators[0].args[0];
+  } else {
+    throw new Error(`Cannot find the annotations or decorator properties for class ${ngModule.name || ngModule}`);
+  }
+
   const {
     imports = [] as (any[] | Type<any> | ModuleWithProviders)[],
     providers = [] as Provider[],
     declarations = [] as (any[] | Type<any>)[],
-    exports = [] as (Provider | Type<any> | any[])[],
+    exports = [] as (Type<any> | any[])[],
     entryComponents = [] as (any[] | Type<any>)[],
-
-  } = ((ngModule as any).__annotations__[0]) as NgModule;
+  } = annotations;
 
   return {imports, providers, declarations, exports, entryComponents};
 };
@@ -54,15 +96,51 @@ export class MockProvider {
 export class Shallow<TTestComponent> {
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
-  private static _neverMock: any[] = [CommonModule];
+  private static readonly _neverMock: any[] = [CommonModule, BrowserModule];
   static neverMock(...things: any[]) {
     this._neverMock.push(...things);
     return Shallow;
   }
 
+  private _ngMock<TThing>(thing: TThing, mockCache: MockCache): TThing {
+    const cached = mockCache.find(i => i.key === thing);
+    if (cached) {
+      return cached.value;
+    }
+
+    if (Array.isArray(thing)) {
+      return thing.map(t => this._ngMock(t, mockCache)) as any; // Recursion
+    }
+
+    if (!this._shouldMock(thing)) {
+      return thing;
+    }
+
+    let mock: any;
+    const type = getType(thing);
+    switch (type) {
+      case 'Component':
+        mock = MockComponent(thing as any);
+        break;
+      case 'Directive':
+        mock = MockDirective(thing as any);
+        break;
+      case 'Pipe':
+        mock = MockPipe(thing as any);
+        break;
+      case 'NgModule':
+        mock = this._mockModule(thing as any, mockCache);
+        break;
+      default:
+        throw new Error(`Don't know how to mock type: ${type}`);
+    }
+    mockCache.push({key: thing, value: mock});
+    return mock;
+  }
+
   constructor(private readonly _testComponentClass: Type<TTestComponent>, private readonly _fromModuleClass: Type<any>) {}
 
-  private _dontMock: any[] = [];
+  private readonly _dontMock: any[] = [];
   dontMock(...things: any[]) {
     this._dontMock.push(...things);
     return this;
@@ -74,43 +152,47 @@ export class Shallow<TTestComponent> {
     return !this._allUnmocked.includes(thing);
   }
 
-  private _copyTestModule(): CopiedTestModuleMetadata {
+  private _copyTestModule(mockCache: MockCache) {
     const ngModule = getAnnotations(this._fromModuleClass);
     return {
       imports: ngModule.imports
-        .map(m => this._shouldMock(m) ? this._copyModule(m) : m),
+        .map(m => this._ngMock(m, mockCache)),
       declarations: ngModule.declarations
-        .map(d => this._shouldMock(d) ? MockDeclaration(d as Type<any>) : d),
+        .map(d => this._ngMock(d, mockCache)),
       providers: ngModule.providers
         .map(p => this._mockProvider(p)),
-    } as CopiedTestModuleMetadata;
+    };
   }
 
-  private _copyModule(mod: any[] | Type<any> | ModuleWithProviders): any[] | Type<any> {
+  private _mockModule(mod: any[] | Type<any> | ModuleWithProviders, mockCache: MockCache): any[] | Type<any> {
+    const cached = mockCache.find(c => c.key === mod);
+    if (cached) {
+      return cached.value;
+    }
     let ngModule: CopiedTestModuleMetadata;
     let moduleClass: Type<any>;
     let providers: Provider[] = [];
     if (Array.isArray(mod)) {
-      return mod.map(i => this._copyModule(i));
-    } else if ((mod as ModuleWithProviders).ngModule) {
-      const modWithProviders = mod as ModuleWithProviders;
-      moduleClass = modWithProviders.ngModule;
-      if (modWithProviders.providers) {
-        providers = modWithProviders.providers;
+      return mod.map(i => this._mockModule(i, mockCache)); // Recursion
+    } else if (isModuleWithProviders(mod)) {
+      moduleClass = mod.ngModule;
+      if (mod.providers) {
+        providers = mod.providers;
       }
     } else {
       moduleClass = mod as Type<any>;
     }
     ngModule = getAnnotations(moduleClass);
     const mockedModule: NgModule = {
-      imports: ngModule.imports.map(i => this._shouldMock(i) ? this._copyModule(i) : i),
-      declarations: ngModule.declarations.map(i => this._shouldMock(i) ? MockDeclaration(i as Type<any>) : i),
+      imports: ngModule.imports.map(i => this._ngMock(i, mockCache)),
+      declarations: ngModule.declarations.map(i => this._ngMock(i, mockCache)),
+      exports: ngModule.exports.map(i => this._ngMock(i, mockCache)),
+      entryComponents: ngModule.entryComponents.map(i => this._ngMock(i, mockCache)),
       providers: ngModule.providers.concat(providers).map(i => this._mockProvider(i)),
-      exports: ngModule.exports.map((i: any) => this._shouldMock(i) ? MockDeclaration(i) : i),
-      entryComponents: ngModule.entryComponents.map((i: any) => this._shouldMock(i) ? MockDeclaration(i) : i),
     };
     @NgModule(mockedModule)
     class MockModule {}
+    mockCache.push({key: mod, value: MockModule});
     return MockModule;
   }
 
@@ -122,19 +204,30 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  private _spyOnProvider(provider: Provider) {
-    const {provide, useValue} = provider as ValueProvider;
-    if (provide && this._shouldMock(provide)) {
-      Object.keys(useValue).forEach(key => {
-        const value = useValue[key];
-        if (typeof value === 'function') {
-          spyOn(useValue, key).and.callThrough();
-        }
-      });
+  private _isValueProvider(provider: Provider): provider is ValueProvider {
+    const key: keyof ValueProvider = 'useValue';
+    return key in provider;
+  }
 
-      return {provide, useValue};
+  private _spyOnProvider(provider: Provider) {
+    if (Array.isArray(provider)) {
+      return provider.map(p => this._spyOnProvider); // Recursion
+    } else {
+      if (this._isValueProvider(provider)) {
+        const {provide, useValue} = provider;
+        if (provide && this._shouldMock(provide)) {
+          Object.keys(useValue).forEach(key => {
+            const value = useValue[key];
+            if (typeof value === 'function') {
+              spyOn(useValue, key).and.callThrough();
+            }
+          });
+
+          return {provide, useValue};
+        }
+      }
+      return provider;
     }
-    return provider;
   }
 
   private _mockProvider(provider: Provider): Provider {
@@ -186,22 +279,23 @@ export class Shallow<TTestComponent> {
 
   async render<TBindings>(html: string, renderOptions?: Partial<RenderOptions<TBindings>>) {
     const options: RenderOptions<TBindings> = {
-      skipDetectChanges: false,
+      detectChanges: true,
       bind: {} as RenderOptions<TBindings>,
       ...renderOptions,
     } as any;
 
-    const containerClass = this._createContainerClass(html, options.bind);
-    const {imports, providers, declarations} = this._copyTestModule();
+    const ContainerClass = this._createContainerClass(html, options.bind);
+    const mockCache: MockCache = [];
+    const {imports, providers, declarations} = this._copyTestModule(mockCache);
     await TestBed
       .configureTestingModule({
         imports,
         providers: providers.map(p => this._spyOnProvider(p)),
-        declarations: [...declarations, containerClass],
+        declarations: [...declarations, ContainerClass],
       })
       .compileComponents();
 
-    const fixture = TestBed.createComponent(containerClass) as ComponentFixture<ShallowContainer>;
+    const fixture = TestBed.createComponent(ContainerClass);
 
     const element = fixture.debugElement.query(By.directive(this._testComponentClass));
     if (!element) {
@@ -213,16 +307,16 @@ export class Shallow<TTestComponent> {
       if (cssOrDirective === this._testComponentClass) {
         throw new Error(`
           Don\'t use 'find' to search for your test component, it is automatically returned by the shallow renderer:
-            `)
+            `);
       }
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
-        : By.directive(cssOrDirective === this._testComponentClass ? cssOrDirective : MockDeclaration(cssOrDirective));
+        : By.directive(cssOrDirective === this._testComponentClass ? cssOrDirective : this._ngMock(cssOrDirective, mockCache));
       const matches = element.queryAll(query);
       if (matches.length === 0) {
         return (new EmptyQueryMatch() as any) as QueryMatch;
       }
-      return new QueryMatch(matches);
+      return QueryMatchClass.fromMatches(matches);
     };
 
     const findDirective = <TDirective>(directive: Type<TDirective>): TDirective | undefined => {
@@ -230,10 +324,10 @@ export class Shallow<TTestComponent> {
       if (found.length === 0) {
         return undefined;
       }
-      return found.injector.get(directive as any === this._testComponentClass ? directive : MockDeclaration(directive)) as TDirective;
-    }
+      return found.injector.get<TDirective>(directive as any === this._testComponentClass ? directive : this._ngMock(directive, mockCache));
+    };
 
-    if (!options.skipDetectChanges) {
+    if (options.detectChanges) {
       fixture.detectChanges();
     }
 
@@ -241,7 +335,7 @@ export class Shallow<TTestComponent> {
 
     return {
       TestBed,
-      fixture,
+      fixture: fixture as ComponentFixture<ShallowContainer>,
       element,
       find,
       findDirective,

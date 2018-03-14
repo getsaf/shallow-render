@@ -36,5 +36,3 @@ describe('using dontMock', () => {
     expect(element.nativeElement.innerText).toBe('RED');
   });
 });
-
-
