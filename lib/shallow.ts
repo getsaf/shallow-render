@@ -40,6 +40,11 @@ type MockCache = {
   value: any;
 }[];
 
+const isModuleWithProviders = (thing: any): thing is ModuleWithProviders => {
+  const key: keyof ModuleWithProviders = 'ngModule';
+  return key in thing;
+};
+
 const getType = (klass: any) => {
   if (Array.isArray(klass.__annotations__)
     && klass.__annotations__[0]
@@ -61,11 +66,6 @@ const getType = (klass: any) => {
   }
   throw new Error(`Cannot find the declaration type for class ${klass.name || klass}`);
 };
-
-const isModuleWithProviders = (thing: any): thing is ModuleWithProviders => {
-  const key: keyof ModuleWithProviders = 'ngModule';
-  return key in thing;
-}
 
 const getAnnotations = (ngModule: Type<any>): CopiedTestModuleMetadata => {
   let annotations: NgModule;
@@ -277,27 +277,40 @@ export class Shallow<TTestComponent> {
     return obj;
   }
 
-  async render<TBindings>(html: string, renderOptions?: Partial<RenderOptions<TBindings>>) {
+  private _fromCache<TThing>(thing: TThing, mockCache: MockCache): TThing {
+    const found = mockCache.find(i => i.key === thing);
+    if (found) {
+      return found.value;
+    }
+    return thing;
+  }
+
+  async render<TBindings>(html?: string, renderOptions?: Partial<RenderOptions<TBindings>>) {
     const options: RenderOptions<TBindings> = {
       detectChanges: true,
       bind: {} as RenderOptions<TBindings>,
       ...renderOptions,
     } as any;
 
-    const ContainerClass = this._createContainerClass(html, options.bind);
     const mockCache: MockCache = [];
     const {imports, providers, declarations} = this._copyTestModule(mockCache);
+    const ComponentClass = html
+      ? this._createContainerClass(html, options.bind)
+      : this._testComponentClass;
+
     await TestBed
       .configureTestingModule({
         imports,
         providers: providers.map(p => this._spyOnProvider(p)),
-        declarations: [...declarations, ContainerClass],
+        declarations: [...declarations, ComponentClass],
       })
       .compileComponents();
 
-    const fixture = TestBed.createComponent(ContainerClass);
+    const fixture = TestBed.createComponent(ComponentClass);
 
-    const element = fixture.debugElement.query(By.directive(this._testComponentClass));
+    const element = html
+      ? fixture.debugElement.query(By.directive(this._testComponentClass))
+      : fixture.debugElement;
     if (!element) {
       throw new Error(`${this._testComponentClass.name} was not found in test template: ${html}`);
     }
@@ -305,13 +318,11 @@ export class Shallow<TTestComponent> {
 
     const find = (cssOrDirective: string | Type<any>) => {
       if (cssOrDirective === this._testComponentClass) {
-        throw new Error(`
-          Don\'t use 'find' to search for your test component, it is automatically returned by the shallow renderer:
-            `);
+        throw new Error(`Don't use 'find' to search for your test component, it is automatically returned by the shallow renderer`);
       }
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
-        : By.directive(cssOrDirective === this._testComponentClass ? cssOrDirective : this._ngMock(cssOrDirective, mockCache));
+        : By.directive(this._fromCache(cssOrDirective, mockCache));
       const matches = element.queryAll(query);
       if (matches.length === 0) {
         return (new EmptyQueryMatch() as any) as QueryMatch;
@@ -324,14 +335,14 @@ export class Shallow<TTestComponent> {
       if (found.length === 0) {
         return undefined;
       }
-      return found.injector.get<TDirective>(directive as any === this._testComponentClass ? directive : this._ngMock(directive, mockCache));
+      return found.injector.get<TDirective>(this._fromCache(directive, mockCache));
     };
 
     if (options.detectChanges) {
       fixture.detectChanges();
     }
 
-    const get = <TClass>(queryClass: Type<TClass>): TClass => element.injector.get(queryClass);
+    const get = <TClass>(queryClass: Type<TClass>): TClass => TestBed.get(queryClass);
 
     return {
       TestBed,
