@@ -45,8 +45,6 @@ describe('component with directive', () => {
 
   it('renders with tooltip text when tooltip = true', async () => {
     const {findDirective} = await shallow.render('<heading [withTooltip]="true"></heading>');
-
-    // TODO: For some reason, this directive query won't return a match?
     const tooltipDirective = findDirective(TooltipDirective);
 
     expect(tooltipDirective && tooltipDirective.tooltip).toBe('My tooltip text');

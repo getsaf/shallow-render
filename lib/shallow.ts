@@ -7,12 +7,13 @@ import {
   Type,
   ValueProvider,
 } from '@angular/core';
-
 import { By, BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { QueryMatch, QueryMatchClass, EmptyQueryMatch } from './query-match';
 import { MockPipe, MockComponent, MockDirective } from 'ng-mocks';
+
+import { QueryMatch, QueryMatchClass, EmptyQueryMatch } from './models/query-match';
+import { MockCache } from './models/mock-cache';
 export type __junkType = DebugElement | ComponentFixture<any>; // To satisfy a TS build bug
 
 export class ShallowContainer {}
@@ -34,11 +35,6 @@ export interface CopiedTestModuleMetadata {
   exports: (Type<any> | any[])[];
   entryComponents: (any[] | Type<any>)[];
 }
-
-type MockCache = {
-  key: any;
-  value: any;
-}[];
 
 const isModuleWithProviders = (thing: any): thing is ModuleWithProviders => {
   const key: keyof ModuleWithProviders = 'ngModule';
@@ -103,13 +99,14 @@ export class Shallow<TTestComponent> {
   }
 
   private _ngMock<TThing>(thing: TThing, mockCache: MockCache): TThing {
-    const cached = mockCache.find(i => i.key === thing);
+    const cached = mockCache.find(thing);
+
     if (cached) {
-      return cached.value;
+      return cached;
     }
 
     if (Array.isArray(thing)) {
-      return thing.map(t => this._ngMock(t, mockCache)) as any; // Recursion
+      return mockCache.add(thing, thing.map(t => this._ngMock(t, mockCache))) as any; // Recursion
     }
 
     if (!this._shouldMock(thing)) {
@@ -134,8 +131,7 @@ export class Shallow<TTestComponent> {
       default:
         throw new Error(`Don't know how to mock type: ${type}`);
     }
-    mockCache.push({key: thing, value: mock});
-    return mock;
+    return mockCache.add(thing, mock);
   }
 
   constructor(private readonly _testComponentClass: Type<TTestComponent>, private readonly _fromModuleClass: Type<any>) {}
@@ -155,25 +151,22 @@ export class Shallow<TTestComponent> {
   private _copyTestModule(mockCache: MockCache) {
     const ngModule = getAnnotations(this._fromModuleClass);
     return {
-      imports: ngModule.imports
-        .map(m => this._ngMock(m, mockCache)),
-      declarations: ngModule.declarations
-        .map(d => this._ngMock(d, mockCache)),
-      providers: ngModule.providers
-        .map(p => this._mockProvider(p)),
+      imports: this._ngMock(ngModule.imports, mockCache),
+      declarations: this._ngMock(ngModule.declarations, mockCache),
+      providers: ngModule.providers.map(p => this._mockProvider(p)),
     };
   }
 
   private _mockModule(mod: any[] | Type<any> | ModuleWithProviders, mockCache: MockCache): any[] | Type<any> {
-    const cached = mockCache.find(c => c.key === mod);
+    const cached = mockCache.find(mod);
     if (cached) {
-      return cached.value;
+      return cached as any[] | Type<any>;
     }
     let ngModule: CopiedTestModuleMetadata;
     let moduleClass: Type<any>;
     let providers: Provider[] = [];
     if (Array.isArray(mod)) {
-      return mod.map(i => this._mockModule(i, mockCache)); // Recursion
+      return mockCache.add(mod, mod.map(i => this._mockModule(i, mockCache))); // Recursion
     } else if (isModuleWithProviders(mod)) {
       moduleClass = mod.ngModule;
       if (mod.providers) {
@@ -192,8 +185,8 @@ export class Shallow<TTestComponent> {
     };
     @NgModule(mockedModule)
     class MockModule {}
-    mockCache.push({key: mod, value: MockModule});
-    return MockModule;
+
+    return mockCache.add(mod, MockModule);
   }
 
   private _mocks = [] as Mocks<any>[];
@@ -277,14 +270,6 @@ export class Shallow<TTestComponent> {
     return obj;
   }
 
-  private _fromCache<TThing>(thing: TThing, mockCache: MockCache): TThing {
-    const found = mockCache.find(i => i.key === thing);
-    if (found) {
-      return found.value;
-    }
-    return thing;
-  }
-
   async render<TBindings>(html?: string, renderOptions?: Partial<RenderOptions<TBindings>>) {
     const options: RenderOptions<TBindings> = {
       detectChanges: true,
@@ -292,7 +277,7 @@ export class Shallow<TTestComponent> {
       ...renderOptions,
     } as any;
 
-    const mockCache: MockCache = [];
+    const mockCache = new MockCache();
     const {imports, providers, declarations} = this._copyTestModule(mockCache);
     const ComponentClass = html
       ? this._createContainerClass(html, options.bind)
@@ -322,7 +307,7 @@ export class Shallow<TTestComponent> {
       }
       const query = typeof cssOrDirective === 'string'
         ? By.css(cssOrDirective)
-        : By.directive(this._fromCache(cssOrDirective, mockCache));
+        : By.directive(mockCache.find(cssOrDirective));
       const matches = element.queryAll(query);
       if (matches.length === 0) {
         return (new EmptyQueryMatch() as any) as QueryMatch;
@@ -335,7 +320,7 @@ export class Shallow<TTestComponent> {
       if (found.length === 0) {
         return undefined;
       }
-      return found.injector.get<TDirective>(this._fromCache(directive, mockCache));
+      return found.injector.get<TDirective>(mockCache.find(directive));
     };
 
     if (options.detectChanges) {
@@ -345,7 +330,6 @@ export class Shallow<TTestComponent> {
     const get = <TClass>(queryClass: Type<TClass>): TClass => TestBed.get(queryClass);
 
     return {
-      TestBed,
       fixture: fixture as ComponentFixture<ShallowContainer>,
       element,
       find,
