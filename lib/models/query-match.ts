@@ -1,5 +1,6 @@
 import { DebugElement } from '@angular/core';
 
+// TODO: Use extends class instead of proxy?
 export type QueryMatch = DebugElement[] & DebugElement;
 
 export class QueryMatchClass {

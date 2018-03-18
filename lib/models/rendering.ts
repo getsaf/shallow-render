@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockCache } from './mock-cache';
 import { EmptyQueryMatch, QueryMatch, QueryMatchClass } from './query-match';
+import { TestSetup } from './test-setup';
 
 export interface RenderOptions<TBindings> {
   detectChanges: boolean;
@@ -14,20 +15,16 @@ export class Rendering<TComponent, TBindings> {
   readonly element: DebugElement;
   readonly instance: TComponent;
 
-  constructor(
-    private _testComponentClass: Type<TComponent>,
-    public fixture: ComponentFixture<any>,
-    private _mockCache: MockCache,
-    public bindings: TBindings
-  ) {
-    this.element = this.fixture.componentInstance instanceof this._testComponentClass
-      ? this.fixture.debugElement.query(By.directive(this._testComponentClass))
-      : this.fixture.debugElement;
+  constructor(public fixture: ComponentFixture<any>, public bindings: TBindings, private _setup: TestSetup<TComponent>) {
+    this.element = this.fixture.componentInstance instanceof this._setup.testComponent
+      ? this.fixture.debugElement
+      : this.fixture.debugElement.query(By.directive(this._setup.testComponent));
 
     if (!this.element) {
-      throw new Error(`${this._testComponentClass.name} was not found in test template`);
+      throw new Error(`${this._setup.testComponent.name} was not found in test template`);
     }
-    this.instance = this.element.injector.get(this._testComponentClass);
+
+    this.instance = this.element.injector.get(this._setup.testComponent);
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -36,12 +33,12 @@ export class Rendering<TComponent, TBindings> {
   /////////////////////////////////////////////////////////////////////////////
   //
   readonly find = (cssOrDirective: string | Type<any>) => {
-    if (cssOrDirective === this._testComponentClass) {
+    if (cssOrDirective === this._setup.testComponent) {
       throw new Error(`Don't use 'find' to search for your test component, it is automatically returned by the shallow renderer`);
     }
     const query = typeof cssOrDirective === 'string'
       ? By.css(cssOrDirective)
-      : By.directive(this._mockCache.find(cssOrDirective));
+      : By.directive(this._setup.mockCache.find(cssOrDirective));
     const matches = this.element.queryAll(query);
     if (matches.length === 0) {
       return (new EmptyQueryMatch() as any) as QueryMatch;
@@ -54,7 +51,7 @@ export class Rendering<TComponent, TBindings> {
     if (found.length === 0) {
       return undefined;
     }
-    return found.injector.get<TDirective>(this._mockCache.find(directive));
+    return found.injector.get<TDirective>(this._setup.mockCache.find(directive));
   }
 
   readonly get = <TClass>(queryClass: Type<TClass>): TClass => TestBed.get(queryClass);

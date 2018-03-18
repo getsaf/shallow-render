@@ -1,10 +1,13 @@
-import { Provider, Type } from '@angular/core';
+import { Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
 import { Renderer } from './models/renderer';
+import { MockCache } from './models/mock-cache';
+import { TestSetup } from './models/test-setup';
 
 export class Shallow<TTestComponent> {
+  readonly setup: TestSetup<TTestComponent>;
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
   private static readonly _neverMock: any[] = [CommonModule, BrowserModule];
@@ -13,31 +16,30 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
-  constructor(public readonly testComponentClass: Type<TTestComponent>, private readonly _fromModuleClass: Type<any>) {}
+  constructor(testComponent: Type<TTestComponent>, testModule: Type<any>) {
+    this.setup = {
+      testComponent,
+      testModule,
+      dontMock: [...Shallow._neverMock, testComponent],
+      mocks: new Map<any, any>(),
+      mockCache: new MockCache(),
+    };
+  }
 
-  private readonly _dontMock: any[] = [];
   dontMock(...things: any[]) {
-    this._dontMock.push(...things);
+    this.setup.dontMock.push(...things);
     return this;
   }
 
-  private get _allUnmocked(): Type<any>[] { return [this.testComponentClass, ...Shallow._neverMock, ...this._dontMock]; }
-
-  private _shouldMock(thing: any) {
-    return !this._allUnmocked.includes(thing);
-  }
-
-  private _mocks = new Map<any, any>();
   mock<TMock>(mockClass: Type<TMock>, stubs: Partial<TMock>) {
-    const mock = this._mocks.get(mockClass) || {class: mockClass, stubs: {}};
+    const mock = this.setup.mocks.get(mockClass) || {class: mockClass, stubs: {}};
     Object.assign(mock.stubs, stubs);
-    this._mocks.set(mockClass, mock);
+    this.setup.mocks.set(mockClass, mock);
     return this;
   }
-
 
   render<TBindings>(html?: string, renderOptions?: Partial<RenderOptions<TBindings>>): Promise<Rendering<TTestComponent, TBindings>> {
-    const renderer = new Renderer(this.testComponentClass, this._fromModuleClass, this._allUnmocked);
+    const renderer = new Renderer(this.setup);
     return renderer.render(html, renderOptions);
   }
 }

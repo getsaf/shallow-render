@@ -1,7 +1,8 @@
 import { ModuleWithProviders, NgModule, Provider, Type } from '@angular/core';
-import { MockCache } from '../models/mock-cache';
 import { isModuleWithProviders } from './type-checkers';
 import { ngMock } from './ng-mock';
+import { mockProvider } from './mock-provider';
+import { TestSetup } from '../models/test-setup';
 
 interface Annotations {
   imports: (any[] | Type<any> | ModuleWithProviders)[];
@@ -33,12 +34,8 @@ const getAnnotations = (ngModule: Type<any>): Annotations => {
   return {imports, providers, declarations, exports, entryComponents};
 };
 
-export function mockModule(
-  mod: any[] | Type<any> | ModuleWithProviders,
-  mockCache: MockCache,
-  dontMock: any[],
-): any[] | Type<any> {
-  const cached = mockCache.find(mod);
+export function mockModule(mod: any[] | Type<any> | ModuleWithProviders, setup: TestSetup<any>): any[] | Type<any> {
+  const cached = setup.mockCache.find(mod);
   if (cached) {
     return cached as any[] | Type<any>;
   }
@@ -46,7 +43,7 @@ export function mockModule(
   let moduleClass: Type<any>;
   let providers: Provider[] = [];
   if (Array.isArray(mod)) {
-    return mockCache.add(mod, mod.map(i => mockModule(i, mockCache, dontMock))); // Recursion
+    return setup.mockCache.add(mod, mod.map(i => mockModule(i, setup))); // Recursion
   } else if (isModuleWithProviders(mod)) {
     moduleClass = mod.ngModule;
     if (mod.providers) {
@@ -57,25 +54,39 @@ export function mockModule(
   }
   ngModule = getAnnotations(moduleClass);
   const mockedModule: NgModule = {
-    imports: ngMock(ngModule.imports, mockCache, dontMock),
-    declarations: ngMock(ngModule.declarations, mockCache, dontMock),
-    exports: ngMock(ngModule.exports, mockCache, dontMock),
-    entryComponents: ngMock(ngModule.entryComponents, mockCache, dontMock),
-    providers: ngModule.providers.concat(providers).map(i => mockProvider(i)),
+    imports: ngMock(ngModule.imports, setup),
+    declarations: ngMock(ngModule.declarations, setup),
+    exports: ngMock(ngModule.exports, setup),
+    entryComponents: ngMock(ngModule.entryComponents, setup),
+    providers: ngModule.providers
+      .concat(providers)
+      .map(p => mockProvider(p, setup)),
   };
   @NgModule(mockedModule)
   class MockModule {}
 
-  return mockCache.add(mod, MockModule);
+  return setup.mockCache.add(mod, MockModule);
 }
 
-// TODO Consolidate this into mockModule
-export function copyTestModule(fromModuleClass: Type<any>, mockCache: MockCache, dontMock: any[]) {
-  const ngModule = getAnnotations(fromModuleClass);
+// TODO Consolidate this into mockModule?
+export function copyTestModule<TComponent>(setup: TestSetup<TComponent>) {
+  let mod: Type<any>;
+  let providers: Provider[] = [];
+  if (isModuleWithProviders(setup.testModule)) {
+    providers = setup.testModule.providers || providers;
+    mod = setup.testModule.ngModule;
+  } else {
+    mod = setup.testModule;
+  }
+  const ngModule = getAnnotations(mod);
+
   return {
-    imports: ngMock(ngModule.imports, mockCache, dontMock),
-    declarations: ngMock(ngModule.declarations, mockCache, dontMock),
-    providers: ngModule.providers.map(p => mockProvider(p)),
+    imports: ngMock(ngModule.imports, setup),
+    declarations: ngMock(ngModule.declarations, setup),
+    providers: [
+      ...ngModule.providers.map(p => mockProvider(p, setup)),
+      ...providers.map(p => mockProvider(p, setup)),
+    ],
   };
 }
 

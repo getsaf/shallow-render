@@ -1,17 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { Type, Provider } from '@angular/core';
-import { MockCache } from './mock-cache';
+import { Provider } from '@angular/core';
 import { Rendering, RenderOptions } from './rendering';
 import { createContainerComponent } from './container.factory';
 import { copyTestModule } from '../tools/mock-module';
 import { isValueProvider } from '../tools/type-checkers';
+import { TestSetup } from './test-setup';
 
-export class Renderer<TComponent, TModule> {
-  constructor(
-    private _testComponentClass: Type<TComponent>,
-    private _testModule: Type<TModule>,
-    private _dontMock: any[]
-  ) {}
+export class Renderer<TComponent> {
+  constructor(private _setup: TestSetup<TComponent>) {}
 
   private _spyOnProvider(provider: Provider) {
     if (Array.isArray(provider)) {
@@ -19,7 +15,7 @@ export class Renderer<TComponent, TModule> {
     } else {
       if (isValueProvider(provider)) {
         const {provide, useValue} = provider;
-        if (provide && !this._dontMock.includes(provide)) {
+        if (provide && !this._setup.dontMock.includes(provide)) {
           Object.keys(useValue).forEach(key => {
             const value = useValue[key];
             if (typeof value === 'function') {
@@ -41,12 +37,11 @@ export class Renderer<TComponent, TModule> {
       ...options,
     };
 
-    const mockCache = new MockCache();
     const ComponentClass = html
       ? createContainerComponent(html, finalOptions.bind)
-      : this._testComponentClass;
+      : this._setup.testComponent;
 
-    const {imports, providers, declarations} = copyTestModule(this._testModule, mockCache, this._dontMock);
+    const {imports, providers, declarations} = copyTestModule(this._setup);
     await TestBed.configureTestingModule({
         imports,
         providers: providers.map(p => this._spyOnProvider(p)),
@@ -58,12 +53,7 @@ export class Renderer<TComponent, TModule> {
       fixture.detectChanges();
     }
 
-    return new Rendering(
-      this._testComponentClass,
-      fixture,
-      mockCache,
-      finalOptions.bind,
-    );
+    return new Rendering(fixture, finalOptions.bind, this._setup);
   }
 }
 

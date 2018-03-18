@@ -1,7 +1,7 @@
 import { MockComponent, MockDirective, MockPipe } from 'ng-mocks';
 import { mockModule } from '../tools/mock-module';
-import { MockCache } from '../models/mock-cache';
 import { isModuleWithProviders } from '../tools/type-checkers';
+import { TestSetup } from '../models/test-setup';
 
 const getType = (klass: any) => {
   if (Array.isArray(klass.__annotations__)
@@ -25,18 +25,18 @@ const getType = (klass: any) => {
   throw new Error(`Cannot find the declaration type for class ${klass.name || klass}`);
 };
 
-export function ngMock<TThing>(thing: TThing, mockCache: MockCache, dontMock: any[]): TThing {
-  const cached = mockCache.find(thing);
+export function ngMock<TThing>(thing: TThing, setup: TestSetup<any>): TThing {
+  const cached = setup.mockCache.find(thing);
 
   if (cached) {
     return cached;
   }
 
   if (Array.isArray(thing)) {
-    return mockCache.add(thing, thing.map(t => ngMock(t, mockCache, dontMock))) as any; // Recursion
+    return setup.mockCache.add(thing, thing.map(t => ngMock(t, setup))) as any; // Recursion
   }
 
-  if (dontMock.includes(thing)) {
+  if (setup.dontMock.includes(thing)) {
     return thing;
   }
 
@@ -53,10 +53,10 @@ export function ngMock<TThing>(thing: TThing, mockCache: MockCache, dontMock: an
       mock = MockPipe(thing as any);
       break;
     case 'NgModule':
-      mock = mockModule(thing as any, mockCache, dontMock);
+      mock = mockModule(thing as any, setup);
       break;
     default:
       throw new Error(`Don't know how to mock type: ${type}`);
   }
-  return mockCache.add(thing, mock);
+  return setup.mockCache.add(thing, mock);
 }

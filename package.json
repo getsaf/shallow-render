@@ -20,7 +20,8 @@
     "release": "npm run lint && npm run test && npm run build && standard-version",
     "test": "karma start",
     "test:fix": "npm run lint:fix && npm run test",
-    "test:watch": "npm test -- --auto-watch=true --single-run=false --browsers=Chrome"
+    "test:watch": "npm test -- --auto-watch=true --single-run=false",
+    "test:debug": "npm run test:watch -- --browsers=Chrome"
   },
   "repository": {
     "type": "git",
