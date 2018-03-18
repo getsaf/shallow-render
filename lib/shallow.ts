@@ -32,8 +32,8 @@ export class Shallow<TTestComponent> {
   }
 
   mock<TMock>(mockClass: Type<TMock>, stubs: Partial<TMock>) {
-    const mock = this.setup.mocks.get(mockClass) || {class: mockClass, stubs: {}};
-    Object.assign(mock.stubs, stubs);
+    const mock = this.setup.mocks.get(mockClass) || {};
+    Object.assign(mock, stubs);
     this.setup.mocks.set(mockClass, mock);
     return this;
   }

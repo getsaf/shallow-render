@@ -18,7 +18,7 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
 
   const userProvidedMock = setup.mocks.get(provide);
   if (userProvidedMock) {
-    return {provide, useValue: Object.assign(new MockProvider(provide), userProvidedMock.stubs)};
+    return {provide, useValue: Object.assign(new MockProvider(provide), userProvidedMock)};
   } else if (!setup.dontMock.includes(provider)) {
     return {provide, useValue: new MockProvider(provide)};
   } else {

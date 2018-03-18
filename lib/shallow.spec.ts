@@ -1,86 +1,61 @@
-import { ExampleComponent } from './example.component';
-import { ExampleDirective } from './example.directive';
-import { ExampleModule } from './example.module';
 import { Shallow } from './shallow';
-import { ExampleService } from './example.service';
+
+class TestService {
+  foo() { return 'foo'; }
+  bar() { return 'bar'; }
+}
+class TestComponent {}
+class TestModule {}
 
 describe('Shallow', () => {
-  describe('rendering a component', () => {
-    const shallow = new Shallow(ExampleComponent, ExampleModule)
-      .mock(ExampleService, {foo: () => 'mocked foo'});
+  it('includes the testComponent in setup.dontMock', () => {
+    const shallow = new Shallow(TestComponent, TestModule);
 
-    it('returns the instance of the test component', async () => {
-      const {instance} = await shallow.render('<example></example>');
+    expect(shallow.setup.dontMock).toContain(TestComponent);
+  });
 
-      expect(instance instanceof ExampleComponent);
-    });
+  describe('neverMock', () => {
+    it('items are automatically added to setup.dontMock on construction', () => {
+      Shallow.neverMock('NEVER_MOCKED');
+      const shallow = new Shallow(TestComponent, TestModule);
 
-    it('returns the debugElement of the test component', async () => {
-      const {element} = await shallow.render('<example label="foo"></example>');
-
-      expect(element.nativeElement.innerText).toBe('foo');
-    });
-
-    it('detects changes automatically by default', async () => {
-      const {instance} = await shallow.render('<example label="foo"></example>');
-
-      expect(instance.label).toBe('foo');
-    });
-
-    it('skips detectChanges when asked', async () => {
-      const {instance} = await shallow.render('<example label="not set"></example>', {detectChanges: false});
-
-      expect(instance.label).not.toBeDefined();
-    });
-
-    it('can find by css', async () => {
-      const {find} = await shallow.render('<example label="foo"></example>');
-      const h1 = find('h1');
-
-      expect(h1.nativeElement.innerText).toBe('foo');
-    });
-
-    it('can find by directive', async () => {
-      const {find} = await shallow.render('<example exampleDirective></example>');
-      const found = find(ExampleDirective);
-
-      expect(found).toBeDefined();
-    });
-
-    it('throws an error when the HTML does not render the test component', async () => {
-      try {
-        await shallow.render('<label>Forgot to render the test component</label>');
-        fail('Render should have thrown an error but did not');
-      } catch (e) {
-        expect(e.message).toMatch(/ExampleComponent/);
-      }
+      expect(shallow.setup.dontMock).toContain('NEVER_MOCKED');
     });
   });
 
-  describe('rendering a directive', () => {
-    const shallow = new Shallow(ExampleDirective, ExampleModule);
+  describe('dontMock', () => {
+    it('adds things to setup.dontMock', () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .dontMock('foo');
 
-    it('returns the instance of the test directive', async () => {
-      const {instance} = await shallow.render('<label exampleDirective="foo"></label>');
-
-      expect(instance instanceof ExampleDirective).toBe(true);
-      expect(instance.exampleDirective).toBe('foo');
-    });
-
-    it('returns the debugElement of the test directive', async () => {
-      const {element} = await shallow.render('<label exampleDirective></label>');
-
-      expect(element.nativeElement.tagName).toBe('LABEL');
+      expect(shallow.setup.dontMock).toContain('foo');
     });
   });
 
   describe('mock', () => {
-    const shallow = new Shallow(ExampleComponent, ExampleModule);
-    it('mocks a thing', async () => {
-      shallow.mock(ExampleService, {foo: () => 'mocked'});
-      const {find} = await shallow.render('<example></example>');
+    it('adds a mock to the mocks', async () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mock(TestService, {foo: () => 'mocked foo'});
 
-      expect(find('h1').nativeElement.getAttribute('title')).toBe('mocked');
+      expect(shallow.setup.mocks.get(TestService).foo())
+        .toBe('mocked foo');
+    });
+
+    it('adds mocks on mocks', async () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mock(TestService, {foo: () => 'mocked foo'})
+        .mock(TestService, {foo: () => 'mocked foo two'});
+
+      expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo two');
+    });
+
+    it('adds mocks to mocks', async () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mock(TestService, {foo: () => 'mocked foo'})
+        .mock(TestService, {bar: () => 'mocked bar'});
+
+      expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo');
+      expect(shallow.setup.mocks.get(TestService).bar()).toBe('mocked bar');
     });
   });
 });
