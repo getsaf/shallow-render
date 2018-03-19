@@ -1,5 +1,7 @@
 # shallow-render
 
+[![Build Status](https://travis-ci.org/getsaf/shallow-render.svg?branch=master)](https://travis-ci.org/getsaf/shallow-render)
+
 Angular 2+ testing made easy with shallow rendering.
 
 ---
