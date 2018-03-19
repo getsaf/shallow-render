@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Provider } from '@angular/core';
 import { Rendering, RenderOptions } from './rendering';
-import { createContainerComponent } from './container.factory';
+import { createContainer } from '../tools/create-container';
 import { copyTestModule } from '../tools/mock-module';
 import { isValueProvider } from '../tools/type-checkers';
 import { TestSetup } from './test-setup';
@@ -38,7 +38,7 @@ export class Renderer<TComponent> {
     };
 
     const ComponentClass = html
-      ? createContainerComponent(html, finalOptions.bind)
+      ? createContainer(html, finalOptions.bind)
       : this._setup.testComponent;
 
     const {imports, providers, declarations} = copyTestModule(this._setup);
