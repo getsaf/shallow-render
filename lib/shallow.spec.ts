@@ -1,4 +1,5 @@
 import { Shallow } from './shallow';
+import { PipeTransform } from '@angular/core';
 
 class TestService {
   foo() { return 'foo'; }
@@ -6,6 +7,11 @@ class TestService {
 }
 class TestComponent {}
 class TestModule {}
+class TestPipe implements PipeTransform {
+  transform(key: string) {
+    return {test: 'pipe'};
+  }
+}
 
 describe('Shallow', () => {
   it('includes the testComponent in setup.dontMock', () => {
@@ -56,6 +62,16 @@ describe('Shallow', () => {
 
       expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo');
       expect(shallow.setup.mocks.get(TestService).bar()).toBe('mocked bar');
+    });
+  });
+
+  describe('mockPipe', () => {
+    it('adds pipe mocks with specific transforms', () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mockPipe(TestPipe, () => ({test: 'mocked pipe'}));
+
+      const transform = shallow.setup.mockPipes.get(TestPipe);
+      expect(transform()).toEqual({test: 'mocked pipe'});
     });
   });
 });

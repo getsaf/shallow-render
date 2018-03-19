@@ -1,4 +1,4 @@
-import { Type } from '@angular/core';
+import { Type, PipeTransform } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
@@ -22,6 +22,7 @@ export class Shallow<TTestComponent> {
       testModule,
       dontMock: [...Shallow._neverMock, testComponent],
       mocks: new Map<any, any>(),
+      mockPipes: new Map<any, any>(),
       mockCache: new MockCache(),
     };
   }
@@ -35,6 +36,11 @@ export class Shallow<TTestComponent> {
     const mock = this.setup.mocks.get(mockClass) || {};
     Object.assign(mock, stubs);
     this.setup.mocks.set(mockClass, mock);
+    return this;
+  }
+
+  mockPipe<TPipe extends PipeTransform>(pipe: Type<TPipe>, transform: TPipe['transform']) {
+    this.setup.mockPipes.set(pipe, transform);
     return this;
   }
 

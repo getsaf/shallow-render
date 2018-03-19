@@ -58,6 +58,7 @@ describe('Rendering', () => {
       dontMock: [],
       mockCache,
       mocks: new Map<any, any>(),
+      mockPipes: new Map<any, any>(),
       testComponent: OuterComponent,
       testModule: class {},
     };

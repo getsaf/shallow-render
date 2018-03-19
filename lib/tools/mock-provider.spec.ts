@@ -19,6 +19,7 @@ describe('mockPrivider', () => {
       dontMock: [],
       mockCache: new MockCache(),
       mocks: new Map<any, any>(),
+      mockPipes: new Map<any, any>(),
     };
   });
 

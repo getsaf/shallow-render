@@ -1,5 +1,5 @@
 import { MockComponent, MockDirective, MockPipe } from 'ng-mocks';
-import { mockModule } from '../tools/mock-module';
+import { mockModule } from './mock-module';
 import { isModuleWithProviders } from '../tools/type-checkers';
 import { TestSetup } from '../models/test-setup';
 
@@ -50,7 +50,7 @@ export function ngMock<TThing>(thing: TThing, setup: TestSetup<any>): TThing {
       mock = MockDirective(thing as any);
       break;
     case 'Pipe':
-      mock = MockPipe(thing as any);
+      mock = MockPipe(thing as any, setup.mockPipes.get(thing as any));
       break;
     case 'NgModule':
       mock = mockModule(thing as any, setup);
