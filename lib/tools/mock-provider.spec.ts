@@ -23,34 +23,34 @@ describe('mockPrivider', () => {
   });
 
   it('auto-mocks classes', () => {
-    const provider = mockProvider(FooService, testSetup) as ValueProvider;
+    const provider = mockProvider(FooService, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.useValue instanceof MockProvider).toBe(true);
   });
 
   it('auto-mocks ClassProviders', () => {
-    const provider = mockProvider({provide: FooService, useClass: FooService}, testSetup) as ValueProvider;
+    const provider = mockProvider({provide: FooService, useClass: FooService}, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue instanceof MockProvider).toBe(true);
   });
 
   it('auto-mocks ValueProviders', () => {
-    const provider = mockProvider({provide: FooService, useValue: 'anything goes here'}, testSetup) as ValueProvider;
+    const provider = mockProvider({provide: FooService, useValue: 'anything goes here'}, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue instanceof MockProvider).toBe(true);
   });
 
   it('auto-mocks FactoryProviders', () => {
-    const provider = mockProvider({provide: FooService, useFactory: () => 'anything goes here'}, testSetup) as ValueProvider;
+    const provider = mockProvider({provide: FooService, useFactory: () => 'anything goes here'}, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue instanceof MockProvider).toBe(true);
   });
 
   it('auto-mocks ExistingProviders', () => {
-    const provider = mockProvider({provide: FooService, useExisting: 'anything goes here'}, testSetup) as ValueProvider;
+    const provider = mockProvider({provide: FooService, useExisting: 'anything goes here'}, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue instanceof MockProvider).toBe(true);
@@ -58,7 +58,7 @@ describe('mockPrivider', () => {
 
   it('prefers mocks from setup.mocks', () => {
     testSetup.mocks.set(FooService, {foo: 'mocked foo'});
-    const provider = mockProvider(FooService, testSetup) as ValueProvider;
+    const provider = mockProvider(FooService, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue.foo).toBe('mocked foo');
@@ -67,7 +67,7 @@ describe('mockPrivider', () => {
   it('mocks from setup.mocks even if the class is in the setup.dontMock array', () => {
     testSetup.dontMock.push(FooService);
     testSetup.mocks.set(FooService, {foo: 'mocked foo'});
-    const provider = mockProvider(FooService, testSetup) as ValueProvider;
+    const provider = mockProvider(FooService, testSetup) as ValueProvider; /* tslint:disable-line no-unnecessary-type-assertion */
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue.foo).toBe('mocked foo');
