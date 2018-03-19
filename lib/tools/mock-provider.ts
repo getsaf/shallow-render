@@ -2,7 +2,9 @@ import { Provider } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
 
 export class MockProvider {
-  constructor(public provider: any) {}
+  constructor(public mockedProvider: any, mockProperties: any = {}) {
+    Object.assign(this, mockProperties);
+  }
 }
 
 export function mockProvider(provider: Provider, setup: TestSetup<any>): Provider {
@@ -18,10 +20,10 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
 
   const userProvidedMock = setup.mocks.get(provide);
   if (userProvidedMock) {
-    return {provide, useValue: Object.assign(new MockProvider(provide), userProvidedMock)};
-  } else if (!setup.dontMock.includes(provider)) {
-    return {provide, useValue: new MockProvider(provide)};
-  } else {
+    return {provide, useValue: new MockProvider(provide, userProvidedMock)};
+  } else if (setup.dontMock.includes(provider)) {
     return provider;
+  } else {
+    return {provide, useValue: new MockProvider(provide)};
   }
 }
