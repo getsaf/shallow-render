@@ -6,11 +6,49 @@ import { MockCache } from './mock-cache';
 import { TestSetup } from './test-setup';
 import { EmptyQueryMatch, QueryMatchClass } from './query-match';
 
+@Component({
+  template: '<outer></outer>',
+})
+class TestHostComponent {}
+
+@Directive({
+  selector: '[directive-to-mock]',
+})
+class DirectiveToMock {}
+
+@Directive({
+  selector: '[test-directive]',
+})
+class TestDirective {}
+
+@Component({
+  selector: 'outer',
+  template: `
+    <div class="outer">
+      <inner directive-to-mock></inner>
+      <component-to-mock></component-to-mock>
+    </div>
+  `,
+})
+class OuterComponent {}
+
+@Component({
+  selector: 'inner',
+  template: '<span test-directive>sub</span>',
+})
+class InnerComponent {}
+
+@Component({
+  selector: 'component-to-mock',
+  template: '<span>this will not render<span>',
+})
+class ComponentToMock {}
+
 describe('Rendering', () => {
   let testSetup: TestSetup<OuterComponent>;
   let fixture: ComponentFixture<TestHostComponent>;
 
-  beforeEach(done => {
+  beforeEach(async () => {
     const MockedDirective = MockDirective(DirectiveToMock);
     const MockedComponent = MockComponent(ComponentToMock);
     const mockCache = new MockCache();
@@ -23,7 +61,7 @@ describe('Rendering', () => {
       testComponent: OuterComponent,
       testModule: class {},
     };
-    TestBed.configureTestingModule({
+    return TestBed.configureTestingModule({
       declarations: [
         TestHostComponent,
         OuterComponent,
@@ -35,7 +73,6 @@ describe('Rendering', () => {
     }).compileComponents().then(() => {
       fixture = TestBed.createComponent(TestHostComponent);
       fixture.detectChanges();
-      done();
     });
   });
 
@@ -160,42 +197,3 @@ describe('Rendering', () => {
     });
   });
 });
-
-@Component({
-  template: '<outer></outer>',
-})
-class TestHostComponent {}
-
-@Directive({
-  selector: '[directive-to-mock]',
-})
-class DirectiveToMock {}
-
-@Directive({
-  selector: '[test-directive]',
-})
-class TestDirective {}
-
-@Component({
-  selector: 'outer',
-  template: `
-    <div class="outer">
-      <inner directive-to-mock></inner>
-      <component-to-mock></component-to-mock>
-    </div>
-  `,
-})
-class OuterComponent {}
-
-@Component({
-  selector: 'inner',
-  template: '<span test-directive>sub</span>',
-})
-class InnerComponent {}
-
-@Component({
-  selector: 'component-to-mock',
-  template: '<span>this will not render<span>',
-})
-class ComponentToMock {}
-

@@ -37,7 +37,7 @@ const getAnnotations = (ngModule: Type<any>): Annotations => {
 export function mockModule(mod: any[] | Type<any> | ModuleWithProviders, setup: TestSetup<any>): any[] | Type<any> {
   const cached = setup.mockCache.find(mod);
   if (cached) {
-    return cached as any[] | Type<any>;
+    return cached as any[] | Type<any>; /* tslint:disable-line no-unnecessary-type-assertion */
   }
   let ngModule: Annotations;
   let moduleClass: Type<any>;
@@ -50,7 +50,7 @@ export function mockModule(mod: any[] | Type<any> | ModuleWithProviders, setup: 
       providers = mod.providers;
     }
   } else {
-    moduleClass = mod as Type<any>;
+    moduleClass = mod;
   }
   ngModule = getAnnotations(moduleClass);
   const mockedModule: NgModule = {
@@ -89,4 +89,3 @@ export function copyTestModule<TComponent>(setup: TestSetup<TComponent>) {
     ],
   };
 }
-

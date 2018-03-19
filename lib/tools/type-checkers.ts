@@ -9,4 +9,3 @@ export function isValueProvider(provider: Provider): provider is ValueProvider {
   const key: keyof ValueProvider = 'useValue';
   return key in provider;
 }
-

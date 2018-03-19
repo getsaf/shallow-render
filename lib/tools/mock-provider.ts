@@ -25,4 +25,3 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
     return provider;
   }
 }
-

@@ -38,7 +38,7 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  render<TBindings>(html?: string, renderOptions?: Partial<RenderOptions<TBindings>>): Promise<Rendering<TTestComponent, TBindings>> {
+  async render<TBindings>(html?: string, renderOptions?: Partial<RenderOptions<TBindings>>): Promise<Rendering<TTestComponent, TBindings>> {
     const renderer = new Renderer(this.setup);
     return renderer.render(html, renderOptions);
   }

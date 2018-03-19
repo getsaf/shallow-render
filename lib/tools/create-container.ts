@@ -18,4 +18,3 @@ export function createContainer(template: string, bindings: any): Type<ShallowRe
 
   return ProxyShallowContainer;
 }
-

@@ -7,7 +7,7 @@ import { isValueProvider } from '../tools/type-checkers';
 import { TestSetup } from './test-setup';
 
 export class Renderer<TComponent> {
-  constructor(private _setup: TestSetup<TComponent>) {}
+  constructor(private readonly _setup: TestSetup<TComponent>) {}
 
   private _spyOnProvider(provider: Provider) {
     if (Array.isArray(provider)) {
@@ -56,4 +56,3 @@ export class Renderer<TComponent> {
     return new Rendering(fixture, finalOptions.bind, this._setup);
   }
 }
-
