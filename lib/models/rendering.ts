@@ -1,7 +1,7 @@
 import { DebugElement, Type } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { EmptyQueryMatch, QueryMatch, QueryMatchClass } from './query-match';
+import { createQueryMatch } from './query-match';
 import { TestSetup } from './test-setup';
 
 export interface RenderOptions<TBindings> {
@@ -39,10 +39,7 @@ export class Rendering<TComponent, TBindings> {
       throw new Error(`Don't use 'find' to search for your test component, it is automatically returned by the shallow renderer`);
     }
 
-    if (matches.length === 0) {
-      return (new EmptyQueryMatch() as any) as QueryMatch;
-    }
-    return QueryMatchClass.fromMatches(matches);
+    return createQueryMatch(matches);
   }
 
   readonly findDirective = <TDirective>(directive: Type<TDirective>): TDirective | undefined => {

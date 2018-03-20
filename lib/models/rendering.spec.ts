@@ -4,7 +4,6 @@ import { MockComponent, MockDirective } from 'ng-mocks';
 import { Rendering } from './rendering';
 import { MockCache } from './mock-cache';
 import { TestSetup } from './test-setup';
-import { EmptyQueryMatch, QueryMatchClass } from './query-match';
 
 @Component({
   template: '<outer></outer>',
@@ -132,16 +131,17 @@ describe('Rendering', () => {
       expect(find(DirectiveToMock).length).toBe(1);
     });
 
-    it('returns an EmptyQueryMatch when no matches found', () => {
+    it('returns an empty query match when no matches found', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find('will-not-be-found') instanceof EmptyQueryMatch).toBe(true);
+      expect(find('will-not-be-found').length).toBe(0);
     });
 
-    it('returns a QueryMatch when a matche is found', () => {
+    it('returns a QueryMatch when a match is found', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find('inner') instanceof QueryMatchClass).toBe(true);
+      expect(find('inner').length).toBe(1);
+      expect(find('inner').nativeElement).toBeDefined();
     });
   });
 
