@@ -113,6 +113,201 @@ Here's the difference:
 * The HTML used to render the component is IN THE SPEC and easy to find.
 	* This means specs now double examples of how to use your component.
 
+## API
+### `Shallow` class:
+This class is used to setup your test module. It's constructor accepts two arguments:
+* `testComponent` - the component you wish to test
+* `testModule`  - the Angular module that the `testComponent` belongs to
+
+Behind the scenes, it breaks down the `testModule` into its' bare elements and mocks everything along the way. All your components, directives and pipes are run through [`ng-mocks`](https://github.com/ike18t/ng-mocks). All your providers are mocked with a simple object `{}`.
+
+#### Service Mocking
+You have control over your `provider` mocks  by using `shallow.mock`. For example, let's say your component uses `FooService` to get data:
+```typescript
+@Injectable()
+class FooService {
+  constructor(private _httpClient: HttpClient) {}
+  
+  async getFoo() {  
+    return await this._httpClient.get<string>('http://foo.service.com').toPromise();
+  }
+  
+  async postFoo() {  
+    return await this._httpClient.post<string>('http://foo.service.com').toPromise();
+  }
+}
+```
+Shallow will automatically mock this service when you render your component. If your component calls the `getFoo` method, you'll need to provide a stub and return the data your component needs to pass your test.
+
+```typescript
+shallow.mock(FooService, {getFoo: () => 'mocked foo get'});
+```
+
+Have multiple services? It's chain-able so you can stack them.
+```typescript
+shallow
+  .mock(FooService, {getFoo: () => 'mocked foo get')
+  .mock(BarService, {getBar: () => 'mocked bar get');
+ ```
+
+If all your specs need the same mock, you can do this in your `beforeEach` block so you only need to do it once. Your individual specs may override the initial mocks if they need to.
+
+```typescript
+let shallow: Shallow<MyComponent>;
+beforeEach(() => {
+  shallow = new Shallow(MyComponent, MyModule)
+    .mock(FooService, {getFoo: () => 'mocked foo get'})
+    .mock(BarService, {getBar: () => 'mocked bar get'});
+})
+
+it('uses the mock', async () => {
+  const wrapper = await shallow.render();
+  // ...
+});
+
+it('can override previously defined mocks', async () => {
+  const wrapper = await shallow
+    .mock(FooService, {getFoo: () => 'custom foo'})
+    .render()
+});
+```
+#####  Skip mocking with `dontMock`
+Have a service/component/directive/pipe, etc that you don't want to be mocked? Use `dontMock` to bypass the automatic mocking of things in your module (or things imported by your module).
+****NOTE: Angular's `coreModule` and `browserModule` are never mocked by this process.***
+
+```typescript
+shallow.dontMock(FooService, FooComponent);
+```
+Tells Shallow to use the *real* `FooService` and `FooComponent` in your spec.
+
+##### Skip mocking globally with `neverMock`
+Some components/directives/pipes you may want to always use the real thing. You may choose to "never mock" in your Karma shim them for all specs.
+
+*in karma-test-shim (also notice `neverMock` is a static method on the class)*
+```javascript
+Shallow.neverMock(FooService, FooPipe);
+```
+
+Tells Shallow to always use the *real* `FooService` and `FooPipe` in all your specs.
+
+##### Global mocks with `alwaysMock`
+Sometimes you will have things that you're constantly re-mocking for a spec. You can setup global mocks for these things by using `alwaysMock` in your Karma shim and shallow will always provide your mock in modules that use the provider you specified.
+
+*in karma-test-shim (also notice `alwaysMock` is a static method on the class)*
+```javascript
+Shallow.alwaysMock(FooService, {
+  getFoo: () => 'foo get',
+  postFoo: () => 'foo post',
+});
+```
+Now, all specs will receive your mocked `FooService` when their module has a provider for it.
+
+#### Using Pipes with `mockPipe`
+Angular pipes are a little special. They are used to transform data in your templates. By default, Shallow will mock all pipes to have no output. Your specs may want to provide mocks for these transforms to allow validation that a pipe received the correct input data.
+
+```typescript
+shallow.mockPipe(MyPipe, input => `MyPipe: ${input}`);
+```
+Tells Shallow to have the `MyPipe` always perform the following action on input data. This lets you inspect your templates and controls for your Pipe's side-effects.
+
+#### Rendering with `render`
+Once you've completed your setup, the final step is rendering. Render takes two arguments:
+* `html` (optional) -  This will be the HTML that exercises your component.
+* `renderOptions` (optional)
+	* `detectChanges`: Defaults to true. Automatically run change detection after render.
+	* `bind` (optional) - an object that provides your bindings to the `html` template  (see more below).
+
+***NOTE: `render` returns a promise, `async`/`await` are your friends***
+
+Components come in different flavors, some have inputs, some have outputs, some transclude, some are entry components, etc.
+
+##### Basic rendering with HTML
+The simplest form of rendering uses a basic HTML template with simple inputs:
+```typescript
+shallow.render('<my-component name="My Name"></my-component>');
+```
+This renders `MyComponent` and passes a single `name` input of `"My Name"`.
+
+##### HTML templates with complex input bindings
+Some components require complex types as their inputs:
+
+```typescript
+shallow.render(
+  '<my-component [person]="testPerson"></my-component>',
+  {bind: {testPerson: {firstName: 'Brandon', lastName: 'Domingue'}}}
+ )
+```
+
+Notice we pass in the `bind` render option and hand it a `testPerson` object. This will render the component and pass the `testPerson` into the component's `person` input property.
+
+##### Entry Components
+Entry components in Angular don't have selectors. They can't take inputs. You can render these with shallow too. Just omit the HTML template or pass in the entry component class.
+```typescript
+shallow.render(MyComponent); // Must be the shallow testComponent
+// -- or --
+shallow.render(); // Automatically renders the testComponent
+```
+
+### Querying
+A `Rendering` is returned from the `shallow.render()` method call. The `Rendering` class has a few query methods available:
+
+#### `find` => `QueryMatch<DebugElement>`
+Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
+
+```typescript
+const {find} = await shallow.render('<my-component name="foo"></my-component');
+const result = find('my-component'); // Find all elements that match this css selector
+
+// Expect a single result like so:
+expect(result.length).toBe(1);
+// For single results, you can use it like any flat DebugElement
+expect(result.componentInstance.name).toBe('foo');
+```
+
+You may also pass in the Component class of the thing you are querying for:
+```typescript
+find(MyComponent); // Finds all instances of MyComponent
+```
+
+#### `findComponent` => `QueryMatch<TComponent>`
+`findComponent` differs from `find` in that it will return the *instances* of the component, not the `DebugElement` returned by `find`.
+
+```typescript
+const {findComponent} = await shallow.render('<my-component name="foo"></my-component>');
+const result = findComponent(MyComponent);
+
+expect(result.name).is('foo');
+```
+
+#### `findDirective` => `QueryMatch<TDirective>`
+`findDirective` is similar to `findComponent` except it returns directive instances.
+
+```typescript
+const {findDirective} = await shallow.render('<div myDirective="foo"/>');
+const result = findDirective(MyDirective);
+
+expect(result.myDirective).is('foo');
+```
+#### `QueryMatch` objects
+Queries return a special `QueryMatch` object. This object is a mash-up of a single object that may be used when the query yields a single result, or an array of objects for when your query yields multiple results.
+
+This lets us use the same object semantically in our tests.
+
+If you expect a single item in your response just use it like a single item:
+```typescript
+const match = find('foo');
+expect(match.nativeElement.tagName).toBe('foo');
+``` 
+If your query found multiple items, and you try to use the match as if it were a single item, Shallow will throw an error letting you know multiple items were found when you expected only one.
+
+If you expect multiple items, use `Array` methods on the matches:
+```typescript
+const matches = find('foo');
+matches.forEach(match => { 
+  expect(match.nativeElement.tagName).toBe('foo'));
+});
+```
+
 ## Need more examples?
 Check out the [examples](lib/examples) folder for more specific use cases including:
 * [Simple component](lib/examples/simple-component.spec.ts)
@@ -125,3 +320,4 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Multiple modules](lib/examples/multiple-modules.spec.ts)
 * [Using dontMock to bypass mocking in a spec](lib/examples/using-dont-mock.spec.ts)
 * [Using neverMock to bypass mocking globally](lib/examples/using-never-mock.spec.ts)
+
