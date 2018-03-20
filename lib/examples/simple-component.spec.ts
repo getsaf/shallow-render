@@ -15,7 +15,11 @@ class BigTextModule {}
 //////////////////////////
 
 describe('simple component example', () => {
-  const shallow = new Shallow(BigTextComponent, BigTextModule);
+  let shallow: Shallow<BigTextComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(BigTextComponent, BigTextModule);
+  });
 
   it('places content in an h1', async () => {
     const {find} = await shallow.render('<big-text>Woot!</big-text>');

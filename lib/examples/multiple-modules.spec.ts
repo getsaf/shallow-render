@@ -47,7 +47,11 @@ class FooBarModule {}
 //////////////////////////
 
 describe('multi module', () => {
-  const shallow = new Shallow(FooBarComponent, FooBarModule);
+  let shallow: Shallow<FooBarComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(FooBarComponent, FooBarModule);
+  });
 
   it('renders a foo and a bar by default', async () => {
     const {find} = await shallow.render(`<foo-bar></foo-bar>`);

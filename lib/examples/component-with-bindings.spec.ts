@@ -26,7 +26,12 @@ class PersonModule {}
 //////////////////////////
 
 describe('component with bindings', () => {
-  const shallow = new Shallow(BornInComponent, PersonModule);
+  let shallow: Shallow<BornInComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(BornInComponent, PersonModule);
+  });
+
   const testPerson: Person = {
     firstName: 'Brandon',
     lastName: 'Domingue',

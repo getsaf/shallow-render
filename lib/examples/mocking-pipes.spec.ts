@@ -26,7 +26,11 @@ class TitleTextModule {}
 //////////////////////////
 
 describe('simple component example', () => {
-  const shallow = new Shallow(TitleTextComponent, TitleTextModule);
+  let shallow: Shallow<TitleTextComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(TitleTextComponent, TitleTextModule);
+  });
 
   it('displays text piped through the HighlightPipe', async () => {
     const {find} = await shallow

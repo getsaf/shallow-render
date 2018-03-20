@@ -35,7 +35,11 @@ class HeadingModule {}
 //////////////////////////
 
 describe('component with directive', () => {
-  const shallow = new Shallow(HeadingComponent, HeadingModule);
+  let shallow: Shallow<HeadingComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(HeadingComponent, HeadingModule);
+  });
 
   it('renders with a tooltip when tooltip = true', async () => {
     const {find} = await shallow.render('<heading [withTooltip]="true"></heading>');

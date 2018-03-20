@@ -25,8 +25,12 @@ class ColorModule {}
 //////////////////////////
 
 describe('component with service', () => {
-  const shallow = new Shallow(ColorLabelComponent, ColorModule)
-    .mock(RedService, {color: () => 'MOCKED COLOR'});
+  let shallow: Shallow<ColorLabelComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(ColorLabelComponent, ColorModule)
+      .mock(RedService, {color: () => 'MOCKED COLOR'});
+  });
 
   it('Uses the color from the RedService', async () => {
     const {element} = await shallow.render('<color-label></color-label>');

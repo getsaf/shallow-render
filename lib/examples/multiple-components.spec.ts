@@ -38,7 +38,11 @@ class ListModule {}
 //////////////////////////
 
 describe('multiple components', () => {
-  const shallow = new Shallow(AwesomeListComponent, ListModule);
+  let shallow: Shallow<AwesomeListComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(AwesomeListComponent, ListModule);
+  });
 
   it('renders Chuck and Tom', async () => {
     const {find} = await shallow.render('<awesome-list></awesome-list>');

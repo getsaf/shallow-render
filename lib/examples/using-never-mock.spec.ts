@@ -32,7 +32,11 @@ Shallow.neverMock(RedService);
 //////////////////////////////////////////////////////////////////
 
 describe('using neverMock', () => {
-  const shallow = new Shallow(ColorLabelComponent, ColorModule);
+  let shallow: Shallow<ColorLabelComponent>;
+
+  beforeEach(() => {
+    shallow = new Shallow(ColorLabelComponent, ColorModule);
+  });
 
   it('Uses the color from the RedService', async () => {
     const {element} = await shallow.render('<color-label></color-label>');
