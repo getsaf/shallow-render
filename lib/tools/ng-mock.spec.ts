@@ -1,7 +1,6 @@
 import { Component, Directive, Pipe, PipeTransform, NgModule } from '@angular/core';
 import { ngMock } from './ng-mock';
 import { TestSetup } from '../models/test-setup';
-import { MockCache } from '../models/mock-cache';
 import * as mockModuleLib from './mock-module';
 import * as ngMocksLib from 'ng-mocks';
 
