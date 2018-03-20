@@ -1,6 +1,6 @@
 import { TestSetup } from './test-setup';
 
-describe('', () => {
+describe('TestSetup', () => {
   it('adds the testComponent to the dontMock array', () => {
     class TestComponent {}
     const setup = new TestSetup(TestComponent, class {});
