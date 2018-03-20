@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
 import { Renderer } from './models/renderer';
-import { MockCache } from './models/mock-cache';
 import { TestSetup } from './models/test-setup';
 
 export class Shallow<TTestComponent> {
@@ -17,14 +16,7 @@ export class Shallow<TTestComponent> {
   }
 
   constructor(testComponent: Type<TTestComponent>, testModule: Type<any>) {
-    this.setup = {
-      testComponent,
-      testModule,
-      dontMock: [...Shallow._neverMock, testComponent],
-      mocks: new Map<any, any>(),
-      mockPipes: new Map<any, any>(),
-      mockCache: new MockCache(),
-    };
+    this.setup = new TestSetup(testComponent, testModule, Shallow._neverMock);
   }
 
   dontMock(...things: any[]) {

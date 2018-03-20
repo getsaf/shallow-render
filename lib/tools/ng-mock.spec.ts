@@ -31,14 +31,7 @@ describe('ng-mock', () => {
   let  testSetup: TestSetup<any>;
 
   beforeEach(() => {
-    testSetup = {
-      testComponent: class {},
-      testModule: class {},
-      mockCache: new MockCache(),
-      mocks: new Map<any, any>(),
-      mockPipes: new Map<any, any>(),
-      dontMock: [],
-    };
+    testSetup = new TestSetup(class {}, class {});
   });
 
   it('uses cached mocks instead of re-mocking components', () => {

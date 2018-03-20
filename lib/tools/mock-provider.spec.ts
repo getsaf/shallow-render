@@ -1,6 +1,5 @@
 import { ValueProvider } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
-import { MockCache } from '../models/mock-cache';
 import { mockProvider, MockProvider } from './mock-provider';
 
 class DummyComponent {}
@@ -13,14 +12,7 @@ describe('mockPrivider', () => {
   let testSetup: TestSetup<DummyComponent>;
 
   beforeEach(() => {
-    testSetup = {
-      testComponent: DummyComponent,
-      testModule: DummyModule,
-      dontMock: [],
-      mockCache: new MockCache(),
-      mocks: new Map<any, any>(),
-      mockPipes: new Map<any, any>(),
-    };
+    testSetup = new TestSetup(DummyComponent, DummyModule);
   });
 
   it('auto-mocks classes', () => {

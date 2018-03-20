@@ -2,7 +2,6 @@ import { Component, Directive, Type } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { MockComponent, MockDirective } from 'ng-mocks';
 import { Rendering } from './rendering';
-import { MockCache } from './mock-cache';
 import { TestSetup } from './test-setup';
 
 @Component({
@@ -65,17 +64,9 @@ describe('Rendering', () => {
   beforeEach(async () => {
     MockedDirective = MockDirective(DirectiveToMock);
     MockedComponent = MockComponent(ComponentToMock);
-    const mockCache = new MockCache();
-    mockCache.add(DirectiveToMock, MockedDirective);
-    mockCache.add(ComponentToMock, MockedComponent);
-    testSetup = {
-      dontMock: [],
-      mockCache,
-      mocks: new Map<any, any>(),
-      mockPipes: new Map<any, any>(),
-      testComponent: OuterComponent,
-      testModule: class {},
-    };
+    testSetup = new TestSetup(OuterComponent, class {});
+    testSetup.mockCache.add(DirectiveToMock, MockedDirective);
+    testSetup.mockCache.add(ComponentToMock, MockedComponent);
     return TestBed.configureTestingModule({
       declarations: [
         TestHostComponent,
