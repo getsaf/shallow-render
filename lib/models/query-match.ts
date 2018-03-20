@@ -1,6 +1,4 @@
-import { DebugElement } from '@angular/core';
-
-export type QueryMatch = DebugElement[] & DebugElement;
+export type QueryMatch<TMatch> = TMatch[] & TMatch;
 
 export class NoMatchesError extends Error {
   constructor(propertyName: string) {
@@ -14,7 +12,7 @@ export class MultipleMatchesError extends Error {
   }
 }
 
-export function createQueryMatch(matches: DebugElement[]): QueryMatch {
+export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> {
   const match: any = matches.length ? matches[0] : {};
   return new Proxy(matches, {
     get: (obj: any, key: string) => {

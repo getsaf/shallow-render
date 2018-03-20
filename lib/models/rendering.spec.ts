@@ -1,4 +1,4 @@
-import { Component, Directive } from '@angular/core';
+import { Component, Directive, Type } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { MockComponent, MockDirective } from 'ng-mocks';
 import { Rendering } from './rendering';
@@ -20,12 +20,19 @@ class DirectiveToMock {}
 })
 class TestDirective {}
 
+@Directive({
+  selector: '[other-directive]',
+})
+class OtherDirective {}
+
 @Component({
   selector: 'outer',
   template: `
     <div class="outer">
       <inner directive-to-mock></inner>
       <component-to-mock></component-to-mock>
+      <other other-directive>one</other>
+      <other other-directive>two</other>
     </div>
   `,
 })
@@ -43,13 +50,21 @@ class InnerComponent {}
 })
 class ComponentToMock {}
 
+@Component({
+  selector: 'other',
+  template: '<span>other</span>',
+})
+class OtherComponent {}
+
 describe('Rendering', () => {
   let testSetup: TestSetup<OuterComponent>;
   let fixture: ComponentFixture<TestHostComponent>;
+  let MockedComponent: Type<ComponentToMock>;
+  let MockedDirective: Type<DirectiveToMock>;
 
   beforeEach(async () => {
-    const MockedDirective = MockDirective(DirectiveToMock);
-    const MockedComponent = MockComponent(ComponentToMock);
+    MockedDirective = MockDirective(DirectiveToMock);
+    MockedComponent = MockComponent(ComponentToMock);
     const mockCache = new MockCache();
     mockCache.add(DirectiveToMock, MockedDirective);
     mockCache.add(ComponentToMock, MockedComponent);
@@ -65,8 +80,10 @@ describe('Rendering', () => {
       declarations: [
         TestHostComponent,
         OuterComponent,
+        OtherComponent,
         InnerComponent,
         TestDirective,
+        OtherDirective,
         MockedComponent,
         MockedDirective,
       ],
@@ -145,29 +162,59 @@ describe('Rendering', () => {
     });
   });
 
+  describe('findComponent', () => {
+    it('can be destructured', () => {
+      const {findComponent} = new Rendering(fixture, {}, testSetup);
+
+      expect(() => findComponent(InnerComponent)).not.toThrow();
+    });
+
+    it('finds components', () => {
+      const {findComponent} = new Rendering(fixture, {}, testSetup);
+
+      expect(findComponent(InnerComponent)[0] instanceof InnerComponent).toBe(true);
+    });
+
+    it('finds mocked components', () => {
+      const {findComponent} = new Rendering(fixture, {}, testSetup);
+
+      expect(findComponent(ComponentToMock)[0] instanceof MockedComponent).toBe(true);
+    });
+
+    it('finds multiple components', () => {
+      const {findComponent} = new Rendering(fixture, {}, testSetup);
+
+      const found = findComponent(OtherComponent);
+      expect(found.length).toBe(2);
+      found.forEach(i => expect(i instanceof OtherComponent).toBe(true));
+    });
+  });
+
   describe('findDirective', () => {
     it('can be destructured', () => {
       const {findDirective} = new Rendering(fixture, {}, testSetup);
 
-      expect(() => findDirective(InnerComponent)).not.toThrow();
-    });
-
-    it('finds components', () => {
-      const {findDirective} = new Rendering(fixture, {}, testSetup);
-
-      expect(findDirective(InnerComponent) instanceof InnerComponent).toBe(true);
+      expect(() => findDirective(TestDirective)).not.toThrow();
     });
 
     it('finds directives', () => {
       const {findDirective} = new Rendering(fixture, {}, testSetup);
 
-      expect(findDirective(TestDirective) instanceof TestDirective).toBe(true);
+      expect(findDirective(TestDirective)[0] instanceof TestDirective).toBe(true);
     });
 
     it('finds mocked directives', () => {
       const {findDirective} = new Rendering(fixture, {}, testSetup);
 
-      expect(findDirective(DirectiveToMock) instanceof MockDirective(DirectiveToMock)).toBe(true);
+      expect(findDirective(DirectiveToMock)[0] instanceof MockDirective(DirectiveToMock)).toBe(true);
+    });
+
+    it('finds multiple directives', () => {
+      const {findDirective} = new Rendering(fixture, {}, testSetup);
+
+      const found = findDirective(OtherDirective);
+      expect(found.length).toBe(2);
+      found.forEach(i => expect(i instanceof OtherDirective).toBe(true));
     });
   });
 
