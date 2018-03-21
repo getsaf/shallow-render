@@ -86,6 +86,7 @@ export function copyTestModule<TComponent>(setup: TestSetup<TComponent>) {
     providers: [
       ...ngModule.providers.map(p => mockProvider(p, setup)),
       ...providers.map(p => mockProvider(p, setup)),
+      ...setup.providers.map(p => mockProvider(p, setup)),
     ],
   };
 }

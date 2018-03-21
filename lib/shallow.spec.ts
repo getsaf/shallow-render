@@ -29,6 +29,16 @@ describe('Shallow', () => {
     });
   });
 
+  describe('alwaysProvide', () => {
+    it('items are automatically added to setup.provide on construction', () => {
+      class MyService {}
+      Shallow.alwaysProvide(MyService);
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.providers).toContain(MyService);
+    });
+  });
+
   describe('dontMock', () => {
     it('adds things to setup.dontMock', () => {
       const shallow = new Shallow(TestComponent, TestModule)
