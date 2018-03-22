@@ -41,6 +41,11 @@ export class Shallow<TTestComponent> {
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
   }
 
+  provide(...providers: Provider[]) {
+    this.setup.providers.push(...providers);
+    return this;
+  }
+
   dontMock(...things: any[]) {
     this.setup.dontMock.push(...things);
     return this;

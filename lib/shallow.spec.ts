@@ -80,8 +80,18 @@ describe('Shallow', () => {
     });
   });
 
+  describe('provide', () => {
+    it('adds to the setup.providers array', () => {
+      class MyService {}
+      const shallow = new Shallow(TestComponent, TestModule)
+        .provide(MyService);
+
+      expect(shallow.setup.providers).toContain(MyService);
+    });
+  });
+
   describe('mock', () => {
-    it('adds a mock to the mocks', async () => {
+    it('adds a mock to the mocks', () => {
       const shallow = new Shallow(TestComponent, TestModule)
         .mock(TestService, {foo: () => 'mocked foo'});
 
@@ -89,7 +99,7 @@ describe('Shallow', () => {
         .toBe('mocked foo');
     });
 
-    it('adds mocks on mocks', async () => {
+    it('adds mocks on mocks', () => {
       const shallow = new Shallow(TestComponent, TestModule)
         .mock(TestService, {foo: () => 'mocked foo'})
         .mock(TestService, {foo: () => 'mocked foo two'});
@@ -97,7 +107,7 @@ describe('Shallow', () => {
       expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo two');
     });
 
-    it('adds mocks to mocks', async () => {
+    it('adds mocks to mocks', () => {
       const shallow = new Shallow(TestComponent, TestModule)
         .mock(TestService, {foo: () => 'mocked foo'})
         .mock(TestService, {bar: () => 'mocked bar'});
