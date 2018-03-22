@@ -13,6 +13,12 @@ describe('QueryMatch', () => {
 
       expect(match[0].fooProperty).toBe('foo value');
     });
+
+    it('passes the instanceof check for the first object', () => {
+      const match = createQueryMatch([new Foo('ONE')]);
+
+      expect(match instanceof Foo).toBe(true);
+    });
   });
 
   describe('multiple matches', () => {
@@ -23,6 +29,10 @@ describe('QueryMatch', () => {
         new Foo('ONE'),
         new Foo('TWO'),
       ]);
+    });
+
+    it('throws an error on instanceof checks', () => {
+      expect(() => matches instanceof Foo).toThrow(new MultipleMatchesError('prototype', 2));
     });
 
     it('throws an error when you try to get a debugElement property and there are multiple results', () => {
@@ -44,7 +54,15 @@ describe('QueryMatch', () => {
   });
 
   describe('empty results', () => {
-    const emptyMatch = createQueryMatch<Foo>([]);
+    let emptyMatch: QueryMatch<Foo>;
+
+    beforeEach(() => {
+      emptyMatch = createQueryMatch<Foo>([]);
+    });
+
+    it('throws an error on instanceof checks', () => {
+      expect(() => emptyMatch instanceof Foo).toThrow(new NoMatchesError('prototype'));
+    });
 
     it('throws an error when trying to get a property on an empty query match', () => {
       expect(() => emptyMatch.which).toThrow(new NoMatchesError('which'));

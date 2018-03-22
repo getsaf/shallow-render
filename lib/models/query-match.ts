@@ -18,7 +18,7 @@ const throwErrorIfNotOneMatch = (key: string, matches: any[]) => {
   } else if (matches.length > 1) {
     throw new MultipleMatchesError(key, matches.length);
   }
-}
+};
 
 export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> {
   const match: any = matches.length ? matches[0] : {};
@@ -35,7 +35,10 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
       throwErrorIfNotOneMatch(key, matches);
       match[key] = value;
       return true;
+    },
+    getPrototypeOf: (target: any) => {
+      throwErrorIfNotOneMatch('prototype', matches);
+      return Object.getPrototypeOf(match);
     }
   });
 }
-
