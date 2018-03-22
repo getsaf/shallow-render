@@ -2,22 +2,22 @@
   "name": "shallow-render",
   "version": "0.3.0",
   "description": "Shallow rendering test utility for Angular",
-  "main": "build/dist/index.js",
+  "main": "dist/index.js",
   "files": [
-    "build",
+    "dist",
     "LICENSE",
     "README.md"
   ],
-  "typings": "build/types/index",
+  "typings": "dist/index",
   "typescript": {
-    "definition": "build/types/index"
+    "definition": "dist/index"
   },
   "scripts": {
-    "clean": "rm -rf build coverage",
+    "clean": "rm -rf dist coverage",
     "lint": "tslint -t stylish --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "build": "npm run clean && tsc",
-    "release": "npm run lint && npm run test && npm run build && standard-version",
+    "release": "npm run lint && npm run test && npm run dist && standard-version",
     "test": "karma start",
     "test:fix": "npm run lint:fix && npm run test",
     "test:watch": "npm test -- --auto-watch=true --single-run=false",
