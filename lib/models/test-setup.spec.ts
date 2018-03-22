@@ -7,17 +7,4 @@ describe('TestSetup', () => {
 
     expect(setup.dontMock).toContain(TestComponent);
   });
-
-  it('adds the dontMock constructor parameter to the dontMock array', () => {
-    const setup = new TestSetup(class {}, class {}, ['foo']);
-
-    expect(setup.dontMock).toContain('foo');
-  });
-
-  it('adds the providers constructor parameter to the providers array', () => {
-    class MyService {}
-    const setup = new TestSetup(class {}, class {}, undefined, [MyService]);
-
-    expect(setup.providers).toContain(MyService);
-  });
 });

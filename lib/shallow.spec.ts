@@ -39,6 +39,38 @@ describe('Shallow', () => {
     });
   });
 
+  describe('alwaysMock', () => {
+    it('items are automatically added to setup.mock on construction', () => {
+      class MyService {
+        foo() { return 'foo'; }
+      }
+      Shallow.alwaysMock(MyService, {foo: () => 'mock foo'});
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.mocks.get(MyService).foo()).toBe('mock foo');
+    });
+
+    it('mocking on an alwaysMock does not mutate the alwaysMock', () => {
+      class MyService {
+        foo() { return 'foo'; }
+        bar() { return 'bar'; }
+      }
+      const alwaysMock = {
+        foo: () => 'always mock foo',
+        bar: () => 'always mock bar',
+      };
+      Shallow.alwaysMock(MyService, alwaysMock);
+      const shallow = new Shallow(TestComponent, TestModule);
+      shallow.mock(MyService, {foo: () => 'second foo'});
+      const secondMock = shallow.setup.mocks.get(MyService);
+
+      expect(alwaysMock.foo()).toBe('always mock foo');
+      expect(alwaysMock.bar()).toBe('always mock bar');
+      expect(secondMock.foo()).toBe('second foo');
+      expect(secondMock.bar()).toBe('always mock bar');
+    });
+  });
+
   describe('dontMock', () => {
     it('adds things to setup.dontMock', () => {
       const shallow = new Shallow(TestComponent, TestModule)

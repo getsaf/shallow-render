@@ -26,13 +26,19 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
+  // Always mock a thing with a particular implementation.
+  private static readonly _alwaysMock = new Map<any, any>();
+  static alwaysMock<TProvider>(thing: Type<TProvider>, stubs: Partial<TProvider>) {
+    const mock = Shallow._alwaysMock.get(thing) || {};
+    Shallow._alwaysMock.set(thing, {...mock, ...stubs as object});
+    return Shallow;
+  }
+
   constructor(testComponent: Type<TTestComponent>, testModule: Type<any>) {
-    this.setup = new TestSetup(
-      testComponent,
-      testModule,
-      Shallow._neverMock,
-      Shallow._alwaysProvide,
-    );
+    this.setup = new TestSetup(testComponent, testModule);
+    this.setup.dontMock.push(...Shallow._neverMock);
+    this.setup.providers.push(...Shallow._alwaysProvide);
+    Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
   }
 
   dontMock(...things: any[]) {
@@ -42,8 +48,7 @@ export class Shallow<TTestComponent> {
 
   mock<TMock>(mockClass: Type<TMock>, stubs: Partial<TMock>) {
     const mock = this.setup.mocks.get(mockClass) || {};
-    Object.assign(mock, stubs);
-    this.setup.mocks.set(mockClass, mock);
+    this.setup.mocks.set(mockClass, {...mock, ...stubs as object});
     return this;
   }
 
