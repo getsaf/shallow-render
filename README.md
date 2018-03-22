@@ -171,6 +171,7 @@ it('can override previously defined mocks', async () => {
     .render()
 });
 ```
+
 #####  Skip mocking with `dontMock`
 Have a service/component/directive/pipe, etc that you don't want to be mocked? Use `dontMock` to bypass the automatic mocking of things in your module (or things imported by your module).
 ****NOTE: Angular's `coreModule` and `browserModule` are never mocked by this process.***
@@ -191,7 +192,7 @@ Shallow.neverMock(FooService, FooPipe);
 Tells Shallow to always use the *real* `FooService` and `FooPipe` in all your specs.
 
 ##### Global mocks with `alwaysMock`
-Sometimes you will have things that you're constantly re-mocking for a spec. You can setup global mocks for these things by using `alwaysMock` in your Karma shim and shallow will always provide your mock in modules that use the provider you specified.
+Sometimes you will have things that you're constantly re-mocking for a spec. You can setup global mocks for these things by using `alwaysMock` in your Karma shim and shallow will always provide your mock in modules that use the provider you specified. Note that doing `alwaysMock` is *NOT* a mock-once for all your specs solution. Use this feature sparingly, remember your specs should generally be self-contained as far as mock data goes. Using `alwaysMock` is just as bad as using global variables. TL;DR; Use sparingly or not-at-all.
 
 *in karma-test-shim (also notice `alwaysMock` is a static method on the class)*
 ```javascript
@@ -200,7 +201,27 @@ Shallow.alwaysMock(FooService, {
   postFoo: () => 'foo post',
 });
 ```
-Now, all specs will receive your mocked `FooService` when their module has a provider for it.
+##### Global providers with `alwaysProvide`
+There are some use cases when your Angular app provides something (usually a configuration) at the top-level of your application. These instance usually follow the [`forRoot`](https://angular.io/guide/singleton-services) pattern. For these cases, you may want your specs to have a similar environment setup where the 'root' providers are globally provided to all specs. This can be accomplished by using `Shallow.alwaysProvide`.
+
+*in karma-test-shim (also notice `alwaysProvide` is a static method on the class)*
+```javascript
+Shallow.alwaysProvide(MyGlobalService);
+```
+Now, all specs will receive a *REAL* `MyGlobalService` when requested for injection.
+
+If you use the `forRoot` pattern, you may provide your root providers like so:
+```javascript
+Shallow.alwaysProvide(MyCoreModule.forRoot().providers);
+```
+
+You may also provide a mocked version by chaining `alwaysProvide` with `alwaysMock`:
+```javascript
+Shallow
+  .alwaysProvide(MyGlobalService)
+  .alwaysMock(MyGlobalService, {getSomeValue: () => 'Globally mocked value'});
+```
+Now, all specs will receive a *MOCKED* `MyGlobalService` when requested for injection.
 
 #### Using Pipes with `mockPipe`
 Angular pipes are a little special. They are used to transform data in your templates. By default, Shallow will mock all pipes to have no output. Your specs may want to provide mocks for these transforms to allow validation that a pipe received the correct input data.
@@ -319,5 +340,7 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Multiple components](lib/examples/multiple-components.spec.ts)
 * [Multiple modules](lib/examples/multiple-modules.spec.ts)
 * [Using dontMock to bypass mocking in a spec](lib/examples/using-dont-mock.spec.ts)
+* [Using alwaysMock to globally mock things](lib/examples/using-always-mock.spec.ts)
+* [Using alwaysProvide to globally provide things](lib/examples/using-always-provide.spec.ts)
 * [Using neverMock to bypass mocking globally](lib/examples/using-never-mock.spec.ts)
 

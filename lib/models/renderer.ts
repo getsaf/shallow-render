@@ -9,9 +9,9 @@ import { TestSetup } from './test-setup';
 export class Renderer<TComponent> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}
 
-  private _spyOnProvider(provider: Provider) {
+  private _spyOnProvider(provider: Provider): Provider {
     if (Array.isArray(provider)) {
-      return provider.map(p => this._spyOnProvider); // Recursion
+      return provider.map(p => this._spyOnProvider(p)); // Recursion
     } else {
       if (isValueProvider(provider)) {
         const {provide, useValue} = provider;
