@@ -12,6 +12,14 @@ export class MultipleMatchesError extends Error {
   }
 }
 
+const throwErrorIfNotOneMatch = (key: string, matches: any[]) => {
+  if (matches.length === 0) {
+    throw new NoMatchesError(key);
+  } else if (matches.length > 1) {
+    throw new MultipleMatchesError(key, matches.length);
+  }
+}
+
 export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> {
   const match: any = matches.length ? matches[0] : {};
   return new Proxy(matches, {
@@ -19,13 +27,15 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
       if (key in matches) {
         return (matches as any)[key];
       } else {
-        if (matches.length === 0) {
-          throw new NoMatchesError(key);
-        } else if (matches.length > 1) {
-          throw new MultipleMatchesError(key, matches.length);
-        }
+        throwErrorIfNotOneMatch(key, matches);
         return match[key];
       }
+    },
+    set: (obj: any, key: string, value: any) => {
+      throwErrorIfNotOneMatch(key, matches);
+      match[key] = value;
+      return true;
     }
   });
 }
+
