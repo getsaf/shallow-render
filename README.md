@@ -202,7 +202,7 @@ Shallow.alwaysMock(FooService, {
 });
 ```
 ##### Global providers with `alwaysProvide`
-There are some use cases when your Angular app provides something (usually a configuration) at the top-level of your application. These instance usually follow the `[forRoot](https://angular.io/guide/singleton-services)` pattern. For these cases, you may want your specs to have a similar environment setup where the 'root' providers are globally provided to all specs. This can be accomplished by using `Shallow.alwaysProvide`.
+There are some use cases when your Angular app provides something (usually a configuration) at the top-level of your application. These instance usually follow the [`forRoot`](https://angular.io/guide/singleton-services) pattern. For these cases, you may want your specs to have a similar environment setup where the 'root' providers are globally provided to all specs. This can be accomplished by using `Shallow.alwaysProvide`.
 
 *in karma-test-shim (also notice `alwaysProvide` is a static method on the class)*
 ```javascript
