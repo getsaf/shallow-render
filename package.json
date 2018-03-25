@@ -17,7 +17,8 @@
     "lint": "tslint -t stylish --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "build": "npm run clean && tsc",
-    "release": "npm run lint && npm run test && npm run build && standard-version",
+    "build:all": "npm run lint && npm run test && npm run build",
+    "release": "npm run build:all && standard-version",
     "test": "karma start",
     "test:fix": "npm run lint:fix && npm run test",
     "test:watch": "npm test -- --auto-watch=true --single-run=false",
@@ -46,7 +47,7 @@
     "@angular/core": "5.x",
     "@angular/forms": "5.x",
     "@angular/platform-browser": "5.x",
-    "ng-mocks": "^5.0.0-rc7"
+    "ng-mocks": "^5.1.0"
   },
   "devDependencies": {
     "@angular/platform-browser-dynamic": "5.x",
