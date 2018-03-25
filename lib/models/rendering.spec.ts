@@ -163,13 +163,13 @@ describe('Rendering', () => {
     it('finds components', () => {
       const {findComponent} = new Rendering(fixture, {}, testSetup);
 
-      expect(findComponent(InnerComponent)[0] instanceof InnerComponent).toBe(true);
+      expect(findComponent(InnerComponent) instanceof InnerComponent).toBe(true);
     });
 
     it('finds mocked components', () => {
       const {findComponent} = new Rendering(fixture, {}, testSetup);
 
-      expect(findComponent(ComponentToMock)[0] instanceof MockedComponent).toBe(true);
+      expect(findComponent(ComponentToMock) instanceof MockedComponent).toBe(true);
     });
 
     it('finds multiple components', () => {
@@ -191,13 +191,13 @@ describe('Rendering', () => {
     it('finds directives', () => {
       const {findDirective} = new Rendering(fixture, {}, testSetup);
 
-      expect(findDirective(TestDirective)[0] instanceof TestDirective).toBe(true);
+      expect(findDirective(TestDirective) instanceof TestDirective).toBe(true);
     });
 
     it('finds mocked directives', () => {
       const {findDirective} = new Rendering(fixture, {}, testSetup);
 
-      expect(findDirective(DirectiveToMock)[0] instanceof MockDirective(DirectiveToMock)).toBe(true);
+      expect(findDirective(DirectiveToMock) instanceof MockDirective(DirectiveToMock)).toBe(true);
     });
 
     it('finds multiple directives', () => {
