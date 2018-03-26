@@ -146,8 +146,8 @@ shallow.mock(FooService, {getFoo: () => 'mocked foo get'});
 Have multiple services? It's chain-able so you can stack them.
 ```typescript
 shallow
-  .mock(FooService, {getFoo: () => 'mocked foo get')
-  .mock(BarService, {getBar: () => 'mocked bar get');
+  .mock(FooService, {getFoo: () => 'mocked foo get'})
+  .mock(BarService, {getBar: () => 'mocked bar get'});
  ```
 
 If all your specs need the same mock, you can do this in your `beforeEach` block so you only need to do it once. Your individual specs may override the initial mocks if they need to.

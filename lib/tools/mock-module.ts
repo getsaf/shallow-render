@@ -24,11 +24,11 @@ const getAnnotations = (ngModule: Type<any>): Annotations => {
   }
 
   const {
-    imports = [] as (any[] | Type<any> | ModuleWithProviders)[],
-    providers = [] as Provider[],
-    declarations = [] as (any[] | Type<any>)[],
-    exports = [] as (Type<any> | any[])[],
-    entryComponents = [] as (any[] | Type<any>)[],
+    imports = [],
+    providers = [],
+    declarations = [],
+    exports = [],
+    entryComponents = [],
   } = annotations;
 
   return {imports, providers, declarations, exports, entryComponents};
