@@ -7,18 +7,43 @@ class Foo {
 
 describe('QueryMatch', () => {
   describe('single match', () => {
+    let match: QueryMatch<Foo>;
+    beforeEach(() => {
+      match = createQueryMatch([new Foo('ONE')]);
+    });
+
     it('assigns properties on the first match', () => {
-      const match = createQueryMatch([new Foo('ONE')]);
       match.fooProperty = 'foo value';
 
       expect(match[0].fooProperty).toBe('foo value');
     });
 
-    it('passes the instanceof check for the first object', () => {
-      const match = createQueryMatch([new Foo('ONE')]);
+    it('defines properties on the first match', () => {
+      Object.defineProperty(match, 'fooProperty', {value: 'foo value'});
 
+      expect(match[0].fooProperty).toBe('foo value');
+    });
+
+    it('deletes properties on the first match', () => {
+      match.fooProperty = 'foo';
+      delete match.fooProperty; /* tslint:disable-line no-dynamic-delete no-string-literal */
+      expect(match.fooProperty).not.toBeDefined();
+    });
+
+    it('passes the instanceof check for the first object', () => {
       expect(match instanceof Foo).toBe(true);
     });
+
+    it('allows checking individual object keys', () => {
+      match.fooProperty = 'foo';
+      expect('fooProperty' in match).toBe(true);
+    });
+
+    // I can't get this to friggen work
+    // it('allows checking object keys', () => {
+    //   match.fooProperty = 'foo';
+    //   expect(Object.keys(match)).toContain('fooProperty');
+    // });
   });
 
   describe('multiple matches', () => {
@@ -35,12 +60,24 @@ describe('QueryMatch', () => {
       expect(() => matches instanceof Foo).toThrow(new MultipleMatchesError('prototype', 2));
     });
 
-    it('throws an error when you try to get a debugElement property and there are multiple results', () => {
+    it('throws an error when you try to get a property and there are multiple results', () => {
       expect(() => matches.which).toThrow(new MultipleMatchesError('which', 2));
     });
 
-    it('throws an error when you try to set a debugElement property and there are multiple results', () => {
+    it('throws an error when you try to set a property and there are multiple results', () => {
       expect(() => matches.which = 'BOOM').toThrow(new MultipleMatchesError('which', 2));
+    });
+
+    it('throws an error when you try to define a property and there are multiple results', () => {
+      expect(() => {
+        Object.defineProperty(matches, 'foo', {value: 'foo value'});
+      }).toThrow();
+    });
+
+    it('throws an error when you try to delete a property and there are multiple results', () => {
+      expect(() => {
+        delete matches.fooProperty;
+      }).toThrow();
     });
 
     it('allows mapping over results', () => {
@@ -70,6 +107,22 @@ describe('QueryMatch', () => {
 
     it('throws an error when trying to set a property on an empty query match', () => {
       expect(() => emptyMatch.which = 'BOOM').toThrow(new NoMatchesError('which'));
+    });
+
+    it('throws an error when you try to define a property on an empty match', () => {
+      expect(() => {
+        Object.defineProperty(emptyMatch, 'foo', {value: 'foo value'});
+      }).toThrow();
+    });
+
+    it('throws an error when you try to delete a property on an empty match', () => {
+      expect(() => {
+        delete emptyMatch.fooProperty;
+      }).toThrow();
+    });
+
+    it('does not match when trying to check a property on empty results', () => {
+      expect('fooProperty' in emptyMatch).toBe(false);
     });
 
     it('allows mapping over results', () => {
