@@ -3,8 +3,9 @@ import { isModuleWithProviders } from './type-checkers';
 import { ngMock } from './ng-mock';
 import { mockProvider } from './mock-provider';
 import { TestSetup } from '../models/test-setup';
+import { ngModuleResolver } from './reflect';
 
-interface Annotations {
+export interface NgModuleAnnotations extends NgModule {
   imports: (any[] | Type<any> | ModuleWithProviders)[];
   declarations: (any[] | Type<any>)[];
   providers: Provider[];
@@ -12,24 +13,14 @@ interface Annotations {
   entryComponents: (any[] | Type<any>)[];
 }
 
-const getAnnotations = (ngModule: Type<any>): Annotations => {
-  let annotations: NgModule;
-  const ngModuleAsAny = ngModule as any;
-  if (Array.isArray(ngModuleAsAny.__annotations__)) {
-    annotations = ngModuleAsAny.__annotations__[0];
-  } else if (Array.isArray(ngModuleAsAny.decorators)) {
-    annotations = ngModuleAsAny.decorators[0].args[0];
-  } else {
-    throw new Error(`Cannot find the annotations or decorator properties for class ${ngModule.name || ngModule}`);
-  }
-
+const getAnnotations = (ngModule: Type<any>): NgModuleAnnotations => {
   const {
     imports = [],
     providers = [],
     declarations = [],
     exports = [],
     entryComponents = [],
-  } = annotations;
+  } = ngModuleResolver.resolve(ngModule);
 
   return {imports, providers, declarations, exports, entryComponents};
 };
@@ -39,27 +30,29 @@ export function mockModule(mod: any[] | Type<any> | ModuleWithProviders, setup: 
   if (cached) {
     return cached as any[] | Type<any>; /* tslint:disable-line no-unnecessary-type-assertion */
   }
-  let ngModule: Annotations;
   let moduleClass: Type<any>;
-  let providers: Provider[] = [];
+  let extraProviders: Provider[] = [];
   if (Array.isArray(mod)) {
     return setup.mockCache.add(mod, mod.map(i => mockModule(i, setup))); // Recursion
   } else if (isModuleWithProviders(mod)) {
     moduleClass = mod.ngModule;
     if (mod.providers) {
-      providers = mod.providers;
+      extraProviders = mod.providers;
     }
-  } else {
+  } else if (typeof mod === 'function') {
     moduleClass = mod;
+  } else {
+    throw new Error(`Don't know how to mock module: ${mod}`);
   }
-  ngModule = getAnnotations(moduleClass);
+
+  const {imports, declarations, exports, entryComponents, providers} = getAnnotations(moduleClass);
   const mockedModule: NgModule = {
-    imports: ngMock(ngModule.imports, setup),
-    declarations: ngMock(ngModule.declarations, setup),
-    exports: ngMock(ngModule.exports, setup),
-    entryComponents: ngMock(ngModule.entryComponents, setup),
-    providers: ngModule.providers
-      .concat(providers)
+    imports: ngMock(imports, setup),
+    declarations: ngMock(declarations, setup),
+    exports: ngMock(exports, setup),
+    entryComponents: ngMock(entryComponents, setup),
+    providers: providers
+      .concat(extraProviders)
       .map(p => mockProvider(p, setup)),
   };
   @NgModule(mockedModule)
@@ -69,7 +62,7 @@ export function mockModule(mod: any[] | Type<any> | ModuleWithProviders, setup: 
 }
 
 // TODO Consolidate this into mockModule?
-export function copyTestModule<TComponent>(setup: TestSetup<TComponent>) {
+export function copyTestModule<TComponent>(setup: TestSetup<TComponent>): NgModuleAnnotations {
   let mod: Type<any>;
   let providers: Provider[] = [];
   if (isModuleWithProviders(setup.testModule)) {
@@ -88,5 +81,7 @@ export function copyTestModule<TComponent>(setup: TestSetup<TComponent>) {
       ...providers.map(p => mockProvider(p, setup)),
       ...setup.providers.map(p => mockProvider(p, setup)),
     ],
+    exports: [],
+    entryComponents: [],
   };
 }
