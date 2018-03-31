@@ -2,7 +2,7 @@ import { Provider } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
 
 export class MockProvider {
-  constructor(public mockedProvider: any, mockProperties: any = {}) {
+  constructor(public mockOf: any, mockProperties: any = {}) {
     Object.assign(this, mockProperties);
   }
 }
@@ -10,10 +10,10 @@ export class MockProvider {
 export function mockProvider(provider: Provider, setup: TestSetup<any>): Provider {
   let provide: any;
 
-  if (typeof provider === 'function') {
-    provide = provider;
-  } else if (Array.isArray(provider)) {
+  if (Array.isArray(provider)) {
     return provider.map(p => mockProvider(p, setup)); // Recursion
+  } else if (typeof provider === 'function') {
+    provide = provider;
   } else {
     provide = provider.provide;
   }
@@ -21,7 +21,7 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
   const userProvidedMock = setup.mocks.get(provide);
   if (userProvidedMock) {
     return {provide, useValue: new MockProvider(provide, userProvidedMock)};
-  } else if (setup.dontMock.includes(provider)) {
+  } else if (setup.dontMock.includes(provide)) {
     return provider;
   } else {
     return {provide, useValue: new MockProvider(provide)};

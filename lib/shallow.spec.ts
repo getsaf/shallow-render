@@ -123,7 +123,7 @@ describe('Shallow', () => {
         .mockPipe(TestPipe, () => ({test: 'mocked pipe'}));
 
       const transform = shallow.setup.mockPipes.get(TestPipe);
-      expect(transform()).toEqual({test: 'mocked pipe'});
+      expect(transform && transform()).toEqual({test: 'mocked pipe'});
     });
   });
 });
