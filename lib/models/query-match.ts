@@ -36,6 +36,30 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
       match[key] = value;
       return true;
     },
+    has: (obj: any, key: string) => {
+      if (matches.length === 1) {
+        return (key in matches || key in match);
+      }
+      return key in matches;
+    },
+    // Not sure why, but this don't work in Chrome
+    // ownKeys: (obj: any) => {
+    //   if (matches.length === 1) {
+    //     return [...Reflect.ownKeys(match), ...Reflect.ownKeys(matches)];
+    //   } else {
+    //     return Object.keys(matches);
+    //   }
+    // },
+    defineProperty: (obj, key: string, descriptor: any) => {
+      throwErrorIfNotOneMatch(key, matches);
+      Object.defineProperty(match, key, descriptor);
+      return true;
+    },
+    deleteProperty: (obj, key: string) => {
+      throwErrorIfNotOneMatch(key, matches);
+      delete match[key]; /* tslint:disable-line no-dynamic-delete */
+      return true;
+    },
     getPrototypeOf: (target: any) => {
       throwErrorIfNotOneMatch('prototype', matches);
       return Object.getPrototypeOf(match);
