@@ -1,4 +1,4 @@
-import { Type, PipeTransform, Provider } from '@angular/core';
+import { InjectionToken, Type, PipeTransform, Provider } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
@@ -27,8 +27,8 @@ export class Shallow<TTestComponent> {
   }
 
   // Always mock a thing with a particular implementation.
-  private static readonly _alwaysMock = new Map<any, any>();
-  static alwaysMock<TProvider>(thing: Type<TProvider>, stubs: Partial<TProvider>) {
+  private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>();
+  static alwaysMock<TProvider>(thing: Type<TProvider> | InjectionToken<TProvider>, stubs: Partial<TProvider>): typeof Shallow {
     const mock = Shallow._alwaysMock.get(thing) || {};
     Shallow._alwaysMock.set(thing, {...mock, ...stubs as object});
     return Shallow;
@@ -51,7 +51,7 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  mock<TMock>(mockClass: Type<TMock>, stubs: Partial<TMock>) {
+  mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: Partial<TMock>) {
     const mock = this.setup.mocks.get(mockClass) || {};
     this.setup.mocks.set(mockClass, {...mock, ...stubs as object});
     return this;

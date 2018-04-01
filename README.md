@@ -338,6 +338,7 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Component with custom providers](lib/examples/component-with-custom-providers.spec.ts)
 * [Testing directives](lib/examples/directive-only-test.spec.ts)
 * [Using custom Pipe mocks](lib/examples/mocking-pipes.spec.ts)
+* [Using Injection Tokens](lib/examples/mocking-injection-tokens.spec.ts)
 * [Multiple components](lib/examples/multiple-components.spec.ts)
 * [Multiple modules](lib/examples/multiple-modules.spec.ts)
 * [Using dontMock to bypass mocking in a spec](lib/examples/using-dont-mock.spec.ts)

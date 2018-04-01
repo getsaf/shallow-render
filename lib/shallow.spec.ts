@@ -1,5 +1,5 @@
 import { Shallow } from './shallow';
-import { PipeTransform } from '@angular/core';
+import { PipeTransform, InjectionToken } from '@angular/core';
 
 class TestService {
   foo() { return 'foo'; }
@@ -48,6 +48,20 @@ describe('Shallow', () => {
       const shallow = new Shallow(TestComponent, TestModule);
 
       expect(shallow.setup.mocks.get(MyService).foo()).toBe('mock foo');
+    });
+
+    it('can mock with an InjectionToken', () => {
+      class MyService {
+        myNumericMethod() {
+          return 3;
+        }
+      }
+      const myToken = new InjectionToken<MyService>('My Service token');
+      const myMock = {myNumericMethod: () => 5};
+      Shallow.alwaysMock(myToken, myMock);
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.mocks.get(myToken)).toEqual(myMock);
     });
 
     it('mocking on an alwaysMock does not mutate the alwaysMock', () => {
