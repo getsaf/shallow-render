@@ -20,7 +20,7 @@ const getAnnotations = (ngModule: Type<any>): NgModuleAnnotations => {
     declarations = [],
     exports = [],
     entryComponents = [],
-  } = ngModuleResolver.resolve(ngModule);
+  } = ngModuleResolver.resolve(ngModule) || {};
 
   return {imports, providers, declarations, exports, entryComponents};
 };
