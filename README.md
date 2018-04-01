@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/getsaf/shallow-render.svg?branch=master)](https://travis-ci.org/getsaf/shallow-render)
 
-Angular 2+ testing made easy with shallow rendering.
+Angular 5 testing made easy with shallow rendering.
 
 ---
 ## The problem
-Testing in Angular 2+ is **HARD**. TestBed is powerful but it's use in component specs ends with lots of duplication.
+Testing in Angular is **HARD**. TestBed is powerful but it's use in component specs ends with lots of duplication.
 
 Here's a standard TestBed spec for a component that uses a few other components, a directive and a pipe and handles click events:
 ```typescript
@@ -89,7 +89,7 @@ describe('MyComponent', () => {
 
   it('renders a link with the provided label text', async () => {
     const {find} = await shallow.render(`<my-component linkText="my text"></my-component>`);
-    let link = find('a');
+    const link = find('a');
 
     expect(link.nativeElement.innerText).toBe('my text');
   });
@@ -161,12 +161,12 @@ beforeEach(() => {
 })
 
 it('uses the mock', async () => {
-  const wrapper = await shallow.render();
+  const rendered = await shallow.render();
   // ...
 });
 
 it('can override previously defined mocks', async () => {
-  const wrapper = await shallow
+  const rendered = await shallow
     .mock(FooService, {getFoo: () => 'custom foo'})
     .render()
 });
