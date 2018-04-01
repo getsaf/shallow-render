@@ -41,6 +41,14 @@ describe('ng-mock', () => {
     expect(mockedSecond).toBe('FIRST' as any);
   });
 
+  it('throws a friendly message when mocking fails', () => {
+    class BadComponent {}
+    spyOn(ngMocksLib, 'MockDeclaration').and.throwError('BOOM');
+
+    expect(() => ngMock(BadComponent, testSetup))
+      .toThrowError(/Shallow.*BadComponent[\s\S]*BOOM/g);
+  });
+
   it('mocks a component', () => {
     spyOn(ngMocksLib, 'MockDeclaration').and.returnValue('MOCKED');
     const mocked = ngMock(FooComponent, testSetup);
