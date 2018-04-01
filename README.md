@@ -335,6 +335,7 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Component with bindings](lib/examples/component-with-bindings.spec.ts)
 * [Component with directive](lib/examples/component-with-directive.spec.ts)
 * [Component with a service](lib/examples/component-with-service.spec.ts)
+* [Component with custom providers](lib/examples/component-with-custom-providers.spec.ts)
 * [Testing directives](lib/examples/directive-only-test.spec.ts)
 * [Using custom Pipe mocks](lib/examples/mocking-pipes.spec.ts)
 * [Multiple components](lib/examples/multiple-components.spec.ts)

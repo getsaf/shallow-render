@@ -5,6 +5,8 @@ import { createContainer } from '../tools/create-container';
 import { copyTestModule } from '../tools/mock-module';
 import { isValueProvider } from '../tools/type-checkers';
 import { TestSetup } from './test-setup';
+import { directiveResolver } from '../tools/reflect';
+import { mockProvider } from '../tools/mock-provider';
 
 export class Renderer<TComponent> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}
@@ -40,6 +42,17 @@ export class Renderer<TComponent> {
     const ComponentClass = html
       ? createContainer(html, finalOptions.bind)
       : this._setup.testComponent;
+
+    // Components may have their own providers, If the test component does,
+    // we will mock them out here..
+    const resolvedTestComponent = directiveResolver.resolve(this._setup.testComponent);
+    if (resolvedTestComponent.providers && resolvedTestComponent.providers.length) {
+      TestBed.overrideComponent(this._setup.testComponent, {
+        set: {
+          providers: resolvedTestComponent.providers.map(p => mockProvider(p, this._setup))
+        }
+      });
+    }
 
     const {imports, providers, declarations} = copyTestModule(this._setup);
     await TestBed.configureTestingModule({
