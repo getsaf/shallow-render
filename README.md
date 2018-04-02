@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/getsaf/shallow-render.svg?branch=master)](https://travis-ci.org/getsaf/shallow-render)
 
-Angular 5 testing made easy with shallow rendering.
+Angular 5 testing made easy with shallow rendering and easy mocking.
 
 ---
 ## The problem
@@ -121,7 +121,7 @@ This class is used to setup your test module. It's constructor accepts two argum
 
 Behind the scenes, it breaks down the `testModule` into its' bare elements and mocks everything along the way. All your components, directives and pipes are run through [`ng-mocks`](https://github.com/ike18t/ng-mocks). All your providers are mocked with a simple object `{}`.
 
-#### Service Mocking
+#### Service or Injection Token Mocking
 You have control over your `provider` mocks  by using `shallow.mock`. For example, let's say your component uses `FooService` to get data:
 ```typescript
 @Injectable()
@@ -137,13 +137,20 @@ class FooService {
   }
 }
 ```
-Shallow will automatically mock this service when you render your component. If your component calls the `getFoo` method, you'll need to provide a stub and return the data your component needs to pass your test.
+Shallow will automatically provide an empty mock for this service when you render your component. If your component calls the `getFoo` method, you'll need to provide a stub and return the data your component needs to pass your test. To prevent mistyping, all stubs are type-safe and *must* match the types on the service you're mocking.
 
 ```typescript
 shallow.mock(FooService, {getFoo: () => 'mocked foo get'});
 ```
 
 Have multiple services? It's chain-able so you can stack them.
+```typescript
+shallow
+  .mock(FooService, {getFoo: () => 'mocked foo get'})
+  .mock(BarService, {getBar: () => 'mocked bar get'});
+ ```
+
+`InjectionToken`s work too. Stubs are double-checked against your token's interface to make sure you're using the correct types.
 ```typescript
 shallow
   .mock(FooService, {getFoo: () => 'mocked foo get'})
@@ -173,7 +180,7 @@ it('can override previously defined mocks', async () => {
 ```
 
 #####  Skip mocking with `dontMock`
-Have a service/component/directive/pipe, etc that you don't want to be mocked? Use `dontMock` to bypass the automatic mocking of things in your module (or things imported by your module).
+Have a service/injection token/component/directive/pipe, etc that you don't want to be mocked? Use `dontMock` to bypass the automatic mocking of things in your module (or things imported by your module).
 ****NOTE: Angular's `coreModule` and `browserModule` are never mocked by this process.***
 
 ```typescript
