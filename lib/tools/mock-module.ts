@@ -25,40 +25,36 @@ const getAnnotations = (ngModule: Type<any>): NgModuleAnnotations => {
   return {imports, providers, declarations, exports, entryComponents};
 };
 
-export function mockModule(mod: any[] | Type<any> | ModuleWithProviders, setup: TestSetup<any>): any[] | Type<any> {
+export type AnyNgModule = any[] | Type<any> | ModuleWithProviders;
+export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: TestSetup<any>): TModule {
   const cached = setup.mockCache.find(mod);
   if (cached) {
-    return cached as any[] | Type<any>; /* tslint:disable-line no-unnecessary-type-assertion */
+    return cached;
   }
-  let moduleClass: Type<any>;
-  let extraProviders: Provider[] = [];
   if (Array.isArray(mod)) {
-    return setup.mockCache.add(mod, mod.map(i => mockModule(i, setup))); // Recursion
+    return setup.mockCache.add(mod, mod.map(i => mockModule(i, setup))) as TModule; // Recursion
   } else if (isModuleWithProviders(mod)) {
-    moduleClass = mod.ngModule;
-    if (mod.providers) {
-      extraProviders = mod.providers;
-    }
-  } else if (typeof mod === 'function') {
-    moduleClass = mod;
-  } else {
+    // If we have a moduleWithProviders, make sure we return the same
+    return {
+      ngModule: mockModule(mod.ngModule, setup), // Recursion
+      providers: mod.providers && mod.providers.map(p => mockProvider(p, setup))
+    } as TModule;
+  } else if (typeof mod !== 'function') {
     throw new Error(`Don't know how to mock module: ${mod}`);
   }
 
-  const {imports, declarations, exports, entryComponents, providers} = getAnnotations(moduleClass);
+  const {imports, declarations, exports, entryComponents, providers} = getAnnotations(mod as Type<any>);
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
     declarations: ngMock(declarations, setup),
     exports: ngMock(exports, setup),
     entryComponents: ngMock(entryComponents, setup),
-    providers: providers
-      .concat(extraProviders)
-      .map(p => mockProvider(p, setup)),
+    providers: providers.map(p => mockProvider(p, setup)),
   };
   @NgModule(mockedModule)
   class MockModule {}
 
-  return setup.mockCache.add(mod, MockModule);
+  return setup.mockCache.add(mod, MockModule) as TModule;
 }
 
 // TODO Consolidate this into mockModule?
