@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/getsaf/shallow-render.svg?branch=master)](https://travis-ci.org/getsaf/shallow-render)
 
-Angular 2+ testing made easy with shallow rendering.
+Angular 5 testing made easy with shallow rendering and easy mocking.
 
 ---
 ## The problem
-Testing in Angular 2+ is **HARD**. TestBed is powerful but it's use in component specs ends with lots of duplication.
+Testing in Angular is **HARD**. TestBed is powerful but it's use in component specs ends with lots of duplication.
 
 Here's a standard TestBed spec for a component that uses a few other components, a directive and a pipe and handles click events:
 ```typescript
@@ -89,7 +89,7 @@ describe('MyComponent', () => {
 
   it('renders a link with the provided label text', async () => {
     const {find} = await shallow.render(`<my-component linkText="my text"></my-component>`);
-    let link = find('a');
+    const link = find('a');
 
     expect(link.nativeElement.innerText).toBe('my text');
   });
@@ -121,7 +121,7 @@ This class is used to setup your test module. It's constructor accepts two argum
 
 Behind the scenes, it breaks down the `testModule` into its' bare elements and mocks everything along the way. All your components, directives and pipes are run through [`ng-mocks`](https://github.com/ike18t/ng-mocks). All your providers are mocked with a simple object `{}`.
 
-#### Service Mocking
+#### Service or Injection Token Mocking
 You have control over your `provider` mocks  by using `shallow.mock`. For example, let's say your component uses `FooService` to get data:
 ```typescript
 @Injectable()
@@ -137,13 +137,20 @@ class FooService {
   }
 }
 ```
-Shallow will automatically mock this service when you render your component. If your component calls the `getFoo` method, you'll need to provide a stub and return the data your component needs to pass your test.
+Shallow will automatically provide an empty mock for this service when you render your component. If your component calls the `getFoo` method, you'll need to provide a stub and return the data your component needs to pass your test. To prevent mistyping, all stubs are type-safe and *must* match the types on the service you're mocking.
 
 ```typescript
 shallow.mock(FooService, {getFoo: () => 'mocked foo get'});
 ```
 
 Have multiple services? It's chain-able so you can stack them.
+```typescript
+shallow
+  .mock(FooService, {getFoo: () => 'mocked foo get'})
+  .mock(BarService, {getBar: () => 'mocked bar get'});
+ ```
+
+`InjectionToken`s work too. Stubs are double-checked against your token's interface to make sure you're using the correct types.
 ```typescript
 shallow
   .mock(FooService, {getFoo: () => 'mocked foo get'})
@@ -161,19 +168,19 @@ beforeEach(() => {
 })
 
 it('uses the mock', async () => {
-  const wrapper = await shallow.render();
+  const rendered = await shallow.render();
   // ...
 });
 
 it('can override previously defined mocks', async () => {
-  const wrapper = await shallow
+  const rendered = await shallow
     .mock(FooService, {getFoo: () => 'custom foo'})
     .render()
 });
 ```
 
 #####  Skip mocking with `dontMock`
-Have a service/component/directive/pipe, etc that you don't want to be mocked? Use `dontMock` to bypass the automatic mocking of things in your module (or things imported by your module).
+Have a service/injection token/component/directive/pipe, etc that you don't want to be mocked? Use `dontMock` to bypass the automatic mocking of things in your module (or things imported by your module).
 ****NOTE: Angular's `coreModule` and `browserModule` are never mocked by this process.***
 
 ```typescript
@@ -335,8 +342,10 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Component with bindings](lib/examples/component-with-bindings.spec.ts)
 * [Component with directive](lib/examples/component-with-directive.spec.ts)
 * [Component with a service](lib/examples/component-with-service.spec.ts)
+* [Component with custom providers](lib/examples/component-with-custom-providers.spec.ts)
 * [Testing directives](lib/examples/directive-only-test.spec.ts)
 * [Using custom Pipe mocks](lib/examples/mocking-pipes.spec.ts)
+* [Using Injection Tokens](lib/examples/mocking-injection-tokens.spec.ts)
 * [Multiple components](lib/examples/multiple-components.spec.ts)
 * [Multiple modules](lib/examples/multiple-modules.spec.ts)
 * [Using dontMock to bypass mocking in a spec](lib/examples/using-dont-mock.spec.ts)

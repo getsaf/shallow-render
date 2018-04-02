@@ -2,7 +2,7 @@ export type QueryMatch<TMatch> = TMatch[] & TMatch;
 
 export class NoMatchesError extends Error {
   constructor(propertyName: string) {
-    super(`Could not find the element you were looking for. Your test tried to access the '${propertyName}' property on a QureyResult but your query had no results.`);
+    super(`Could not find the element you were looking for. Your test tried to access the '${propertyName}' property on a QueryResult but your query had no results.`);
   }
 }
 

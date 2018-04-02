@@ -24,14 +24,18 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
   }
 
   let mock: NgMockable;
-  if (ngModuleResolver.isNgModule(thing) || isModuleWithProviders(thing)) {
-    mock = mockModule(thing, setup);
-  } else if (isPipeTransform(thing)) {
+  try {
+    if (ngModuleResolver.isNgModule(thing) || isModuleWithProviders(thing)) {
+      mock = mockModule(thing, setup);
+    } else if (isPipeTransform(thing)) {
       mock = MockPipe(thing as any, setup.mockPipes.get(thing)); // Use any because ng-mocks has an unusable input type
-  } else if (typeof thing === 'function') {
-    mock = MockDeclaration(thing as any); // Use any because ng-mocks has an unusable input type
-  } else {
-    throw new Error(`Don't know how to mock: ${thing}`);
+    } else if (typeof thing === 'function') {
+      mock = MockDeclaration(thing as any); // Use any because ng-mocks has an unusable input type
+    } else {
+      throw new Error(`Shallow doesn't know how to mock: ${thing}`);
+    }
+  } catch (e) {
+    throw new Error(`Shallow ran into some trouble mocking ${(thing as any).name || thing}. Try skipping it with dontMock or neverMock.\n${e}`);
   }
   return setup.mockCache.add(thing, mock) as TThing;
 }
