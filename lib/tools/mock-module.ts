@@ -1,4 +1,5 @@
 import { ModuleWithProviders, NgModule, Provider, Type } from '@angular/core';
+import { MockOf } from 'ng-mocks';
 import { isModuleWithProviders } from './type-checkers';
 import { ngMock } from './ng-mock';
 import { mockProvider } from './mock-provider';
@@ -43,7 +44,8 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     throw new Error(`Don't know how to mock module: ${mod}`);
   }
 
-  const {imports, declarations, exports, entryComponents, providers} = getAnnotations(mod as Type<any>);
+  const modClass = mod as Type<any>;
+  const {imports, declarations, exports, entryComponents, providers} = getAnnotations(modClass);
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
     declarations: ngMock(declarations, setup),
@@ -52,12 +54,12 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     providers: providers.map(p => mockProvider(p, setup)),
   };
   @NgModule(mockedModule)
+  @MockOf(modClass)
   class MockModule {}
 
   return setup.mockCache.add(mod, MockModule) as TModule;
 }
 
-// TODO Consolidate this into mockModule?
 export function copyTestModule<TComponent>(setup: TestSetup<TComponent>): NgModuleAnnotations {
   let mod: Type<any>;
   let providers: Provider[] = [];

@@ -28,9 +28,9 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
     if (ngModuleResolver.isNgModule(thing) || isModuleWithProviders(thing)) {
       mock = mockModule(thing, setup);
     } else if (isPipeTransform(thing)) {
-      mock = MockPipe(thing as any, setup.mockPipes.get(thing)); // Use any because ng-mocks has an unusable input type
+      mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
     } else if (typeof thing === 'function') {
-      mock = MockDeclaration(thing as any); // Use any because ng-mocks has an unusable input type
+      mock = MockDeclaration(thing as Type<any>);
     } else {
       throw new Error(`Shallow doesn't know how to mock: ${thing}`);
     }
