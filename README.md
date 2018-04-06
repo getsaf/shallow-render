@@ -293,6 +293,7 @@ A `Rendering` is returned from the `shallow.render()` method call. The [`Renderi
 
 #### `find`
 `find(CSS | Directive | Component)` => `QueryMatch<DebugElement>`
+
 Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
 
 ```typescript
