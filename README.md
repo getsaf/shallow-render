@@ -291,6 +291,23 @@ A [`Rendering`](lib/models/rendering.ts) is returned from the `shallow.render()`
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
 | [`get(Token/Provider)`](#get--provider-instance)                     | Type-safe version of `TestBed.get`                 | `TProvider`                                       |
 
+### destructuring properties off of a rendering
+
+Note that ALL of these methods and properties can be destructured from the rendering which allows for some syntactic flexibility when rendering.
+
+For example:
+```typescript
+  const rendering = await shallow.render();
+  const label = rendering.find('label');
+```
+
+is the same as the destructured version
+
+```typescript
+  const {find} = await shallow.render();
+  const label = find('label');
+```
+
 #### `find` => `QueryMatch<DebugElement>`
 
 ```typescript
