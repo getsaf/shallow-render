@@ -289,7 +289,7 @@ A `Rendering` is returned from the `shallow.render()` method call. The [`Renderi
 | [`find(CSS/Directive/Component)`](#find--querymatchdebugelement)     | Finds elements by CSS or Directive/Component       | [`QueryMatch<DebugElement>`](#querymatch-objects) |
 | [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | [`QueryMatch<TComponent>`](#querymatch-objects)   |
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
-| [`get(Token/Provider)`](#get--providerinstance)                      | Type-safe version of `TestBed.get`                 | `TProvider`                                       |
+| [`get(Token/Provider)`](#get--provider-instance)                     | Type-safe version of `TestBed.get`                 | `TProvider`                                       |
 
 #### `find => QueryMatch<DebugElement>`
 
