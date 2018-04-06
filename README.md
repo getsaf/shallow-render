@@ -277,18 +277,18 @@ shallow.render(); // Automatically renders the testComponent
 ```
 
 ### Querying
-A `Rendering` is returned from the `shallow.render()` method call. The `Rendering` class has a few query methods available:
+A `Rendering` is returned from the `shallow.render()` method call. The [`Rendering` class](lib/models/rendering.ts) has a few query methods available:
 
-| Property                                                             | Description                                        | type or return type        |
-|----------------------------------------------------------------------|----------------------------------------------------|----------------------------|
-| `instance`                                                           | Instance of the rendered `TestComponent`           |                            |
-| `element`                                                            | The `DebugElement` of the rendered `TestComponent` |                            |
-| `TestBed`                                                            | Easy access to `TestBed`                           |                            |
-| `fixture`                                                            | The `TestBed` fixture from rendering the component |                            |
-| `bindings`                                                           | The bindings object used in your render (if any)   |                            |
-| [`find(CSS/Directive/Component)`](#find--querymatchdebugelement)     | Finds elements by CSS or Directive/Component       | `QueryMatch<DebugElement>` |
-| [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | `QueryMatch<TComponent>`   |
-| [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | `QueryMatch<TDirective>`   |
+| Property                                                             | Description                                        | type or return type                               |
+|----------------------------------------------------------------------|----------------------------------------------------|---------------------------------------------------|
+| `instance`                                                           | Instance of the rendered `TestComponent`           |                                                   |
+| `element`                                                            | The `DebugElement` of the rendered `TestComponent` |                                                   |
+| `TestBed`                                                            | Easy access to `TestBed`                           |                                                   |
+| `fixture`                                                            | The `TestBed` fixture from rendering the component |                                                   |
+| `bindings`                                                           | The bindings object used in your render (if any)   |                                                   |
+| [`find(CSS/Directive/Component)`](#find--querymatchdebugelement)     | Finds elements by CSS or Directive/Component       | [`QueryMatch<DebugElement>`](#querymatch-objects) |
+| [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | [`QueryMatch<TComponent>`](#querymatch-objects)   |
+| [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
 
 #### `find` => `QueryMatch<DebugElement>`
 Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
