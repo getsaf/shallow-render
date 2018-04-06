@@ -291,7 +291,7 @@ A `Rendering` is returned from the `shallow.render()` method call. The [`Renderi
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
 | [`get(Token/Provider)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
 
-#### `find`
+#### `rendering.find`
 `find(CSS | Directive | Component)` => `QueryMatch<DebugElement>`
 
 Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
