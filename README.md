@@ -276,11 +276,45 @@ shallow.render(MyComponent); // Must be the shallow testComponent
 shallow.render(); // Automatically renders the testComponent
 ```
 
-### Querying
-A `Rendering` is returned from the `shallow.render()` method call. The `Rendering` class has a few query methods available:
+### Rendering and Querying
+A [`Rendering`](lib/models/rendering.ts) is returned from the `shallow.render()` method call.
+
+| Property                                                             | Description                                        | type or return type                               |
+|----------------------------------------------------------------------|----------------------------------------------------|---------------------------------------------------|
+| `instance`                                                           | Instance of the rendered `TestComponent`           |                                                   |
+| `element`                                                            | The `DebugElement` of the rendered `TestComponent` |                                                   |
+| `TestBed`                                                            | Easy access to `TestBed`                           |                                                   |
+| `fixture`                                                            | The `TestBed` fixture from rendering the component |                                                   |
+| `bindings`                                                           | The bindings object used in your render (if any)   |                                                   |
+| [`find(CSS/Directive/Component)`](#find--querymatchdebugelement)     | Finds elements by CSS or Directive/Component       | [`QueryMatch<DebugElement>`](#querymatch-objects) |
+| [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | [`QueryMatch<TComponent>`](#querymatch-objects)   |
+| [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
+| [`get(Token/Provider)`](#get--provider-instance)                     | Type-safe version of `TestBed.get`                 | `TProvider`                                       |
+
+### destructuring properties off of a rendering
+
+Note that ALL of these methods and properties can be destructured from the rendering which allows for some syntactic flexibility when rendering.
+
+For example:
+```typescript
+  const rendering = await shallow.render();
+  const label = rendering.find('label');
+```
+
+is the same as the destructured version
+
+```typescript
+  const {find} = await shallow.render();
+  const label = find('label');
+```
 
 #### `find` => `QueryMatch<DebugElement>`
-Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
+
+```typescript
+find(CSSSelector | Directive | Component) => QueryMatch<DebugElement>
+```
+
+Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a [`QueryMatch`](#querymatch-objects) object.
 
 ```typescript
 const {find} = await shallow.render('<my-component name="foo"></my-component');
@@ -298,7 +332,12 @@ find(MyComponent); // Finds all instances of MyComponent
 ```
 
 #### `findComponent` => `QueryMatch<TComponent>`
-`findComponent` differs from `find` in that it will return the *instances* of the component, not the `DebugElement` returned by `find`.
+
+```typescript
+findComponent(Component) => QueryMatch<TComponent>
+```
+
+`findComponent` differs from `find` in that it will return the *instances* of the component, not the `DebugElement` returned by `find`. The returned instance(s) are wrapped in a [`QueryMatch`](#querymatch-objects) object.
 
 ```typescript
 const {findComponent} = await shallow.render('<my-component name="foo"></my-component>');
@@ -308,7 +347,12 @@ expect(result.name).is('foo');
 ```
 
 #### `findDirective` => `QueryMatch<TDirective>`
-`findDirective` is similar to `findComponent` except it returns directive instances.
+
+```typescript
+findDirective(Directive) => QueryMatch<TDirective>
+```
+
+`findDirective` is similar to `findComponent` except it returns directive instances wrapped in a [`QueryMatch`](#querymatch-objects) object.
 
 ```typescript
 const {findDirective} = await shallow.render('<div myDirective="foo"/>');
@@ -316,6 +360,36 @@ const result = findDirective(MyDirective);
 
 expect(result.myDirective).is('foo');
 ```
+
+#### `get` => provider instance
+
+```typescript
+get(ProvidedClass | InjectionToken) => QueryMatch<TProvider>
+```
+
+This is a type-safe version of `TestBed.get()`.
+
+```typescript
+const {get} = await shallow.render();
+const service = get(MyService); // Returns an instance of MyService (or the mock if it's mocked) from the injector
+
+expect(service.getFoo).toHaveBeenCalled();
+```
+
+You may also use `get` to pull service instances and add more mocks/spys on them *AFTER* rendering. (This is usually done *before* rendering by using `shallow.mock()` but sometimes you need to alter mocks after the initial rendering. I recommend a type-safe mocking library like [ts-mocks](https://www.npmjs.com/package/ts-mocks) to do your mocking.
+
+```typescript
+const {get, find} = await shallow
+  .mock(MyService, {getFoo: () => 'FIRST FOO'})
+  .render();
+const service = get(MyService);
+new Mock(service).extend({getFoo: () => 'SECOND FOO'}); // <-- Using ts-mocks here to re-mock a method
+find('button').triggerEventHandler('click', {});
+const responseLabel = find('label');
+
+expect(responseLabel.nativeElement.innerText).toBe('SECOND FOO');
+```
+
 #### `QueryMatch` objects
 Queries return a special `QueryMatch` object. This object is a mash-up of a single object that may be used when the query yields a single result, or an array of objects for when your query yields multiple results.
 
@@ -352,4 +426,3 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Using alwaysMock to globally mock things](lib/examples/using-always-mock.spec.ts)
 * [Using alwaysProvide to globally provide things](lib/examples/using-always-provide.spec.ts)
 * [Using neverMock to bypass mocking globally](lib/examples/using-never-mock.spec.ts)
-
