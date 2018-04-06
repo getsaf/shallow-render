@@ -291,7 +291,7 @@ A [`Rendering`](lib/models/rendering.ts) is returned from the `shallow.render()`
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
 | [`get(Token/Provider)`](#get--provider-instance)                     | Type-safe version of `TestBed.get`                 | `TProvider`                                       |
 
-#### `find => QueryMatch<DebugElement>`
+#### `find` => `QueryMatch<DebugElement>`
 
 ```typescript
 find(CSSSelector | Directive | Component) => QueryMatch<DebugElement>
