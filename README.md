@@ -286,7 +286,7 @@ A `Rendering` is returned from the `shallow.render()` method call. The `Renderin
 | `TestBed`                                                            | Easy access to `TestBed`                           |                            |
 | `fixture`                                                            | The `TestBed` fixture from rendering the component |                            |
 | `bindings`                                                           | The bindings object used in your render (if any)   |                            |
-| [`find(CSS | Directive | Component)`](#find--querymatchdebugelement) | Finds elements by CSS or Directive/Component       | `QueryMatch<DebugElement>` |
+| [`find(CSS || Directive || Component)`](#find--querymatchdebugelement) | Finds elements by CSS or Directive/Component       | `QueryMatch<DebugElement>` |
 | [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | `QueryMatch<TComponent>`   |
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | `QueryMatch<TDirective>`   |
 
