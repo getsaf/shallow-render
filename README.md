@@ -276,8 +276,8 @@ shallow.render(MyComponent); // Must be the shallow testComponent
 shallow.render(); // Automatically renders the testComponent
 ```
 
-### Querying
-A `Rendering` is returned from the `shallow.render()` method call. The [`Rendering` class](lib/models/rendering.ts) has a few query methods available:
+### Rendering and Querying
+A [`Rendering`](lib/models/rendering.ts) is returned from the `shallow.render()` method call.
 
 | Property                                                             | Description                                        | type or return type                               |
 |----------------------------------------------------------------------|----------------------------------------------------|---------------------------------------------------|
@@ -297,7 +297,7 @@ A `Rendering` is returned from the `shallow.render()` method call. The [`Renderi
 find(CSSSelector | Directive | Component) => QueryMatch<DebugElement>
 ```
 
-Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a [`QueryMatch` object](#querymatch-objects).
+Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a [`QueryMatch`](#querymatch-objects) object.
 
 ```typescript
 const {find} = await shallow.render('<my-component name="foo"></my-component');
@@ -320,7 +320,7 @@ find(MyComponent); // Finds all instances of MyComponent
 findComponent(Component) => QueryMatch<TComponent>
 ```
 
-`findComponent` differs from `find` in that it will return the *instances* of the component, not the `DebugElement` returned by `find`.
+`findComponent` differs from `find` in that it will return the *instances* of the component, not the `DebugElement` returned by `find`. The returned instance(s) are wrapped in a [`QueryMatch`](#querymatch-objects) object.
 
 ```typescript
 const {findComponent} = await shallow.render('<my-component name="foo"></my-component>');
@@ -335,7 +335,7 @@ expect(result.name).is('foo');
 findDirective(Directive) => QueryMatch<TDirective>
 ```
 
-`findDirective` is similar to `findComponent` except it returns directive instances.
+`findDirective` is similar to `findComponent` except it returns directive instances wrapped in a [`QueryMatch`](#querymatch-objects) object.
 
 ```typescript
 const {findDirective} = await shallow.render('<div myDirective="foo"/>');
