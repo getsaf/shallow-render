@@ -289,14 +289,15 @@ A `Rendering` is returned from the `shallow.render()` method call. The [`Renderi
 | [`find(CSS/Directive/Component)`](#find--querymatchdebugelement)     | Finds elements by CSS or Directive/Component       | [`QueryMatch<DebugElement>`](#querymatch-objects) |
 | [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | [`QueryMatch<TComponent>`](#querymatch-objects)   |
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
-| [`get(Token/Provider)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
+| [`get(Token/Provider)`](#get--providerinstance)                      | Type-safe version of `TestBed.get`                 | `TProvider`                                       |
 
-#### `.find => QueryMatch<DebugElement>`
+#### `find => QueryMatch<DebugElement>`
+
 ```typescript
-find(CSS | Directive | Component) => QueryMatch<DebugElement>
+find(CSSSelector | Directive | Component) => QueryMatch<DebugElement>
 ```
 
-Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
+Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a [`QueryMatch` object](#querymatch-objects).
 
 ```typescript
 const {find} = await shallow.render('<my-component name="foo"></my-component');
@@ -314,6 +315,11 @@ find(MyComponent); // Finds all instances of MyComponent
 ```
 
 #### `findComponent` => `QueryMatch<TComponent>`
+
+```typescript
+findComponent(Component) => QueryMatch<TComponent>
+```
+
 `findComponent` differs from `find` in that it will return the *instances* of the component, not the `DebugElement` returned by `find`.
 
 ```typescript
@@ -324,6 +330,11 @@ expect(result.name).is('foo');
 ```
 
 #### `findDirective` => `QueryMatch<TDirective>`
+
+```typescript
+findDirective(Directive) => QueryMatch<TDirective>
+```
+
 `findDirective` is similar to `findComponent` except it returns directive instances.
 
 ```typescript
@@ -334,6 +345,11 @@ expect(result.myDirective).is('foo');
 ```
 
 #### `get` => provider instance
+
+```typescript
+get(ProvidedClass | InjectionToken) => QueryMatch<TProvider>
+```
+
 This is a type-safe version of `TestBed.get()`.
 
 ```typescript
