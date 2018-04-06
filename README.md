@@ -289,8 +289,10 @@ A `Rendering` is returned from the `shallow.render()` method call. The [`Renderi
 | [`find(CSS/Directive/Component)`](#find--querymatchdebugelement)     | Finds elements by CSS or Directive/Component       | [`QueryMatch<DebugElement>`](#querymatch-objects) |
 | [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | [`QueryMatch<TComponent>`](#querymatch-objects)   |
 | [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
+| [`get(Token/Provider)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](#querymatch-objects)   |
 
-#### `find` => `QueryMatch<DebugElement>`
+#### `find`
+`find(CSS | Directive | Component)` => `QueryMatch<DebugElement>`
 Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
 
 ```typescript
@@ -327,6 +329,31 @@ const result = findDirective(MyDirective);
 
 expect(result.myDirective).is('foo');
 ```
+
+#### `get` => provider instance
+This is a type-safe version of `TestBed.get()`.
+
+```typescript
+const {get} = await shallow.render();
+const service = get(MyService); // Returns an instance of MyService (or the mock if it's mocked) from the injector
+
+expect(service.getFoo).toHaveBeenCalled();
+```
+
+You may also use `get` to pull service instances and add more mocks/spys on them *AFTER* rendering. (This is usually done *before* rendering by using `shallow.mock()` but sometimes you need to alter mocks after the initial rendering. I recommend a type-safe mocking library like [ts-mocks](https://www.npmjs.com/package/ts-mocks) to do your mocking.
+
+```typescript
+const {get, find} = await shallow
+  .mock(MyService, {getFoo: () => 'FIRST FOO'})
+  .render();
+const service = get(MyService);
+new Mock(service).extend({getFoo: () => 'SECOND FOO'}); // <-- Using ts-mocks here to re-mock a method
+find('button').triggerEventHandler('click', {});
+const responseLabel = find('label');
+
+expect(responseLabel.nativeElement.innerText).toBe('SECOND FOO');
+```
+
 #### `QueryMatch` objects
 Queries return a special `QueryMatch` object. This object is a mash-up of a single object that may be used when the query yields a single result, or an array of objects for when your query yields multiple results.
 
