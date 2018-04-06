@@ -279,6 +279,17 @@ shallow.render(); // Automatically renders the testComponent
 ### Querying
 A `Rendering` is returned from the `shallow.render()` method call. The `Rendering` class has a few query methods available:
 
+| Property                                                             | Description                                        | type or return type        |
+|----------------------------------------------------------------------|----------------------------------------------------|----------------------------|
+| `instance`                                                           | Instance of the rendered `TestComponent`           |                            |
+| `element`                                                            | The `DebugElement` of the rendered `TestComponent` |                            |
+| `TestBed`                                                            | Easy access to `TestBed`                           |                            |
+| `fixture`                                                            | The `TestBed` fixture from rendering the component |                            |
+| `bindings`                                                           | The bindings object used in your render (if any)   |                            |
+| [`find(CSS | Directive | Component)`](#find--querymatchdebugelement) | Finds elements by CSS or Directive/Component       | `QueryMatch<DebugElement>` |
+| [`findComponent(Component)`](#findcomponent--querymatchtcomponent)   | Finds and returns all matches for a Component      | `QueryMatch<TComponent>`   |
+| [`findDirective(Directive)`](#finddirective--querymatchtdirective)   | Finds and returns all matches for a Directive      | `QueryMatch<TDirective>`   |
+
 #### `find` => `QueryMatch<DebugElement>`
 Accepts a CSS selector, Component class or Directive class and returns all the resulting `DebugElements` wrapped in a `QueryMatch` object (more on that later).
 
@@ -352,4 +363,3 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Using alwaysMock to globally mock things](lib/examples/using-always-mock.spec.ts)
 * [Using alwaysProvide to globally provide things](lib/examples/using-always-provide.spec.ts)
 * [Using neverMock to bypass mocking globally](lib/examples/using-never-mock.spec.ts)
-
