@@ -1,29 +1,42 @@
 import { Provider } from '@angular/core';
+import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
-
-export class MockProvider {
-  constructor(public mockOf: any, mockProperties: any = {}) {
-    Object.assign(this, mockProperties);
-  }
-}
+import { isClassProvider, isFactoryProvider, isExistingProvider } from './type-checkers';
+import { getProviderName } from './get-provider-name';
 
 export function mockProvider(provider: Provider, setup: TestSetup<any>): Provider {
-  let provide: any;
-
   if (Array.isArray(provider)) {
     return provider.map(p => mockProvider(p, setup)); // Recursion
-  } else if (typeof provider === 'function') {
-    provide = provider;
-  } else {
-    provide = provider.provide;
+  }
+  if (isExistingProvider(provider)) {
+    return provider;
   }
 
-  const userProvidedMock = setup.mocks.get(provide);
-  if (userProvidedMock) {
-    return {provide, useValue: new MockProvider(provide, userProvidedMock)};
-  } else if (setup.dontMock.includes(provide)) {
+  const provide = typeof provider === 'function' ? provider : provider.provide;
+  const userMocks = setup.mocks.get(provide);
+
+  // TODO: What if setup.dontMock.includes(provide.useClass)?
+  if (!userMocks && setup.dontMock.includes(provide)) {
     return provider;
-  } else {
-    return {provide, useValue: new MockProvider(provide)};
   }
+
+  class MockProvider extends MockOfProvider { /* tslint:disable-line no-unnecessary-class */
+    constructor() {
+      super(provider, userMocks);
+    }
+  }
+  Object.defineProperty(MockProvider, 'name', {value: `MockOf${getProviderName(provider)}`});
+
+  const prov = {
+    provide,
+    multi: 'multi' in provider && provider.multi
+  };
+
+  if (isClassProvider(provider)) {
+    return {...prov, useClass: MockProvider};
+  }
+  if (isFactoryProvider(provider)) {
+    return {...prov, useFactory: () => new MockProvider()};
+  }
+  return {...prov, useValue: new MockProvider()};
 }
