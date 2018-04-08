@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { Rendering, RenderOptions } from './rendering';
 import { createContainer } from '../tools/create-container';
-import { copyTestModule } from '../tools/mock-module';
 import { TestSetup } from './test-setup';
 import { directiveResolver } from '../tools/reflect';
 import { mockProvider } from '../tools/mock-provider';
+import { copyTestModule } from '../tools/copy-test-module';
 
 export class Renderer<TComponent> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}

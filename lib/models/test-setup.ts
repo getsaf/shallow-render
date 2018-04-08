@@ -11,7 +11,5 @@ export class TestSetup<TComponent> {
   constructor(
     public readonly testComponent: Type<TComponent>,
     public readonly testModule: Type<any> | ModuleWithProviders,
-  ) {
-    this.dontMock.push(testComponent);
-  }
+  ) { }
 }

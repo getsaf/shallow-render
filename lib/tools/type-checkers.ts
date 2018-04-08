@@ -1,4 +1,4 @@
-import { ModuleWithProviders, PipeTransform, Provider, ClassProvider, ExistingProvider, FactoryProvider, ValueProvider } from '@angular/core';
+import { ModuleWithProviders, PipeTransform, Provider, ClassProvider, ExistingProvider, FactoryProvider, ValueProvider, TypeProvider } from '@angular/core';
 import { pipeResolver } from './reflect';
 
 export function isModuleWithProviders(thing: any): thing is ModuleWithProviders {
@@ -24,6 +24,10 @@ export function isFactoryProvider(provider: Provider): provider is FactoryProvid
 export function isClassProvider(provider: Provider): provider is ClassProvider {
   const key: keyof ClassProvider = 'useClass';
   return key in provider;
+}
+
+export function isTypeProvider(provider: Provider): provider is TypeProvider {
+  return typeof provider === 'function';
 }
 
 export function isPipeTransform(thing: any): thing is PipeTransform {
