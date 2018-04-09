@@ -36,7 +36,7 @@ export class Shallow<TTestComponent> {
 
   constructor(testComponent: Type<TTestComponent>, testModule: Type<any>) {
     this.setup = new TestSetup(testComponent, testModule);
-    this.setup.dontMock.push(...Shallow._neverMock);
+    this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
   }
