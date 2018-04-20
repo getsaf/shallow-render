@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.10.0"></a>
+# 0.10.0 (2018-04-20)
+
+
+### Bug Fixes
+
+* Remove duplicate changelog entries and upgrade standard-version ([8041089](https://github.com/getsaf/shallow-render/commit/8041089))
+
+
+
 <a name="0.9.0"></a>
 # 0.9.0 (2018-04-05)
 
@@ -116,4 +126,3 @@ All notable changes to this project will be documented in this file. See [standa
 * Initial commit ([7335965](https://github.com/getsaf/shallow-render/commit/7335965))
 * Support providing bindings while rendering ([e75e749](https://github.com/getsaf/shallow-render/commit/e75e749))
 * Use MockCache after render has been called ([c28ae48](https://github.com/getsaf/shallow-render/commit/c28ae48))
-
