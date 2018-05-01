@@ -112,43 +112,43 @@ describe('Rendering', () => {
     it('can find things by CSS', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find('inner').length).toBe(1);
+      expect(find('inner')).toHaveFound(1);
     });
 
     it('can find by Component', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find(InnerComponent).length).toBe(1);
+      expect(find(InnerComponent)).toHaveFound(1);
     });
 
     it('finds by mocked Components', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find(ComponentToMock).length).toBe(1);
+      expect(find(ComponentToMock)).toHaveFound(1);
     });
 
     it('can find by Directive', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find(InnerComponent).length).toBe(1);
+      expect(find(InnerComponent)).toHaveFound(1);
     });
 
     it('finds by mocked directives', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find(DirectiveToMock).length).toBe(1);
+      expect(find(DirectiveToMock)).toHaveFound(1);
     });
 
     it('returns an empty query match when no matches found', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find('will-not-be-found').length).toBe(0);
+      expect(find('will-not-be-found')).toHaveFound(0);
     });
 
     it('returns a QueryMatch when a match is found', () => {
       const {find} = new Rendering(fixture, {}, testSetup);
 
-      expect(find('inner').length).toBe(1);
+      expect(find('inner')).toHaveFound(1);
       expect(find('inner').nativeElement).toBeDefined();
     });
   });
@@ -176,7 +176,7 @@ describe('Rendering', () => {
       const {findComponent} = new Rendering(fixture, {}, testSetup);
 
       const found = findComponent(OtherComponent);
-      expect(found.length).toBe(2);
+      expect(found).toHaveFound(2);
       found.forEach(i => expect(i instanceof OtherComponent).toBe(true));
     });
   });
@@ -204,7 +204,7 @@ describe('Rendering', () => {
       const {findDirective} = new Rendering(fixture, {}, testSetup);
 
       const found = findDirective(OtherDirective);
-      expect(found.length).toBe(2);
+      expect(found).toHaveFound(2);
       found.forEach(i => expect(i instanceof OtherDirective).toBe(true));
     });
   });

@@ -44,7 +44,7 @@ describe('component with directive', () => {
   it('renders with a tooltip when tooltip = true', async () => {
     const {find} = await shallow.render('<heading [withTooltip]="true"></heading>');
 
-    expect(find('h1[tooltip]').length).toBe(1);
+    expect(find('h1[tooltip]')).toHaveFoundOne();
   });
 
   it('renders with tooltip text when tooltip = true', async () => {
@@ -59,7 +59,7 @@ describe('component with directive', () => {
     const tooltip = find('h1[tooltip]');
     const noTooltip = find('h1');
 
-    expect(tooltip.length).toBe(0);
-    expect(noTooltip.length).toBe(1);
+    expect(tooltip).toHaveFound(0);
+    expect(noTooltip).toHaveFoundOne();
   });
 });
