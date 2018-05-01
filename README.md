@@ -312,25 +312,25 @@ const label = find('label');
 Shallow includes custom Jasmine matchers to help with query validation.
 
 `toHaveFound(count: number)` - Expect a query to have found an exact number of items.
-Example:
+
 ```typescript
 expect(find('h1')).toHaveFound(3);
 ```
 
 `toHaveFoundOne()` - Expect a query to have found exactly one items.
-Example:
+
 ```typescript
 expect(find('h1')).toHaveFoundOne();
 ```
 
 `toHaveFoundMoreThan(count: number)` - Expect a query to have found more than x items.
-Example:
+
 ```typescript
 expect(find('h1')).toHaveFoundMoreThan(0); // 1 or more
 ```
 
 `toHaveFoundLessThan(count: number)` - Expect a query to have found fewer than x items.
-Example:
+
 ```typescript
 expect(find('h1')).toHaveFoundLessThan(3); // 2 or fewer
 ```
