@@ -4,6 +4,11 @@ import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
 import { Renderer } from './models/renderer';
 import { TestSetup } from './models/test-setup';
+import { jasmineMatchers } from './tools/jasmine-matchers';
+
+beforeEach(() => {
+  jasmine.addMatchers(jasmineMatchers);
+});
 
 export class Shallow<TTestComponent> {
   readonly setup: TestSetup<TTestComponent>;
