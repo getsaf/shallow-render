@@ -56,21 +56,21 @@ describe('multi module', () => {
   it('renders a foo and a bar by default', async () => {
     const {find} = await shallow.render(`<foo-bar></foo-bar>`);
 
-    expect(find('foo').length).toBe(1);
-    expect(find('bar').length).toBe(1);
+    expect(find('foo')).toHaveFound(1);
+    expect(find('bar')).toHaveFound(1);
   });
 
   it('does not render a foo when showFoo is false', async () => {
     const {find} = await shallow.render(`<foo-bar [showFoo]="false"></foo-bar>`);
 
-    expect(find('foo').length).toBe(0);
-    expect(find('bar').length).toBe(1);
+    expect(find('foo')).toHaveFound(0);
+    expect(find('bar')).toHaveFound(1);
   });
 
   it('does not render a bar when showBar is false', async () => {
     const {find} = await shallow.render(`<foo-bar [showBar]="false"></foo-bar>`);
 
-    expect(find('foo').length).toBe(1);
-    expect(find('bar').length).toBe(0);
+    expect(find('foo')).toHaveFound(1);
+    expect(find('bar')).toHaveFound(0);
   });
 });

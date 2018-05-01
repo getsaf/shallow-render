@@ -297,15 +297,42 @@ Note that ALL of these methods and properties can be destructured from the rende
 
 For example:
 ```typescript
-  const rendering = await shallow.render();
-  const label = rendering.find('label');
+const rendering = await shallow.render();
+const label = rendering.find('label');
 ```
 
 is the same as the destructured version
 
 ```typescript
-  const {find} = await shallow.render();
-  const label = find('label');
+const {find} = await shallow.render();
+const label = find('label');
+```
+
+#### Custom Jasmine Expectations
+Shallow includes custom Jasmine matchers to help with query validation.
+
+`toHaveFound(count: number)` - Expect a query to have found an exact number of items.
+
+```typescript
+expect(find('h1')).toHaveFound(3);
+```
+
+`toHaveFoundOne()` - Expect a query to have found exactly one items.
+
+```typescript
+expect(find('h1')).toHaveFoundOne();
+```
+
+`toHaveFoundMoreThan(count: number)` - Expect a query to have found more than x items.
+
+```typescript
+expect(find('h1')).toHaveFoundMoreThan(0); // 1 or more
+```
+
+`toHaveFoundLessThan(count: number)` - Expect a query to have found fewer than x items.
+
+```typescript
+expect(find('h1')).toHaveFoundLessThan(3); // 2 or fewer
 ```
 
 #### `find` => `QueryMatch<DebugElement>`
@@ -322,6 +349,8 @@ const result = find('my-component'); // Find all elements that match this css se
 
 // Expect a single result like so:
 expect(result.length).toBe(1);
+// or
+expect(result).toHaveFound(1);
 // For single results, you can use it like any flat DebugElement
 expect(result.componentInstance.name).toBe('foo');
 ```

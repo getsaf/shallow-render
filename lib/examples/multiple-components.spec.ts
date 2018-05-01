@@ -70,7 +70,7 @@ describe('multiple components', () => {
     const {find} = await shallow.render('<awesome-list></awesome-list>');
 
     const li = find('list-item');
-    expect(li.length).toBe(2);
-    expect(find('.top-item').length).toBe(0);
+    expect(li).toHaveFound(2);
+    expect(find('.top-item')).toHaveFound(0);
   });
 });
