@@ -238,6 +238,21 @@ shallow.mockPipe(MyPipe, input => `MyPipe: ${input}`);
 ```
 Tells Shallow to have the `MyPipe` always perform the following action on input data. This lets you inspect your templates and controls for your Pipe's side-effects.
 
+#### Replace a module with a test module
+Angular has a pattern in which they provide full-module replacements specifically designed for testing (see: [HttpClientTestingModule](https://angular.io/api/common/http/testing/HttpClientTestingModule)). These testing modules can be used in your Shallow tests by replacing the original module with the test module.
+
+```typescript
+shallow.replaceModule(HttpClientModule, HttpClientTestingModule);
+
+```
+
+If you would like to do this globally, you can use `alwaysReplaceModule` in your global test setup.
+
+```typescript
+Shallow.alwaysReplaceModule(HttpClientModule, HttpClientTestingModule);
+
+```
+
 #### Rendering with `render`
 Once you've completed your setup, the final step is rendering. Render takes two arguments:
 * `html` (optional) -  This will be the HTML that exercises your component.
@@ -451,6 +466,7 @@ Check out the [examples](lib/examples) folder for more specific use cases includ
 * [Using Injection Tokens](lib/examples/mocking-injection-tokens.spec.ts)
 * [Multiple components](lib/examples/multiple-components.spec.ts)
 * [Multiple modules](lib/examples/multiple-modules.spec.ts)
+* [Using replaceModule to substitute test modules](lib/examples/using-replacement-modules.spec.ts)
 * [Using dontMock to bypass mocking in a spec](lib/examples/using-dont-mock.spec.ts)
 * [Using alwaysMock to globally mock things](lib/examples/using-always-mock.spec.ts)
 * [Using alwaysProvide to globally provide things](lib/examples/using-always-provide.spec.ts)

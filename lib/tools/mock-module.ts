@@ -25,6 +25,11 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
   }
 
   const modClass = mod as Type<any>;
+  const replacementModule = setup.moduleReplacements.get(modClass);
+  if (replacementModule) {
+    return setup.mockCache.add(mod, replacementModule) as TModule;
+  }
+
   const {imports, declarations, exports, entryComponents, providers} = getNgModuleAnnotations(modClass);
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
