@@ -39,24 +39,32 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
+  // Always replace one module with another replacement module.
+  private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any>>();
+  static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any>): typeof Shallow {
+    Shallow._alwaysReplaceModule.set(originalModule, replacementModule);
+    return Shallow;
+  }
+
   constructor(testComponent: Type<TTestComponent>, testModule: Type<any>) {
     this.setup = new TestSetup(testComponent, testModule);
     this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
+    Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
   }
 
-  provide(...providers: Provider[]) {
+  provide(...providers: Provider[]): this {
     this.setup.providers.push(...providers);
     return this;
   }
 
-  dontMock(...things: any[]) {
+  dontMock(...things: any[]): this {
     this.setup.dontMock.push(...things);
     return this;
   }
 
-  mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: Partial<TMock>) {
+  mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: Partial<TMock>): this {
     const mock = this.setup.mocks.get(mockClass) || {};
     this.setup.mocks.set(mockClass, {...mock, ...stubs as object});
     return this;
@@ -64,6 +72,11 @@ export class Shallow<TTestComponent> {
 
   mockPipe<TPipe extends PipeTransform>(pipe: Type<TPipe>, transform: TPipe['transform']) {
     this.setup.mockPipes.set(pipe, transform);
+    return this;
+  }
+
+  replaceModule(originalModule: Type<any>, replacementModule: Type<any>): this {
+    this.setup.moduleReplacements.set(originalModule, replacementModule);
     return this;
   }
 

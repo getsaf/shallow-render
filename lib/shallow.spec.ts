@@ -39,6 +39,17 @@ describe('Shallow', () => {
     });
   });
 
+  describe('alwaysReplaceModule', () => {
+    it('modules are automatically added to setup.replacementModules on construction', () => {
+      class ReplacementModule {}
+      Shallow.alwaysReplaceModule(TestModule, ReplacementModule);
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.moduleReplacements.get(TestModule))
+        .toBe(ReplacementModule);
+    });
+  });
+
   describe('alwaysMock', () => {
     it('items are automatically added to setup.mock on construction', () => {
       class MyService {
@@ -138,6 +149,17 @@ describe('Shallow', () => {
 
       const transform = shallow.setup.mockPipes.get(TestPipe);
       expect(transform && transform()).toEqual({test: 'mocked pipe'});
+    });
+  });
+
+  describe('replaceModule', () => {
+    it('adds replacementModule', () => {
+      class ReplacementModule {}
+      const shallow = new Shallow(TestComponent, TestModule)
+        .replaceModule(TestModule, ReplacementModule);
+
+      expect(shallow.setup.moduleReplacements.get(TestModule))
+        .toBe(ReplacementModule);
     });
   });
 });
