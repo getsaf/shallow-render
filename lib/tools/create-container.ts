@@ -14,7 +14,7 @@ export class ShallowRenderContainer {}
 export function createContainer(template: string, bindings: any): Type<ShallowRenderContainer> {
   @Component({template})
   class ProxyShallowContainer extends ShallowRenderContainer {}
-  Object.assign(ProxyShallowContainer.prototype, spyOnBindings(bindings));
+  ProxyShallowContainer.prototype = spyOnBindings(bindings);
 
   return ProxyShallowContainer;
 }

@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Component, NgModule } from '@angular/core';
+import { Input, Output, EventEmitter, Component, NgModule, OnChanges } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
@@ -11,12 +11,19 @@ interface Person {
 @Component({
   selector: 'born-in',
   template: `
-    <label (click)="select.emit(person)">{{person.firstName}} {{person.lastName}} was born in {{person.birthDate.getFullYear()}}</label>
+    <label id="personLabel" (click)="select.emit(person)">{{person.firstName}} {{person.lastName}} was born in {{person.birthDate.getFullYear()}}</label>
+    <label id="ngOnChangesCount">{{ngOnChangesCount}}</label>
   `,
 })
-class BornInComponent {
+class BornInComponent implements OnChanges {
   @Input() person: Person;
   @Output() select = new EventEmitter<Person>();
+
+  public ngOnChangesCount = 0;
+
+  ngOnChanges() {
+    this.ngOnChangesCount += 1;
+  }
 }
 
 @NgModule({
@@ -39,12 +46,12 @@ describe('component with bindings', () => {
   };
 
   it('displays the name and year the person was born', async () => {
-    const {element} = await shallow.render(
+    const {find} = await shallow.render(
       '<born-in [person]="testPerson"></born-in>',
       {bind: {testPerson}}
     );
 
-    expect(element.nativeElement.innerText)
+    expect(find('#personLabel').nativeElement.innerText)
       .toBe('Brandon Domingue was born in 1982');
   });
 
@@ -53,8 +60,22 @@ describe('component with bindings', () => {
       '<born-in [person]="testPerson" (select)="handleSelect($event)"></born-in>',
       {bind: {testPerson, handleSelect: () => undefined}}
     );
-    find('label').nativeElement.click();
+    find('#personLabel').nativeElement.click();
 
     expect(bindings.handleSelect).toHaveBeenCalledWith(testPerson);
+  });
+
+  it('emits the person when clicked', async () => {
+    const {find, fixture, bindings} = await shallow.render(
+      '<born-in [person]="testPerson" (select)="handleSelect($event)"></born-in>',
+      {bind: {testPerson, handleSelect: () => undefined}}
+    );
+
+    expect(find('#ngOnChangesCount').nativeElement.innerText).toEqual('1');
+
+    bindings.testPerson = {firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24')};
+    fixture.detectChanges();
+
+    expect(find('#ngOnChangesCount').nativeElement.innerText).toEqual('2');
   });
 });
