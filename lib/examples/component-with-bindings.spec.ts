@@ -65,17 +65,17 @@ describe('component with bindings', () => {
     expect(bindings.handleSelect).toHaveBeenCalledWith(testPerson);
   });
 
-  it('emits the person when clicked', async () => {
+  it('displays the number of times the person was updated', async () => {
     const {find, fixture, bindings} = await shallow.render(
-      '<born-in [person]="testPerson" (select)="handleSelect($event)"></born-in>',
-      {bind: {testPerson, handleSelect: () => undefined}}
+      '<born-in [person]="testPerson"></born-in>',
+      {bind: {testPerson}}
     );
 
-    expect(find('#ngOnChangesCount').nativeElement.innerText).toEqual('1');
+    expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('1');
 
     bindings.testPerson = {firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24')};
     fixture.detectChanges();
 
-    expect(find('#ngOnChangesCount').nativeElement.innerText).toEqual('2');
+    expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('2');
   });
 });
