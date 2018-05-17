@@ -1,12 +1,6 @@
-import { ShallowRenderContainer, createContainer } from './create-container';
+import { createContainer } from './create-container';
 
 describe('createContainerComponent', () => {
-  it('returns an extension of ShallowRenderContainer', () => {
-    const Container = createContainer('', {});
-
-    expect(new Container() instanceof ShallowRenderContainer).toBe(true);
-  });
-
   it('attaches binding properties to container prototype', () => {
     const bindings: any = {foo: 'foo', bar: 'bar'};
     const Container = createContainer('', bindings);
