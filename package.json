@@ -44,18 +44,21 @@
   },
   "homepage": "https://github.com/getsaf/shallow-render#readme",
   "peerDependencies": {
+    "@angular/common": ">=5.x <=6.x",
+    "@angular/compiler": ">=5.x <=6.x",
     "@angular/core": ">=5.x <=6.x",
-    "@angular/forms": ">=5.x <=6.x"
+    "@angular/forms": ">=5.x <=6.x",
+    "@angular/platform-browser": ">=5.x <=6.x"
   },
   "dependencies": {
-    "@angular/common": "6.x",
-    "@angular/compiler": "6.x",
-    "@angular/core": "6.x",
-    "@angular/forms": "6.x",
-    "@angular/platform-browser": "6.x",
     "ng-mocks": "^6.0.1"
   },
   "devDependencies": {
+    "@angular/common": "6.x",
+    "@angular/core": "6.x",
+    "@angular/forms": "6.x",
+    "@angular/compiler": "6.x",
+    "@angular/platform-browser": "6.x",
     "@angular/platform-browser-dynamic": "6.x",
     "@types/jasmine": "^2.5.53",
     "@types/node": "^8.0.17",
