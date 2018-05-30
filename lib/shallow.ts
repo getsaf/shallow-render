@@ -5,6 +5,9 @@ import { RenderOptions, Rendering } from './models/rendering';
 import { Renderer } from './models/renderer';
 import { TestSetup } from './models/test-setup';
 import { jasmineMatchers } from './tools/jasmine-matchers';
+// This import ensures JasmineMatchers are available any time
+// shallow is imported
+import './tools/jasmine-matchers-namespace';
 
 beforeEach(() => {
   jasmine.addMatchers(jasmineMatchers);
