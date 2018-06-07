@@ -1,8 +1,9 @@
 import { QueryMatch } from '../models/query-match';
-import CustomMatcherFactories = jasmine.CustomMatcherFactories;
-require('./jasmine-matchers-namespace'); // tslint:disable-line
+// This import ensures JasmineMatchers are available any time
+// shallow is imported
+import './jasmine-matchers-namespace';
 
-export const jasmineMatchers: CustomMatcherFactories = {
+const jasmineMatchers: jasmine.CustomMatcherFactories = {
   toHaveFound: () => ({
     compare: (actual: QueryMatch<any>, expected: number) => ({
       pass: actual.length === expected,
@@ -31,3 +32,7 @@ export const jasmineMatchers: CustomMatcherFactories = {
     })
   }),
 };
+
+beforeAll(() => {
+  jasmine.addMatchers(jasmineMatchers);
+});
