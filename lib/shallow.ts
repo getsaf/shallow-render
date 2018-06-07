@@ -1,4 +1,4 @@
-import { InjectionToken, Type, PipeTransform, Provider } from '@angular/core';
+import { InjectionToken, ModuleWithProviders, Type, PipeTransform, Provider } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
@@ -43,7 +43,7 @@ export class Shallow<TTestComponent> {
   }
 
   // Always replace one module with another replacement module.
-  private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any>>();
+  private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
   static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any>): typeof Shallow {
     Shallow._alwaysReplaceModule.set(originalModule, replacementModule);
     return Shallow;
@@ -78,7 +78,7 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  replaceModule(originalModule: Type<any>, replacementModule: Type<any>): this {
+  replaceModule(originalModule: Type<any>, replacementModule: Type<any> | ModuleWithProviders): this {
     this.setup.moduleReplacements.set(originalModule, replacementModule);
     return this;
   }
