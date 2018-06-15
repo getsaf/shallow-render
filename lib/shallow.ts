@@ -76,8 +76,31 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  async render<TBindings>(html?: string, renderOptions?: Partial<RenderOptions<TBindings>>): Promise<Rendering<TTestComponent, TBindings>> {
+  // Render no options, just the component and no bindings
+  render(): Promise<Rendering<TTestComponent, never>>;
+
+  render<TBindings>(
+    html: string,
+    renderOptions?: Partial<RenderOptions<TBindings>>
+  ): Promise<Rendering<TTestComponent, TBindings>>;
+
+  // Render with just renderOptions, means you must provide bindings that match
+  // the TestComponent
+  render<TBindings extends Partial<TTestComponent>>(
+    renderOptions?: Partial<RenderOptions<TBindings>>
+  ): Promise<Rendering<TTestComponent, TBindings>>;
+
+  async render<TBindings>(
+    htmlOrRenderOptions?: string | Partial<RenderOptions<TBindings>>,
+    renderOptions?: Partial<RenderOptions<TBindings>>
+  ) {
     const renderer = new Renderer(this.setup);
-    return renderer.render(html, renderOptions);
+    if (typeof htmlOrRenderOptions === 'string') {
+      return renderer.render(htmlOrRenderOptions, renderOptions);
+    } else if (htmlOrRenderOptions !== undefined) {
+      return renderer.render(htmlOrRenderOptions);
+    } else {
+      return renderer.render();
+    }
   }
 }

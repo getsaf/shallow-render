@@ -1,17 +1,26 @@
 import { Shallow } from './shallow';
-import { PipeTransform, InjectionToken } from '@angular/core';
+import { Pipe, Component, NgModule, PipeTransform, InjectionToken } from '@angular/core';
 
 class TestService {
   foo() { return 'foo'; }
   bar() { return 'bar'; }
 }
-class TestComponent {}
-class TestModule {}
+@Component({
+  selector: 'test',
+  template: '<hr/>'
+}) class TestComponent {}
+
+@Pipe({name: 'test'})
 class TestPipe implements PipeTransform {
   transform(key: string) {
     return {test: 'pipe'};
   }
 }
+
+@NgModule({
+  declarations: [TestComponent, TestPipe]
+})
+class TestModule {}
 
 describe('Shallow', () => {
   it('includes the testComponent in setup.dontMock', () => {
@@ -160,6 +169,29 @@ describe('Shallow', () => {
 
       expect(shallow.setup.moduleReplacements.get(TestModule))
         .toBe(ReplacementModule);
+    });
+  });
+
+  describe('render', () => {
+    it('can render with only HTML', async () => {
+      const {instance} = await new Shallow(TestComponent, TestModule)
+        .render('<test></test>');
+
+      expect(instance instanceof TestComponent).toBe(true);
+    });
+
+    it('can render with no parameters', async () => {
+      const {instance} = await new Shallow(TestComponent, TestModule)
+        .render();
+
+      expect(instance instanceof TestComponent).toBe(true);
+    });
+
+    it('can render with only renderOptions', async () => {
+      const {instance} = await new Shallow(TestComponent, TestModule)
+        .render({detectChanges: false});
+
+      expect(instance instanceof TestComponent).toBe(true);
     });
   });
 });
