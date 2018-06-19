@@ -91,4 +91,14 @@ describe('mockPrivider', () => {
     expect(providers[1].provide).toBe(BarService);
     expect(providers[1].useValue instanceof MockOfProvider).toBe(true);
   });
+
+  it('mocks services even when they are part of a provider array in dontMock', () => {
+    // Angular allows a provider to be defined as an array of providers
+    // so in this instance, adding an array that contains FooService *should*
+    // be the same as adding just FooService.
+    testSetup.dontMock.push([FooService]);
+    const providers = mockProvider([FooService], testSetup) as any[];
+
+    expect(providers[0]).toBe(FooService);
+  });
 });
