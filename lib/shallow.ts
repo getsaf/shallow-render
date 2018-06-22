@@ -2,7 +2,7 @@ import { InjectionToken, ModuleWithProviders, Type, PipeTransform, Provider } fr
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
-import { Renderer } from './models/renderer';
+import { Renderer, InvalidStaticPropertyMockError } from './models/renderer';
 import { TestSetup } from './models/test-setup';
 import './tools/jasmine-matchers';
 
@@ -63,6 +63,15 @@ export class Shallow<TTestComponent> {
   mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: Partial<TMock>): this {
     const mock = this.setup.mocks.get(mockClass) || {};
     this.setup.mocks.set(mockClass, {...mock, ...stubs as object});
+    return this;
+  }
+
+  // TODO: Support property mocks or use a conditional partial type (TS 2.8+)to exclude non-function properties
+  mockStatic<TMock extends object>(obj: TMock, stubs: Partial<TMock>): this {
+    InvalidStaticPropertyMockError
+      .checkMockForStaticProperties(stubs);
+    const mock = this.setup.staticMocks.get(obj) || {};
+    this.setup.staticMocks.set(obj, {...mock, ...stubs as object});
     return this;
   }
 

@@ -12,8 +12,40 @@ export class InvalidInputBindError {
   constructor(public availableInputs: string[], public key: string) {}
 }
 
+export class InvalidStaticPropertyMockError {
+  static checkMockForStaticProperties(stubs: object) {
+    Object.keys(stubs).forEach(key => {
+      if (typeof (stubs as any)[key] !== 'function') {
+        throw new InvalidStaticPropertyMockError(key);
+      }
+    });
+  }
+
+  public readonly message: string;
+  constructor(key: string | symbol) {
+    this.message = `Tried to mock the '${key}' property but only functions are supported for static mocks.`;
+  }
+}
+
 export class Renderer<TComponent> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}
+
+  private _mockStatics() {
+    this._setup.staticMocks.forEach((stubs, obj) => {
+      InvalidStaticPropertyMockError
+        .checkMockForStaticProperties(stubs);
+      Object.keys(stubs).forEach(key => {
+        const stub = stubs[key];
+        if (!(jasmine as any).isSpy(obj[key])) {
+          spyOn(obj, key).and.callFake(stub);
+        } else {
+          const spy = obj[key] as jasmine.Spy;
+          spy.calls.reset();
+          spy.and.callFake(stub);
+        }
+      });
+    });
+  }
 
   render<TBindings extends Partial<TComponent>>(
     options: Partial<RenderOptions<TBindings>>
@@ -37,6 +69,9 @@ export class Renderer<TComponent> {
       bind: {} as TBindings,
       ...options,
     };
+
+    // Go ahead and mock static things
+    this._mockStatics();
 
     const ComponentClass = template
       ? createContainer(template, finalOptions.bind)
