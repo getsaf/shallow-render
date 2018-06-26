@@ -42,7 +42,7 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
-  constructor(testComponent: Type<TTestComponent>, testModule: Type<any>) {
+  constructor(testComponent: Type<TTestComponent>, testModule: Type<any> | ModuleWithProviders) {
     this.setup = new TestSetup(testComponent, testModule);
     this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
