@@ -1,7 +1,10 @@
 import { Shallow } from './shallow';
 import { Pipe, Component, NgModule, PipeTransform, InjectionToken } from '@angular/core';
+import { InvalidStaticPropertyMockError } from './models/renderer';
 
 class TestService {
+  static staticFoo() { return 'static foo'; }
+  static staticBar() { return 'static bar'; }
   foo() { return 'foo'; }
   bar() { return 'bar'; }
 }
@@ -29,8 +32,7 @@ describe('Shallow', () => {
     expect(shallow.setup.dontMock).toContain(TestComponent);
   });
 
-  describe('neverMock', () => {
-    it('items are automatically added to setup.dontMock on construction', () => {
+  describe('neverMock', () => { it('items are automatically added to setup.dontMock on construction', () => {
       Shallow.neverMock('NEVER_MOCKED');
       const shallow = new Shallow(TestComponent, TestModule);
 
@@ -148,6 +150,43 @@ describe('Shallow', () => {
 
       expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo');
       expect(shallow.setup.mocks.get(TestService).bar()).toBe('mocked bar');
+    });
+  });
+
+  describe('mockStatic', () => {
+    it('throws an error when a non-method property is mocked', async () => {
+      const staticObject = {
+        staticNumber: 999
+      };
+
+      expect(() => new Shallow(TestComponent, TestModule)
+        .mockStatic(staticObject, {staticNumber: 999}))
+        .toThrow(new InvalidStaticPropertyMockError('staticNumber'));
+    });
+
+    it('adds a static mock to the staticMocks', () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mockStatic(TestService, {staticFoo: () => 'mocked foo'});
+
+      expect(shallow.setup.staticMocks.get(TestService).staticFoo())
+        .toBe('mocked foo');
+    });
+
+    it('adds mocks on mocks', () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mockStatic(TestService, {staticFoo: () => 'mocked foo'})
+        .mockStatic(TestService, {staticFoo: () => 'mocked foo two'});
+
+      expect(shallow.setup.staticMocks.get(TestService).staticFoo()).toBe('mocked foo two');
+    });
+
+    it('adds mocks to mocks', () => {
+      const shallow = new Shallow(TestComponent, TestModule)
+        .mockStatic(TestService, {staticFoo: () => 'mocked foo'})
+        .mockStatic(TestService, {staticBar: () => 'mocked bar'});
+
+      expect(shallow.setup.staticMocks.get(TestService).staticFoo()).toBe('mocked foo');
+      expect(shallow.setup.staticMocks.get(TestService).staticBar()).toBe('mocked bar');
     });
   });
 

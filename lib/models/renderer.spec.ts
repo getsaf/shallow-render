@@ -1,6 +1,16 @@
 import { Input, Output, Component, EventEmitter, NgModule } from '@angular/core';
-import { Renderer } from './renderer';
+import { Renderer, InvalidStaticPropertyMockError } from './renderer';
 import { TestSetup } from './test-setup';
+
+class TestUtility { // tslint:disable-line no-unnecessary-class
+  static readonly staticNumber = 123;
+  static staticMethod() { return 'foo'; }
+}
+
+const staticObject = {
+  staticNumber: 123,
+  staticMethod: () => 'foo',
+};
 
 @Component({
   selector: 'thing',
@@ -21,10 +31,47 @@ class TestModule {}
 
 describe('Renderer', () => {
   let renderer: Renderer<TestComponent>;
+  let setup: TestSetup<TestComponent>;
   beforeEach(() => {
-    const setup = new TestSetup(TestComponent, TestModule);
+    setup = new TestSetup(TestComponent, TestModule);
     setup.dontMock.push(TestComponent);
     renderer = new Renderer(setup);
+  });
+
+  it('mocks static CLASS methods from the test setup', async () => {
+    setup.staticMocks.set(TestUtility, {staticMethod: () => 'mocked foo'});
+    await renderer.render();
+
+    expect(TestUtility.staticMethod()).toBe('mocked foo');
+  });
+
+  it('mocks static OBJECT methods from the test setup', async () => {
+    setup.staticMocks.set(staticObject, {staticMethod: () => 'mocked foo'});
+    await renderer.render();
+
+    expect(staticObject.staticMethod()).toBe('mocked foo');
+  });
+
+  it('mocks static CLASS properties throws an error', async () => {
+    setup.staticMocks.set(TestUtility, {staticNumber: 999});
+
+    try {
+      await renderer.render();
+      fail('render should have thrown an error');
+    } catch (e) {
+      expect(e instanceof InvalidStaticPropertyMockError).toBe(true);
+    }
+  });
+
+  it('mocks static OBJECT properties throws an error', async () => {
+    setup.staticMocks.set(staticObject, {staticNumber: 999});
+
+    try {
+      await renderer.render();
+      fail('render should have thrown an error');
+    } catch (e) {
+      expect(e instanceof InvalidStaticPropertyMockError).toBe(true);
+    }
   });
 
   it('spys on output event emitters', async () => {
