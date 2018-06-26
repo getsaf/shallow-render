@@ -19,7 +19,7 @@
     "build": "npm run clean && tsc",
     "build:all": "npm run lint && npm run test && npm run build",
     "release:minor": "VERSION=minor npm run release",
-    "release": "npm run build:all && npm version ${VERSION:-patch} && echo 'Now run:\ngit push --tags && npm publish'",
+    "release": "npm run build:all && npm version ${VERSION:-patch} && echo 'Now run:\ngit push --follow-tags && npm publish'",
     "test": "karma start",
     "test:fix": "npm run lint:fix && npm run test",
     "test:watch": "npm test -- --auto-watch=true --single-run=false",
