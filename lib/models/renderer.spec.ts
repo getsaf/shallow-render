@@ -1,4 +1,4 @@
-import { Input, Output, Component, EventEmitter, NgModule } from '@angular/core';
+import { Input, Output, OnInit, Component, EventEmitter, NgModule } from '@angular/core';
 import { Renderer, InvalidStaticPropertyMockError } from './renderer';
 import { TestSetup } from './test-setup';
 
@@ -14,14 +14,22 @@ const staticObject = {
 
 @Component({
   selector: 'thing',
-  template: '<div></div>'
+  template: `
+    <div>{{myInput}}</div>
+    <span>{{promiseResult}}</span>
+  `
 })
-class TestComponent {
+class TestComponent implements OnInit {
   @Input('renamedInput') fooInput: string;
   @Input() myInput: string;
   myProperty: string;
   @Output() myOutput = new EventEmitter<any>();
   emitterWithoutOutputDecorator = new EventEmitter<any>();
+  promiseResult: string;
+
+  async ngOnInit() {
+    this.promiseResult = await Promise.resolve('Promise Result');
+  }
 }
 
 @NgModule({
@@ -141,6 +149,39 @@ describe('Renderer', () => {
       } catch {
         done();
       }
+    });
+  });
+
+  describe('whenStable', () => {
+    fit('is awaited by default', async () => {
+      const {find} = await renderer.render();
+
+      expect(find('span').nativeElement.textContent).toBe('Promise Result');
+    });
+
+    it('is not awaited when disabled in options', async () => {
+      const {find} = await renderer.render({whenStable: false});
+
+      expect(find('span').nativeElement.textContent).toBe('');
+    });
+  });
+
+  describe('detectChanges', () => {
+    it('is detected by default', async () => {
+      const {find} = await renderer.render({
+        bind: {myInput: 'FOO'}
+      });
+
+      expect(find('div').nativeElement.textContent).toBe('FOO');
+    });
+
+    it('is not detected by when disabled in options', async () => {
+      const {find} = await renderer.render({
+        detectChanges: false,
+        bind: {myInput: 'FOO'}
+      });
+
+      expect(find('div').nativeElement.textContent).toBe('');
     });
   });
 });

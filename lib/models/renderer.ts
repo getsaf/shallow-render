@@ -64,8 +64,9 @@ export class Renderer<TComponent> {
       ? [templateOrOptions, optionsOrUndefined]
       : [undefined, templateOrOptions];
 
-    const finalOptions = {
+    const finalOptions: RenderOptions<TBindings> = {
       detectChanges: true,
+      whenStable: true,
       bind: {} as TBindings,
       ...options,
     };
@@ -118,6 +119,11 @@ export class Renderer<TComponent> {
         }
         (rendering.instance as any)[k] = (finalOptions.bind as any)[k];
       });
+    }
+
+    if (finalOptions.whenStable) {
+      fixture.detectChanges();
+      await fixture.whenStable();
     }
 
     if (finalOptions.detectChanges) {

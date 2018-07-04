@@ -6,6 +6,7 @@ import { TestSetup } from './test-setup';
 
 export interface RenderOptions<TBindings> {
   detectChanges: boolean;
+  whenStable: boolean;
   bind: TBindings;
 }
 
