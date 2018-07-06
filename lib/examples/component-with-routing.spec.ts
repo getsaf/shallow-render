@@ -19,8 +19,8 @@ class GoHomeLinkComponent {
 
   constructor(public router: Router) {}
 
-  goHome() {
-    this.router.navigate(['home']);
+  async goHome() {
+    await this.router.navigate(['home']);
   }
 }
 const routes: Routes = [

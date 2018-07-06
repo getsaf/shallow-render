@@ -80,7 +80,7 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  replaceModule(originalModule: Type<any>, replacementModule: Type<any> | ModuleWithProviders): this {
+  replaceModule(originalModule: Type<any> | ModuleWithProviders, replacementModule: Type<any> | ModuleWithProviders): this {
     this.setup.moduleReplacements.set(originalModule, replacementModule);
     return this;
   }
