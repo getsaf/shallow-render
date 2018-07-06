@@ -122,7 +122,9 @@ export class Renderer<TComponent> {
     }
 
     if (finalOptions.whenStable) {
-      fixture.detectChanges();
+      if (finalOptions.detectChanges) {
+        fixture.detectChanges();
+      }
       await fixture.whenStable();
     }
 

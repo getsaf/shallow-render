@@ -175,7 +175,7 @@ describe('Renderer', () => {
       expect(find('div').nativeElement.textContent).toBe('FOO');
     });
 
-    it('is not detected by when disabled in options', async () => {
+    it('is not detected when disabled in options', async () => {
       const {find} = await renderer.render({
         detectChanges: false,
         bind: {myInput: 'FOO'}
