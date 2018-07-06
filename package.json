@@ -13,7 +13,7 @@
     "definition": "dist/index"
   },
   "scripts": {
-    "clean": "rm -rf dist coverage",
+    "clean": "rm -rf dist",
     "lint": "tslint -t stylish --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "build": "npm run clean && tsc",
