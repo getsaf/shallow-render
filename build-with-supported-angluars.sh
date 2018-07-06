@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 VERSIONS="5.0 5.1 5 6"
-PACKAGES="common compiler core forms platform-browser platform-browser-dynamic"
+PACKAGES="common compiler core forms platform-browser platform-browser-dynamic router"
 
 for version in $VERSIONS
 do

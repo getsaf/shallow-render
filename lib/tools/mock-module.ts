@@ -6,12 +6,25 @@ import { mockProvider } from './mock-provider';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
 
+export class InvalidModuleError {
+  readonly message: string;
+  constructor(public mod: any) {
+    this.message = `Don't know how to mock module: ${mod}`;
+  }
+}
+
 export type AnyNgModule = any[] | Type<any> | ModuleWithProviders;
 export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: TestSetup<any>): TModule {
   const cached = setup.mockCache.find(mod);
   if (cached) {
     return cached;
   }
+
+  const replacementModule = setup.moduleReplacements.get(mod as any);
+  if (replacementModule) {
+    return setup.mockCache.add(mod, replacementModule) as TModule;
+  }
+
   if (Array.isArray(mod)) {
     return setup.mockCache.add(mod, mod.map(i => mockModule(i, setup))) as TModule; // Recursion
   } else if (isModuleWithProviders(mod)) {
@@ -21,14 +34,10 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
       providers: mod.providers && mod.providers.map(p => mockProvider(p, setup))
     } as TModule;
   } else if (typeof mod !== 'function') {
-    throw new Error(`Don't know how to mock module: ${mod}`);
+    throw new InvalidModuleError(mod);
   }
 
   const modClass = mod as Type<any>;
-  const replacementModule = setup.moduleReplacements.get(modClass);
-  if (replacementModule) {
-    return setup.mockCache.add(mod, replacementModule) as TModule;
-  }
 
   const {imports, declarations, exports, entryComponents, providers} = getNgModuleAnnotations(modClass);
   const mockedModule: NgModule = {

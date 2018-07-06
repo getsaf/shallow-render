@@ -13,7 +13,7 @@
     "definition": "dist/index"
   },
   "scripts": {
-    "clean": "rm -rf dist coverage",
+    "clean": "rm -rf dist",
     "lint": "tslint -t stylish --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "build": "npm run clean && tsc",
@@ -55,11 +55,12 @@
   },
   "devDependencies": {
     "@angular/common": "6.x",
+    "@angular/compiler": "6.x",
     "@angular/core": "6.x",
     "@angular/forms": "6.x",
-    "@angular/compiler": "6.x",
     "@angular/platform-browser": "6.x",
     "@angular/platform-browser-dynamic": "6.x",
+    "@angular/router": "6.x",
     "@types/jasmine": "^2.5.53",
     "@types/node": "^8.0.17",
     "core-js": "^2.5.6",
