@@ -153,7 +153,7 @@ describe('Renderer', () => {
   });
 
   describe('whenStable', () => {
-    fit('is awaited by default', async () => {
+    it('is awaited by default', async () => {
       const {find} = await renderer.render();
 
       expect(find('span').nativeElement.textContent).toBe('Promise Result');
