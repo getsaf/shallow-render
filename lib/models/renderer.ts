@@ -1,15 +1,21 @@
-import { EventEmitter } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { Directive, EventEmitter, Type } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Rendering, RenderOptions } from './rendering';
 import { createContainer } from '../tools/create-container';
 import { TestSetup } from './test-setup';
 import { directiveResolver } from '../tools/reflect';
 import { mockProvider } from '../tools/mock-provider';
 import { copyTestModule } from '../tools/copy-test-module';
+import { By } from '@angular/platform-browser';
 
 export class InvalidInputBindError {
   message = `Tried to bind to a property that is not marked as @Input: ${this.key}\nAvailable input bindings: ${this.availableInputs}`;
   constructor(public availableInputs: string[], public key: string) {}
+}
+
+export class MissingTestComponentError {
+  message = `${this.testComponent.name} was not found in test template`;
+  constructor(public testComponent: Type<any>) {}
 }
 
 export class InvalidStaticPropertyMockError {
@@ -91,47 +97,83 @@ export class Renderer<TComponent> {
 
     const {imports, providers, declarations} = copyTestModule(this._setup);
     await TestBed.configureTestingModule({
-        imports,
-        providers,
-        declarations: [...declarations, ComponentClass],
-      }).compileComponents();
+      imports,
+      providers,
+      declarations: [...declarations, ComponentClass],
+    }).compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);
-    const rendering = new Rendering(fixture, finalOptions.bind, this._setup);
+    const instance = this._getInstance(fixture);
 
-    if (resolvedTestComponent.outputs) {
-      resolvedTestComponent.outputs.forEach(k => {
-        const value = (rendering.instance as any)[k];
+    this._spyOnOutputs(instance, resolvedTestComponent);
+
+    if (!template) {
+      // If no template is used, the bindings should go directly to the
+      // component @Inputs
+      this._bindInputsDirectlyToComponent(instance, resolvedTestComponent, finalOptions.bind);
+    }
+
+    await this._runComponentLifecycle(fixture, finalOptions);
+    const element = this._getElement(fixture);
+
+    return new Rendering(fixture, element, instance, finalOptions.bind, this._setup);
+  }
+
+  private _spyOnOutputs(instance: TComponent, directive: Directive) {
+    if (directive.outputs) {
+      directive.outputs.forEach(k => {
+        const value = (instance as any)[k];
         if (value && value instanceof EventEmitter) {
           spyOn(value, 'emit').and.callThrough();
         }
       });
     }
+  }
 
-    if (!template) {
-      // If no template is used, the bindings should go directly to the
-      // component @Inputs
-      const inputPropertyNames = (resolvedTestComponent.inputs || [])
-        .map(k => k.split(':')[0]);
-      Object.keys(finalOptions.bind).forEach(k => {
-        if (!inputPropertyNames.includes(k)) {
-          throw new InvalidInputBindError(inputPropertyNames, k);
-        }
-        (rendering.instance as any)[k] = (finalOptions.bind as any)[k];
-      });
-    }
+  private _bindInputsDirectlyToComponent(instance: TComponent, directive: Directive, bindings: Partial<TComponent>) {
+    const inputPropertyNames = (directive.inputs || [])
+      .map(k => k.split(':')[0]);
+    Object.keys(bindings).forEach(k => {
+      if (!inputPropertyNames.includes(k)) {
+        throw new InvalidInputBindError(inputPropertyNames, k);
+      }
+      (instance as any)[k] = (bindings as any)[k];
+    });
+  }
 
-    if (finalOptions.whenStable) {
-      if (finalOptions.detectChanges) {
+  private async _runComponentLifecycle(fixture: ComponentFixture<any>, options: RenderOptions<any>) {
+    if (options.whenStable) {
+      if (options.detectChanges) {
         fixture.detectChanges();
       }
       await fixture.whenStable();
     }
 
-    if (finalOptions.detectChanges) {
+    if (options.detectChanges) {
       fixture.detectChanges();
     }
+  }
 
-    return rendering;
+  private _getElement(fixture: ComponentFixture<any>) {
+    return fixture.componentInstance instanceof this._setup.testComponent
+      ? fixture.debugElement
+      : fixture.debugElement.query(By.directive(this._setup.testComponent)) || fixture.debugElement.children[0];
+  }
+
+  private _getInstance(fixture: ComponentFixture<any>) {
+    const element = this._getElement(fixture);
+    const instance = element
+      ? element.injector.get<TComponent>(this._setup.testComponent)
+      : this._getStructuralDirectiveInstance(fixture);
+
+    return instance;
+  }
+
+  private _getStructuralDirectiveInstance(fixture: ComponentFixture<any>) {
+    const [debugNode] = fixture.debugElement.queryAllNodes(By.directive(this._setup.testComponent));
+    if (debugNode) {
+      return debugNode.injector.get<TComponent>(this._setup.testComponent);
+    }
+    throw new MissingTestComponentError(this._setup.testComponent);
   }
 }

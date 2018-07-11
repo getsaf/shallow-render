@@ -1,6 +1,7 @@
 import { Input, Output, OnInit, Component, EventEmitter, NgModule } from '@angular/core';
 import { Renderer, InvalidStaticPropertyMockError } from './renderer';
 import { TestSetup } from './test-setup';
+import { NgIf } from '@angular/common';
 
 class TestUtility { // tslint:disable-line no-unnecessary-class
   static readonly staticNumber = 123;
@@ -182,6 +183,29 @@ describe('Renderer', () => {
       });
 
       expect(find('div').nativeElement.textContent).toBe('');
+    });
+  });
+
+  describe('structural directives', () => {
+    it('element is the first child element when testing a structural directive', async () => {
+      const myRenderer = new Renderer(new TestSetup(NgIf, TestModule));
+      const {element} = await myRenderer.render('<b *ngIf="true"></b>');
+
+      expect(element.nativeElement.tagName).toBe('B');
+    });
+
+    it('element is undefined when the structural directive does not render an element', async () => {
+      const myRenderer = new Renderer(new TestSetup(NgIf, TestModule));
+      const {element} = await myRenderer.render('<b *ngIf="false"></b>');
+
+      expect(element).not.toBeDefined();
+    });
+
+    it('instance is the directive instance when testing a structural directive', async () => {
+      const myRenderer = new Renderer(new TestSetup(NgIf, TestModule));
+      const {instance} = await myRenderer.render('<b *ngIf="true"></b>');
+
+      expect(instance instanceof NgIf).toBe(true);
     });
   });
 });

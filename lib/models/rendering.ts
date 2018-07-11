@@ -11,20 +11,13 @@ export interface RenderOptions<TBindings> {
 }
 
 export class Rendering<TComponent, TBindings> {
-  readonly element: DebugElement;
-  readonly instance: TComponent;
-
-  constructor(public fixture: ComponentFixture<any>, public bindings: TBindings, private readonly _setup: TestSetup<TComponent>) {
-    this.element = this.fixture.componentInstance instanceof this._setup.testComponent
-      ? this.fixture.debugElement
-      : this.fixture.debugElement.query(By.directive(this._setup.testComponent));
-
-    if (!this.element) {
-      throw new Error(`${this._setup.testComponent.name} was not found in test template`);
-    }
-
-    this.instance = this.element.injector.get<TComponent>(this._setup.testComponent);
-  }
+  constructor(
+    public readonly fixture: ComponentFixture<any>,
+    public readonly element: DebugElement,
+    public readonly instance: TComponent,
+    public readonly bindings: TBindings,
+    private readonly _setup: TestSetup<TComponent>
+  ) {}
 
   /////////////////////////////////////////////////////////////////////////////
   // The following methods MUST be arrow functions so they can be deconstructured

@@ -1,5 +1,6 @@
-import { Component, Directive, Type } from '@angular/core';
+import { Component, DebugElement, Directive, Type } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { MockComponent, MockDirective } from 'ng-mocks';
 import { Rendering } from './rendering';
 import { TestSetup } from './test-setup';
@@ -58,6 +59,8 @@ class OtherComponent {}
 describe('Rendering', () => {
   let testSetup: TestSetup<OuterComponent>;
   let fixture: ComponentFixture<TestHostComponent>;
+  let instance: ComponentToMock;
+  let element: DebugElement;
   let MockedComponent: Type<ComponentToMock>;
   let MockedDirective: Type<DirectiveToMock>;
 
@@ -81,72 +84,74 @@ describe('Rendering', () => {
     }).compileComponents().then(() => {
       fixture = TestBed.createComponent(TestHostComponent);
       fixture.detectChanges();
+      element = fixture.debugElement.query(By.directive(OuterComponent));
+      instance = element.componentInstance;
     });
   });
 
   describe('find', () => {
     it('can be destructured', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(() => find('some-css-selector')).not.toThrowError();
     });
 
     it('throws an error when used to find the test component by CSS', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(() => find('outer')).toThrow();
     });
 
     it('does not throw an error when used to find an inner element of the test component', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(() => find('div.outer')).not.toThrow();
     });
 
     it('throws an error when used to find the test component by Directive', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(() => find(OuterComponent)).toThrow();
     });
 
     it('can find things by CSS', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find('inner')).toHaveFound(1);
     });
 
     it('can find by Component', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find(InnerComponent)).toHaveFound(1);
     });
 
     it('finds by mocked Components', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find(ComponentToMock)).toHaveFound(1);
     });
 
     it('can find by Directive', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find(InnerComponent)).toHaveFound(1);
     });
 
     it('finds by mocked directives', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find(DirectiveToMock)).toHaveFound(1);
     });
 
     it('returns an empty query match when no matches found', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find('will-not-be-found')).toHaveFound(0);
     });
 
     it('returns a QueryMatch when a match is found', () => {
-      const {find} = new Rendering(fixture, {}, testSetup);
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(find('inner')).toHaveFound(1);
       expect(find('inner').nativeElement).toBeDefined();
@@ -155,25 +160,25 @@ describe('Rendering', () => {
 
   describe('findComponent', () => {
     it('can be destructured', () => {
-      const {findComponent} = new Rendering(fixture, {}, testSetup);
+      const {findComponent} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(() => findComponent(InnerComponent)).not.toThrow();
     });
 
     it('finds components', () => {
-      const {findComponent} = new Rendering(fixture, {}, testSetup);
+      const {findComponent} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(findComponent(InnerComponent) instanceof InnerComponent).toBe(true);
     });
 
     it('finds mocked components', () => {
-      const {findComponent} = new Rendering(fixture, {}, testSetup);
+      const {findComponent} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(findComponent(ComponentToMock) instanceof MockedComponent).toBe(true);
     });
 
     it('finds multiple components', () => {
-      const {findComponent} = new Rendering(fixture, {}, testSetup);
+      const {findComponent} = new Rendering(fixture, element, instance, {}, testSetup);
 
       const found = findComponent(OtherComponent);
       expect(found).toHaveFound(2);
@@ -183,25 +188,25 @@ describe('Rendering', () => {
 
   describe('findDirective', () => {
     it('can be destructured', () => {
-      const {findDirective} = new Rendering(fixture, {}, testSetup);
+      const {findDirective} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(() => findDirective(TestDirective)).not.toThrow();
     });
 
     it('finds directives', () => {
-      const {findDirective} = new Rendering(fixture, {}, testSetup);
+      const {findDirective} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(findDirective(TestDirective) instanceof TestDirective).toBe(true);
     });
 
     it('finds mocked directives', () => {
-      const {findDirective} = new Rendering(fixture, {}, testSetup);
+      const {findDirective} = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(findDirective(DirectiveToMock) instanceof MockDirective(DirectiveToMock)).toBe(true);
     });
 
     it('finds multiple directives', () => {
-      const {findDirective} = new Rendering(fixture, {}, testSetup);
+      const {findDirective} = new Rendering(fixture, element, instance, {}, testSetup);
 
       const found = findDirective(OtherDirective);
       expect(found).toHaveFound(2);
@@ -211,7 +216,7 @@ describe('Rendering', () => {
 
   describe('get', () => {
     it('returns the result of TestBed.get', () => {
-      const {get} = new Rendering(fixture, {}, testSetup);
+      const {get} = new Rendering(fixture, element, instance, {}, testSetup);
       spyOn(TestBed, 'get').and.returnValue('foo');
 
       class QueryClass {}
@@ -222,7 +227,7 @@ describe('Rendering', () => {
   describe('bindings object', () => {
     it('is returned', () => {
       const inputBindings = {};
-      const {bindings} = new Rendering(fixture, inputBindings, testSetup);
+      const {bindings} = new Rendering(fixture, element, instance, inputBindings, testSetup);
 
       expect(bindings).toBe(inputBindings);
     });
@@ -230,9 +235,9 @@ describe('Rendering', () => {
 
   describe('test component instance', () => {
     it('is returned', () => {
-      const {instance} = new Rendering(fixture, {}, testSetup);
+      const rendering = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(instance instanceof OuterComponent).toBe(true);
+      expect(rendering.instance).toBe(instance);
     });
   });
 });
