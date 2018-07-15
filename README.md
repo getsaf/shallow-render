@@ -8,7 +8,7 @@ Angular 5 & 6 testing made easy with shallow rendering and easy mocking.
 ---
 ## The Docs
 * [API Docs](https://github.com/getsaf/shallow-render/wiki)
-* [StackBlitz Playground](https://stackblitz.com/edit/shallow-render)
+* [StackBlitz Playground](https://stackblitz.com/github/getsaf/shallow-render-stackblitz)
 * [Release Notes](https://github.com/getsaf/shallow-render/wiki/Releases)
 
 ## The problem
