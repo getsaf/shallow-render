@@ -46,7 +46,6 @@ describe('component with routing', () => {
       //////////////////////////
       // These are good candidates for global setup
       // using `neverMock` and `alwaysProvide`
-      .dontMock(routerModuleRef)
       .provide({provide: APP_BASE_HREF, useValue: '/'})
       .dontMock(APP_BASE_HREF)
       ///////////////////////////
