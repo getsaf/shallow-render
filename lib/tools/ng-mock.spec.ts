@@ -7,7 +7,9 @@ import * as ngMocksLib from 'ng-mocks';
 @Component({
   template: '<label>foo</label>'
 })
-class FooComponent {}
+class FooComponent {
+  doFoo() { return 'doFoo'; }
+}
 
 @Directive({
   selector: '[foo]'
@@ -54,6 +56,33 @@ describe('ng-mock', () => {
     const mocked = ngMock(FooComponent, testSetup);
 
     expect(mocked).toBe('MOCKED' as any);
+  });
+
+  describe('components with mocks', () => {
+    it('adds stubs to components', () => {
+      testSetup.mocks.set(FooComponent, {doFoo: () => 'mocked doFoo'});
+      const MockedFoo = ngMock(FooComponent, testSetup);
+      const foo = new MockedFoo();
+
+      expect(foo.doFoo()).toBe('mocked doFoo');
+    });
+
+    it('spys on component stubs', () => {
+      testSetup.mocks.set(FooComponent, {doFoo: () => 'mocked doFoo'});
+      const MockedFoo = ngMock(FooComponent, testSetup);
+      const foo = new MockedFoo();
+
+      foo.doFoo();
+      expect(foo.doFoo).toHaveBeenCalled(); // doFoo should be a spy
+    });
+
+    it('uses MockOf* in the mocked component class name', () => {
+      testSetup.mocks.set(FooComponent, {});
+      const MockedFoo = ngMock(FooComponent, testSetup);
+      const foo = new MockedFoo();
+
+      expect(foo.constructor.name).toBe('MockOfFooComponent');
+    });
   });
 
   it('mocks a directive', () => {
