@@ -1,14 +1,16 @@
+import { CustomError } from './custom-error';
 export type QueryMatch<TMatch> = TMatch[] & TMatch;
 
-export class NoMatchesError extends Error {
+export class NoMatchesError extends CustomError {
   constructor(propertyName: string) {
     super(`Could not find the element you were looking for. Your test tried to access the '${propertyName}' property on a QueryResult but your query had no results.`);
   }
 }
 
-export class MultipleMatchesError extends Error {
+export class MultipleMatchesError extends CustomError {
   constructor(propertyName: string, matchLength: number) {
     super(`Tried to access ${propertyName} on query match but your query found multiple (${matchLength} results. Try narrowing your query or targeting the specific match you are interested in from the array`);
+    // this.message = 'foo';
   }
 }
 
