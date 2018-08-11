@@ -5,6 +5,7 @@
     "arrow-parens": false,
     "comment-format": false,
     "completed-docs": false,
+    "file-name-casing": false,
     "interface-name": false,
     "max-classes-per-file": false,
     "max-line-length": false,
