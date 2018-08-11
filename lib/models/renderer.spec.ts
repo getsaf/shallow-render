@@ -1,5 +1,5 @@
 import { Input, Output, OnInit, Component, EventEmitter, NgModule } from '@angular/core';
-import { Renderer, InvalidStaticPropertyMockError } from './renderer';
+import { Renderer, InvalidStaticPropertyMockError, InvalidInputBindError } from './renderer';
 import { TestSetup } from './test-setup';
 import { NgIf } from '@angular/common';
 
@@ -147,7 +147,8 @@ describe('Renderer', () => {
           bind: {myProperty: 'FOO'}
         });
         fail('Render should have thrown an error because the myProperty is not an @Input');
-      } catch {
+      } catch (e) {
+        expect(e instanceof InvalidInputBindError).toBe(true);
         done();
       }
     });

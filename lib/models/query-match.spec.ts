@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import { createQueryMatch, NoMatchesError, MultipleMatchesError, QueryMatch } from './query-match';
 
 class Foo {
@@ -6,6 +7,14 @@ class Foo {
 }
 
 describe('QueryMatch', () => {
+  const shouldThrow = (func: () => void, errorClass: Type<Error>) => {
+    try {
+      func();
+      fail(`Should have thrown an ${errorClass.name} error`);
+    } catch (e) {
+      expect(e instanceof errorClass).toBe(true);
+    }
+  };
   describe('single match', () => {
     let match: QueryMatch<Foo>;
     beforeEach(() => {
@@ -61,23 +70,31 @@ describe('QueryMatch', () => {
     });
 
     it('throws an error when you try to get a property and there are multiple results', () => {
-      expect(() => matches.which).toThrow(new MultipleMatchesError('which', 2));
+      shouldThrow(
+        () => Object.keys(matches.which),
+        MultipleMatchesError
+      );
     });
 
     it('throws an error when you try to set a property and there are multiple results', () => {
-      expect(() => matches.which = 'BOOM').toThrow(new MultipleMatchesError('which', 2));
+      shouldThrow(
+        () => matches.which = 'BOOM',
+        MultipleMatchesError
+      );
     });
 
     it('throws an error when you try to define a property and there are multiple results', () => {
-      expect(() => {
-        Object.defineProperty(matches, 'foo', {value: 'foo value'});
-      }).toThrow();
+      shouldThrow(
+        () => Object.defineProperty(matches, 'foo', {value: 'foo value'}),
+        MultipleMatchesError
+      );
     });
 
     it('throws an error when you try to delete a property and there are multiple results', () => {
-      expect(() => {
-        delete matches.fooProperty;
-      }).toThrow();
+      shouldThrow(
+        () => delete matches.fooProperty,
+        MultipleMatchesError
+      );
     });
 
     it('allows mapping over results', () => {
@@ -98,27 +115,38 @@ describe('QueryMatch', () => {
     });
 
     it('throws an error on instanceof checks', () => {
-      expect(() => emptyMatch instanceof Foo).toThrow(new NoMatchesError('prototype'));
+      shouldThrow(
+        () => emptyMatch instanceof Foo,
+        NoMatchesError
+      );
     });
 
     it('throws an error when trying to get a property on an empty query match', () => {
-      expect(() => emptyMatch.which).toThrow(new NoMatchesError('which'));
+      shouldThrow(
+        () => emptyMatch.which,
+        NoMatchesError
+      );
     });
 
     it('throws an error when trying to set a property on an empty query match', () => {
-      expect(() => emptyMatch.which = 'BOOM').toThrow(new NoMatchesError('which'));
+      shouldThrow(
+        () => emptyMatch.which = 'BOOM',
+        NoMatchesError
+      );
     });
 
     it('throws an error when you try to define a property on an empty match', () => {
-      expect(() => {
-        Object.defineProperty(emptyMatch, 'foo', {value: 'foo value'});
-      }).toThrow();
+      shouldThrow(
+        () => Object.defineProperty(emptyMatch, 'foo', {value: 'foo value'}),
+        NoMatchesError
+      );
     });
 
     it('throws an error when you try to delete a property on an empty match', () => {
-      expect(() => {
-        delete emptyMatch.fooProperty;
-      }).toThrow();
+      shouldThrow(
+        () => delete emptyMatch.fooProperty,
+        NoMatchesError
+      );
     });
 
     it('does not match when trying to check a property on empty results', () => {

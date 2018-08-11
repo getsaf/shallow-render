@@ -7,18 +7,21 @@ import { directiveResolver } from '../tools/reflect';
 import { mockProvider } from '../tools/mock-provider';
 import { copyTestModule } from '../tools/copy-test-module';
 import { By } from '@angular/platform-browser';
+import { CustomError } from './custom-error';
 
-export class InvalidInputBindError {
-  message = `Tried to bind to a property that is not marked as @Input: ${this.key}\nAvailable input bindings: ${this.availableInputs}`;
-  constructor(public availableInputs: string[], public key: string) {}
+export class InvalidInputBindError extends CustomError {
+  constructor(availableInputs: string[], key: string) {
+    super(`Tried to bind to a property that is not marked as @Input: ${key}\nAvailable input bindings: ${availableInputs}`);
+  }
 }
 
-export class MissingTestComponentError {
-  message = `${this.testComponent.name} was not found in test template`;
-  constructor(public testComponent: Type<any>) {}
+export class MissingTestComponentError extends CustomError {
+  constructor(testComponent: Type<any>) {
+    super(`${testComponent.name} was not found in test template`);
+  }
 }
 
-export class InvalidStaticPropertyMockError {
+export class InvalidStaticPropertyMockError extends CustomError {
   static checkMockForStaticProperties(stubs: object) {
     Object.keys(stubs).forEach(key => {
       if (typeof (stubs as any)[key] !== 'function') {
@@ -27,9 +30,8 @@ export class InvalidStaticPropertyMockError {
     });
   }
 
-  public readonly message: string;
   constructor(key: string | symbol) {
-    this.message = `Tried to mock the '${key}' property but only functions are supported for static mocks.`;
+    super(`Tried to mock the '${key}' property but only functions are supported for static mocks.`);
   }
 }
 
