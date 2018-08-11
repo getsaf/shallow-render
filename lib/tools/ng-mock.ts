@@ -31,6 +31,21 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
     } else if (typeof thing === 'function') {
       mock = MockDeclaration(thing as Type<any>);
+      const stubs = setup.mocks.get(thing);
+      if (stubs) {
+        mock = class extends MockDeclaration(thing as Type<any>) {
+          constructor() {
+            super();
+            Object.assign(this, stubs);
+            Object.keys(stubs).forEach(key => {
+              if (typeof this[key] === 'function') {
+                spyOn(this, key).and.callThrough();
+              }
+            });
+          }
+        };
+        Object.defineProperty(mock, 'name', {value: `MockOf${(thing as Type<any>).name}`});
+      }
     } else {
       throw new Error(`Shallow doesn't know how to mock: ${thing}`);
     }
