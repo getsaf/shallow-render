@@ -1,4 +1,4 @@
-import { Type, Component, NgModule } from '@angular/core';
+import { Type, Component, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
 import { mockModule, InvalidModuleError } from './mock-module';
 import { TestSetup } from '../models/test-setup';
@@ -118,6 +118,14 @@ describe('mockModule', () => {
 
     expect(isMockOf(annotations.providers[0], FooService)).toBe(true);
     expect(isMockOf(annotations.providers[1], BarService)).toBe(true);
+  });
+
+  it('applies schemas', () => {
+    const {annotations} = makeMock({
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    });
+
+    expect(annotations.schemas[0]).toBe(CUSTOM_ELEMENTS_SCHEMA);
   });
 
   it('throws an error when module is not a recognized Angular module', () => {
