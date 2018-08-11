@@ -26,5 +26,6 @@ export function copyTestModule<TComponent>(setup: TestSetup<TComponent>): NgModu
       ...setup.providers,
     ].map(p => mockProvider(p, setup)),
     exports: [],
+    schemas: [...(ngModule.schemas || [])],
   };
 }

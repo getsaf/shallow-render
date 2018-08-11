@@ -13,16 +13,18 @@ describe('getNgModuleAnnotations', () => {
         declarations: [],
         exports: [],
         entryComponents: [],
+        schemas: [],
       });
   });
 
   it('returns annotations from the module', () => {
     const annotations = {
-        imports: [class {}],
-        providers: [class {}],
-        declarations: [class {}],
-        exports: [class {}],
-        entryComponents: [class {}],
+      imports: [class {}],
+      providers: [class {}],
+      declarations: [class {}],
+      exports: [class {}],
+      entryComponents: [class {}],
+      schemas: [class {}],
     };
     @NgModule(annotations)
     class DummyModule {}

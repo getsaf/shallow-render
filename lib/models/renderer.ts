@@ -95,11 +95,12 @@ export class Renderer<TComponent> {
       });
     }
 
-    const {imports, providers, declarations} = copyTestModule(this._setup);
+    const {imports, providers, declarations, schemas} = copyTestModule(this._setup);
     await TestBed.configureTestingModule({
       imports,
       providers,
       declarations: [...declarations, ComponentClass],
+      schemas,
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);
