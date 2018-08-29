@@ -1,11 +1,19 @@
+import { TestBed } from '@angular/core/testing';
 import { MockDeclaration, MockPipe } from 'ng-mocks';
 import { mockModule } from './mock-module';
 import { TestSetup } from '../models/test-setup';
-import { ngModuleResolver } from './reflect';
+import { ngModuleResolver, directiveResolver } from './reflect';
 import { isModuleWithProviders, isPipeTransform } from './type-checkers';
 import { ModuleWithProviders, Type, PipeTransform } from '@angular/core';
 
 export type NgMockable = ModuleWithProviders | Type<any> | Type<PipeTransform> | any[];
+
+const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
+  const annotations = directiveResolver.resolve(thing);
+  if (!annotations.selector) {
+    TestBed.overrideDirective(mock, { add: { selector: `__${mock.name}-selector` } });
+  }
+};
 
 export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, setup: TestSetup<any>): TThing {
   const cached = setup.mockCache.find(thing);
@@ -31,9 +39,10 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
     } else if (typeof thing === 'function') {
       mock = MockDeclaration(thing as Type<any>);
+      fixEmptySelector(thing as Type<any>, mock);
       const stubs = setup.mocks.get(thing);
       if (stubs) {
-        mock = class extends MockDeclaration(thing as Type<any>) {
+        mock = class extends (mock as Type<any>) {
           constructor() {
             super();
             Object.assign(this, stubs);
