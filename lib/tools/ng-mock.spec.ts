@@ -1,4 +1,5 @@
 import { Component, Directive, ModuleWithProviders, Pipe, PipeTransform, NgModule } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { ngMock } from './ng-mock';
 import { TestSetup } from '../models/test-setup';
 import * as mockModuleLib from './mock-module';
@@ -142,5 +143,15 @@ describe('ng-mock', () => {
     ) as any;
 
     expect(mocked).toEqual(['DECLARATION', 'DECLARATION', 'PIPE', 'MODULE']);
+  });
+
+  it('works in TestBed when mocking a component without a selector', async () => {
+    @Component({template: ''})
+    class NoSelectorComponent {}
+
+    const mocked = ngMock(NoSelectorComponent, testSetup);
+    await TestBed.configureTestingModule({
+      declarations: [mocked]
+    }).compileComponents();
   });
 });
