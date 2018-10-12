@@ -37,7 +37,7 @@ export class Shallow<TTestComponent> {
 
   // Always replace one module with another replacement module.
   private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
-  static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any>): typeof Shallow {
+  static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any> | ModuleWithProviders): typeof Shallow {
     Shallow._alwaysReplaceModule.set(originalModule, replacementModule);
     return Shallow;
   }
