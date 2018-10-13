@@ -3,8 +3,8 @@ import { MockCache } from './mock-cache';
 
 export class TestSetup<TComponent> {
   readonly dontMock: any[] = [];
-  readonly mocks = new Map<any, any>();
-  readonly staticMocks = new Map<any, any>();
+  readonly mocks = new Map();
+  readonly staticMocks = new Map();
   readonly moduleReplacements = new Map<Type<any> | ModuleWithProviders, Type<any> | ModuleWithProviders>();
   readonly mockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>(); /* tslint:disable-line ban-types */
   readonly mockCache = new MockCache();

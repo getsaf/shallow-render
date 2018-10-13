@@ -28,7 +28,7 @@ export class Shallow<TTestComponent> {
   }
 
   // Always mock a thing with a particular implementation.
-  private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>();
+  private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>>();
   static alwaysMock<TProvider>(thing: Type<TProvider> | InjectionToken<TProvider>, stubs: Partial<TProvider>): typeof Shallow {
     const mock = Shallow._alwaysMock.get(thing) || {};
     this._alwaysMock.set(thing, {...mock, ...stubs as object});
