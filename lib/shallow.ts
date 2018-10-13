@@ -31,14 +31,20 @@ export class Shallow<TTestComponent> {
   private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>();
   static alwaysMock<TProvider>(thing: Type<TProvider> | InjectionToken<TProvider>, stubs: Partial<TProvider>): typeof Shallow {
     const mock = Shallow._alwaysMock.get(thing) || {};
-    Shallow._alwaysMock.set(thing, {...mock, ...stubs as object});
+    this._alwaysMock.set(thing, {...mock, ...stubs as object});
     return Shallow;
   }
 
   // Always replace one module with another replacement module.
   private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
   static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any> | ModuleWithProviders): typeof Shallow {
-    Shallow._alwaysReplaceModule.set(originalModule, replacementModule);
+    this._alwaysReplaceModule.set(originalModule, replacementModule);
+    return Shallow;
+  }
+
+  private static readonly _alwaysImport: (Type<any> | ModuleWithProviders)[] = [];
+  static alwaysImport(...imports: (Type<any> | ModuleWithProviders)[]) {
+    this._alwaysImport.push(...imports);
     return Shallow;
   }
 
@@ -46,6 +52,7 @@ export class Shallow<TTestComponent> {
     this.setup = new TestSetup(testComponent, testModule);
     this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
+    this.setup.imports.push(...Shallow._alwaysImport);
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
     Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
   }
@@ -82,6 +89,11 @@ export class Shallow<TTestComponent> {
 
   replaceModule(originalModule: Type<any> | ModuleWithProviders, replacementModule: Type<any> | ModuleWithProviders): this {
     this.setup.moduleReplacements.set(originalModule, replacementModule);
+    return this;
+  }
+
+  import(...imports: (Type<any> | ModuleWithProviders)[]) {
+    this.setup.imports.push(...imports);
     return this;
   }
 
