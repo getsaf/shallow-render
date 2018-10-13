@@ -21,7 +21,7 @@ class ListItemComponent {
   template: '<ul><ng-content></ng-content></ul>',
 })
 class ListContainerComponent implements AfterContentInit {
-  @ContentChild('active') listItem: ListItemComponent;
+  @ContentChild(ListItemComponent) listItem: ListItemComponent;
   ngAfterContentInit() {
     if (this.listItem) {
       this.listItem.activate();

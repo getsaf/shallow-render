@@ -10,8 +10,8 @@ import { By } from '@angular/platform-browser';
 import { CustomError } from './custom-error';
 
 export class InvalidInputBindError extends CustomError {
-  constructor(availableInputs: string[], key: string) {
-    super(`Tried to bind to a property that is not marked as @Input: ${key}\nAvailable input bindings: ${availableInputs}`);
+  constructor(availableInputs: string[], key: string | symbol) {
+    super(`Tried to bind to a property that is not marked as @Input: ${String(key)}\nAvailable input bindings: ${availableInputs}`);
   }
 }
 
@@ -31,7 +31,7 @@ export class InvalidStaticPropertyMockError extends CustomError {
   }
 
   constructor(key: string | symbol) {
-    super(`Tried to mock the '${key}' property but only functions are supported for static mocks.`);
+    super(`Tried to mock the '${String(key)}' property but only functions are supported for static mocks.`);
   }
 }
 
