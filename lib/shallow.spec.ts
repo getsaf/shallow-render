@@ -41,7 +41,7 @@ describe('Shallow', () => {
   });
 
   describe('alwaysProvide', () => {
-    it('items are automatically added to setup.provide on construction', () => {
+    it('automatically adds items to setup.provide on construction', () => {
       class MyService {}
       Shallow.alwaysProvide(MyService);
       const shallow = new Shallow(TestComponent, TestModule);
@@ -51,7 +51,7 @@ describe('Shallow', () => {
   });
 
   describe('alwaysReplaceModule', () => {
-    it('modules are automatically added to setup.replacementModules on construction', () => {
+    it('automatically adds modules to setup.replacementModules on construction', () => {
       class ReplacementModule {}
       Shallow.alwaysReplaceModule(TestModule, ReplacementModule);
       const shallow = new Shallow(TestComponent, TestModule);
@@ -59,10 +59,19 @@ describe('Shallow', () => {
       expect(shallow.setup.moduleReplacements.get(TestModule))
         .toBe(ReplacementModule);
     });
+
+    it('works with ModuleWithProviders', () => {
+      const replacementModule = {ngModule: class {}, providers: []};
+      Shallow.alwaysReplaceModule(TestModule, replacementModule);
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.moduleReplacements.get(TestModule))
+        .toBe(replacementModule);
+    });
   });
 
   describe('alwaysMock', () => {
-    it('items are automatically added to setup.mock on construction', () => {
+    it('automatically adds items to setup.mock on construction', () => {
       class MyService {
         foo() { return 'foo'; }
       }

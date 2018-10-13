@@ -51,7 +51,7 @@
     "@angular/platform-browser": ">=5.x <=6.x"
   },
   "dependencies": {
-    "ng-mocks": "^6.1.0"
+    "ng-mocks": "^6.2.3"
   },
   "devDependencies": {
     "@angular/common": "^6.1.2",

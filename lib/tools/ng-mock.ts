@@ -4,7 +4,7 @@ import { mockModule } from './mock-module';
 import { TestSetup } from '../models/test-setup';
 import { ngModuleResolver, directiveResolver } from './reflect';
 import { isModuleWithProviders, isPipeTransform } from './type-checkers';
-import { ModuleWithProviders, Type, PipeTransform } from '@angular/core';
+import { ModuleWithProviders, Type, PipeTransform, forwardRef } from '@angular/core';
 
 export type NgMockable = ModuleWithProviders | Type<any> | Type<PipeTransform> | any[];
 
@@ -55,6 +55,9 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
         };
         Object.defineProperty(mock, 'name', {value: `MockOf${(thing as Type<any>).name}`});
       }
+      // Provide our mock in place of any other usage of 'thing'.
+      // This makes `ViewChild` and `ContentChildren` selectors work!
+      TestBed.overrideComponent(mock, {add: {providers: [{provide: thing, useExisting: forwardRef(() => mock)}]}});
     } else {
       throw new Error(`Shallow doesn't know how to mock: ${thing}`);
     }
