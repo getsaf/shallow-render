@@ -61,6 +61,16 @@ describe('Shallow', () => {
     });
   });
 
+  describe('alwaysImport', () => {
+    it('adds modules to setup.imports on construction', () => {
+      @NgModule({}) class MyModule {}
+      Shallow.alwaysImport(MyModule);
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.imports).toContain(MyModule);
+    });
+  });
+
   describe('alwaysMock', () => {
     it('items are automatically added to setup.mock on construction', () => {
       class MyService {
@@ -123,6 +133,16 @@ describe('Shallow', () => {
         .provide(MyService);
 
       expect(shallow.setup.providers).toContain(MyService);
+    });
+  });
+
+  describe('import', () => {
+    it('adds to the setup.imports array', () => {
+      @NgModule({}) class MyModule {}
+      const shallow = new Shallow(TestComponent, TestModule)
+        .import(MyModule);
+
+      expect(shallow.setup.imports).toContain(MyModule);
     });
   });
 

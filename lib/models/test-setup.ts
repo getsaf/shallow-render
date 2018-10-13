@@ -9,6 +9,7 @@ export class TestSetup<TComponent> {
   readonly mockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>(); /* tslint:disable-line ban-types */
   readonly mockCache = new MockCache();
   readonly providers: Provider[] = [];
+  readonly imports: (Type<any> | ModuleWithProviders)[] = [];
 
   constructor(
     public readonly testComponent: Type<TComponent>,

@@ -17,7 +17,7 @@ export function copyTestModule<TComponent>(setup: TestSetup<TComponent>): NgModu
   const ngModule = getNgModuleAnnotations(mod);
 
   return {
-    imports: ngMock(ngModule.imports, setup),
+    imports: ngMock([...ngModule.imports, ...setup.imports], setup),
     declarations: ngMock(ngModule.declarations, setup),
     entryComponents: ngMock(ngModule.entryComponents, setup),
     providers: [
