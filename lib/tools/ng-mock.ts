@@ -4,9 +4,10 @@ import { mockModule } from './mock-module';
 import { TestSetup } from '../models/test-setup';
 import { ngModuleResolver, directiveResolver } from './reflect';
 import { isModuleWithProviders, isPipeTransform } from './type-checkers';
-import { ModuleWithProviders, Type, PipeTransform, forwardRef } from '@angular/core';
+import { Type, PipeTransform, forwardRef } from '@angular/core';
+import { AngularModule } from '../models/angular-module';
 
-export type NgMockable = ModuleWithProviders | Type<any> | Type<PipeTransform> | any[];
+export type NgMockable = AngularModule | Type<any> | Type<PipeTransform> | any[];
 
 const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
   const annotations = directiveResolver.resolve(thing);
