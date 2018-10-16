@@ -1,10 +1,11 @@
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { NgModule, Type } from '@angular/core';
 import { MockOf } from 'ng-mocks';
 import { isModuleWithProviders } from './type-checkers';
 import { ngMock } from './ng-mock';
 import { mockProvider } from './mock-provider';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
+import { AngularModule } from '../models/angular-module';
 
 export class InvalidModuleError {
   readonly message: string;
@@ -13,7 +14,7 @@ export class InvalidModuleError {
   }
 }
 
-export type AnyNgModule = any[] | Type<any> | ModuleWithProviders;
+export type AnyNgModule = any[] | AngularModule;
 export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: TestSetup<any>): TModule {
   const cached = setup.mockCache.find(mod);
   if (cached) {
