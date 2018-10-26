@@ -1,4 +1,4 @@
-import { Provider, ValueProvider, TypeProvider } from '@angular/core';
+import { Provider, ValueProvider, TypeProvider, APP_INITIALIZER } from '@angular/core';
 import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { isClassProvider, isFactoryProvider, isExistingProvider, isTypeProvider } from './type-checkers';
@@ -14,6 +14,12 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
     return provider.map(p => mockProvider(p, setup)); // Recursion
   } else if (isExistingProvider(provider)) {
     return provider;
+  }
+
+  // APP_INITIALIZERS break TestBed!
+  // Do this until https://github.com/angular/angular/issues/24218 is fixed
+  if (!isTypeProvider(provider) && provider.provide === APP_INITIALIZER) {
+     return [];
   }
 
   const provide = isTypeProvider(provider) ? provider : provider.provide;
