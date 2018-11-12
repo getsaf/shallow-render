@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/getsaf/shallow-render.svg?branch=master)](https://travis-ci.org/getsaf/shallow-render)
 [![npm version](https://badge.fury.io/js/shallow-render.svg)](https://www.npmjs.com/package/shallow-render)
 
-Angular 5 & 6 testing made easy with shallow rendering and easy mocking.
+Angular 5+ testing made easy with shallow rendering and easy mocking.
 
 ---
 ## The Docs
