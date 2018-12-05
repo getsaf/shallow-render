@@ -21,7 +21,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     return cached;
   }
 
-  const replacementModule = setup.moduleReplacements.get(mod as any);
+  const replacementModule = setup.moduleReplacements.get(mod as any) || setup.moduleReplacements.get((mod as any).ngModule);
   if (replacementModule) {
     return setup.mockCache.add(mod, replacementModule) as TModule;
   }

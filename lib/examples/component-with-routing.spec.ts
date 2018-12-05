@@ -27,11 +27,8 @@ const routes: Routes = [
   {path: 'home', component: class DummyComponent {}}
 ];
 
-// You probabaly want to export this ref from your module
-// so we can give Shallow specs access to it too.
-const routerModuleRef = RouterModule.forRoot(routes);
 @NgModule({
-  imports: [routerModuleRef],
+  imports: [RouterModule.forRoot(routes)],
   providers: [{provide: APP_BASE_HREF, useValue: '/'}],
   declarations: [GoHomeLinkComponent],
 })
@@ -50,7 +47,7 @@ describe('component with routing', () => {
       .dontMock(APP_BASE_HREF)
       ///////////////////////////
       .replaceModule(
-        routerModuleRef,
+        RouterModule,
         RouterTestingModule.withRoutes(routes)
       );
   });
