@@ -40,16 +40,7 @@ describe('component with routing', () => {
 
   beforeEach(() => {
     shallow = new Shallow(GoHomeLinkComponent, GoHomeModule)
-      //////////////////////////
-      // These are good candidates for global setup
-      // using `neverMock` and `alwaysProvide`
-      .provide({provide: APP_BASE_HREF, useValue: '/'})
-      .dontMock(APP_BASE_HREF)
-      ///////////////////////////
-      .replaceModule(
-        RouterModule,
-        RouterTestingModule.withRoutes(routes)
-      );
+      .replaceModule(RouterModule, RouterTestingModule.withRoutes(routes));
   });
 
   it('uses the route', async () => {
