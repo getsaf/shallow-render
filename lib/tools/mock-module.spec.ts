@@ -70,6 +70,16 @@ describe('mockModule', () => {
     expect(result).toBe(replacement as any);
   });
 
+  it('looks for a match on ModuleWithProviders#ngModule', () => {
+    const originalModule = makeModule();
+    const moduleWithProviders = {ngModule: originalModule, providers: [class FooClass {}]};
+    const replacement = makeModule();
+    setup.moduleReplacements.set(originalModule, replacement);
+    const result = mockModule(moduleWithProviders, setup);
+
+    expect(result).toBe(replacement as any);
+  });
+
   it('memoizes mocks of modules', () => {
     const mod = makeModule();
     expect(mockModule(mod, setup))

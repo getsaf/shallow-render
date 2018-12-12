@@ -27,11 +27,8 @@ const routes: Routes = [
   {path: 'home', component: class DummyComponent {}}
 ];
 
-// You probabaly want to export this ref from your module
-// so we can give Shallow specs access to it too.
-const routerModuleRef = RouterModule.forRoot(routes);
 @NgModule({
-  imports: [routerModuleRef],
+  imports: [RouterModule.forRoot(routes)],
   providers: [{provide: APP_BASE_HREF, useValue: '/'}],
   declarations: [GoHomeLinkComponent],
 })
@@ -43,16 +40,7 @@ describe('component with routing', () => {
 
   beforeEach(() => {
     shallow = new Shallow(GoHomeLinkComponent, GoHomeModule)
-      //////////////////////////
-      // These are good candidates for global setup
-      // using `neverMock` and `alwaysProvide`
-      .provide({provide: APP_BASE_HREF, useValue: '/'})
-      .dontMock(APP_BASE_HREF)
-      ///////////////////////////
-      .replaceModule(
-        routerModuleRef,
-        RouterTestingModule.withRoutes(routes)
-      );
+      .replaceModule(RouterModule, RouterTestingModule.withRoutes(routes));
   });
 
   it('uses the route', async () => {
