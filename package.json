@@ -17,6 +17,7 @@
     "lint": "tslint -t stylish --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "build": "npm run clean && tsc",
+    "build:schematics": "tsc -p ./tsconfig.schematics.json && webpack --config webpack.schematics.config.js",
     "build:all": "npm run lint && npm run test && npm run build",
     "preversion": "npm run build:all",
     "postversion": "echo 'Now run:\ngit push --follow-tags && npm publish'",
@@ -24,8 +25,10 @@
     "test:fix": "npm run lint:fix && npm run test",
     "test:watch": "npm test -- --auto-watch=true --single-run=false",
     "test:debug": "npm run test:watch -- --browsers=Chrome",
-    "test:angular-versions": "sh build-with-supported-angluars.sh"
+    "test:angular-versions": "sh build-with-supported-angluars.sh",
+    "test:schematics": "npm run build:schematics && jasmine ./dist/schematics/**/*.spec.js"
   },
+  "schematics": "./dist/schematics/collection.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/getsaf/shallow-render.git"
@@ -54,6 +57,8 @@
     "ng-mocks": "^7.0.1"
   },
   "devDependencies": {
+    "@angular-devkit/core": "^7.0.3",
+    "@angular-devkit/schematics": "^7.0.3",
     "@angular/common": "^6.1.10",
     "@angular/compiler": "^6.1.10",
     "@angular/core": "^6.1.10",
@@ -61,20 +66,26 @@
     "@angular/platform-browser": "^6.1.10",
     "@angular/platform-browser-dynamic": "^6.1.10",
     "@angular/router": "^6.1.10",
-    "@types/jasmine": "^2.5.53",
+    "@schematics/angular": "^7.0.3",
+    "@types/jasmine": "^3.3.1",
     "@types/node": "^8.10.25",
+    "copy-webpack-plugin": "^4.6.0",
     "core-js": "^2.5.7",
+    "jasmine": "^3.3.1",
     "jasmine-ts": "^0.2.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.2",
-    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-jasmine": "^2.0.1",
+    "karma-jasmine-html-reporter": "^1.4.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-typescript": "^3.0.13",
     "rxjs": "^6.3.3",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
-    "typescript": "2.7.x",
+    "typescript": "2.9.x",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2",
     "zone.js": "^0.8.26"
   }
 }

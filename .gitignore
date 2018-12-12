@@ -2,3 +2,5 @@ dist
 coverage
 node_modules
 .idea
+.vscode
+sh.exe.stackdump

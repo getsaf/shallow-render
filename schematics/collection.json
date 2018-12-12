@@ -1,0 +1,16 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "extends": [
+    "@schematics/angular"
+  ],
+  "schematics": {
+    "component": {
+      "aliases": [
+        "c"
+      ],
+      "description": "Creates a component with a shallow-render template",
+      "factory": "./component",
+      "schema": "./component/schema.json"
+    }
+  }
+}

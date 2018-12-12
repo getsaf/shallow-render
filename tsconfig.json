@@ -21,5 +21,8 @@
   "include": [
     "index.ts",
     "lib/**/*"
+  ],
+  "exclude": [
+    "schematics/**/*"
   ]
 }

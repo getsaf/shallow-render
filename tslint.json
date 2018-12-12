@@ -32,6 +32,7 @@
     "strict-type-predicates": false,
     "trailing-comma": false,
     "typedef": false,
-    "variable-name": false
+    "variable-name": false,
+    "linebreak-style": false
   }
 }
