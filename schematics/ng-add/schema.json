@@ -1,0 +1,22 @@
+
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "shallow-render/ng-add",
+    "title": "Add shallow-render to the project",
+    "description": "NOTE: Does not work in the --dry-run mode",
+    "type": "object",
+    "properties": {
+      "skipInstall": {
+        "type": "boolean",
+        "description": "Skip installing after adding shallow-render dependency",
+        "default": false
+      },
+      "setAsDefaultCollection": {
+        "type": "boolean",
+        "description": "Sets shallow-render schematics as default. It allows to use cli 'ng generate component' command without specifying collection",
+        "default": true
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }

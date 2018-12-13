@@ -6,10 +6,10 @@ import {
 } from '@angular-devkit/schematics/testing';
 import { Schema as ApplicationOptions } from '@schematics/angular/application/schema';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
-import { ShallowComponentOptions } from '.';
 import { Tree } from '@angular-devkit/schematics';
+import { Schema as ShallowComponentOptions } from './schema';
 
-describe('shallow-render-schematic', () => {
+describe('Schematics: component', () => {
   const workspaceOptions: WorkspaceOptions = {
     name: 'workspace',
     newProjectRoot: 'projects',
@@ -90,8 +90,8 @@ describe('shallow-render-schematic', () => {
       `describe('FooComponent', () => {`,
       `let shallow: Shallow<FooComponent>;`,
       `shallow = new Shallow(FooComponent, AppModule);`,
-      `const { get } = await shallow.render('<foo></foo>');`,
-      `expect(get('p')).toHaveFound(1);`
+      `const { find } = await shallow.render('<foo></foo>');`,
+      `expect(find('p')).toHaveFound(1);`
     ];
     const options: ShallowComponentOptions = { ...defaultOptions, module: 'app.module.ts' };
 

@@ -10,35 +10,18 @@ import {
   move,
   MergeStrategy,
   chain,
-  externalSchematic,
-  SchematicsException
+  externalSchematic
 } from '@angular-devkit/schematics';
 
 import { parseName } from '@schematics/angular/utility/parse-name';
 import * as findModule from '@schematics/angular/utility/find-module';
+import { getWorkspace } from '@schematics/angular/utility/config';
 import { strings, Path } from '@angular-devkit/core';
 import {
   buildDefaultPath,
   getProject
 } from '@schematics/angular/utility/project';
-
-export interface ShallowComponentOptions {
-  name: string;
-  path?: string;
-  project?: string;
-  inlineStyle?: boolean;
-  inlineTemplate?: boolean;
-  viewEncapsulation?: 'Emulated' | 'Native' | 'None';
-  changeDetection?: 'Default' | 'OnPush';
-  prefix?: string;
-  styleext?: string;
-  spec?: boolean;
-  flat?: boolean;
-  skipImport?: boolean;
-  selector?: string;
-  module?: string;
-  export?: boolean;
-}
+import { Schema as ShallowComponentOptions } from './schema';
 
 interface ModuleDetails {
   moduleName: string;
@@ -53,17 +36,17 @@ export const defaultModuleDetails: ModuleDetails = {
 // tslint:disable-next-line:no-default-export
 export default function(options: ShallowComponentOptions): Rule {
   return (host: Tree, context: SchematicContext) => {
-    if (!options.project) {
-      throw new SchematicsException('Option (project) is required.');
-    }
-
     // no reason to continue if spec file is not required
     if (!options.spec) {
       return externalSchematic('@schematics/angular', 'component', options);
     }
 
-    const project = getProject(host, options.project);
     if (options.path === undefined) {
+      const workspace = getWorkspace(host);
+      const projectName = options.project
+        ? options.project
+        : Object.keys(workspace.projects)[0];
+      const project = getProject(host, projectName);
       options.path = buildDefaultPath(project);
     }
 

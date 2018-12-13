@@ -3,10 +3,13 @@ const nodeExternals = require('webpack-node-externals');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './dist/schematics/component/index.js',
+    entry: {
+        'component/index': './dist/schematics/component/index.js',
+        'ng-add/index': './dist/schematics/ng-add/index.js',
+    },
     output: {
-        path: path.resolve(__dirname, 'dist/schematics/component'),
-        filename: 'index.js',
+        path: path.resolve(__dirname, 'dist/schematics'),
+        filename: '[name].js',
         libraryTarget: 'commonjs2'
     },
     mode: 'production',
@@ -23,12 +26,12 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             {
-                from: 'schematics/**/*.json',
-                to: '../../'
+                from: './schematics/**/*.json',
+                to: '../'
             },
             {
-                from: 'schematics/**/files/**/*',
-                to: '../../'
+                from: './schematics/**/files/**/*',
+                to: '../'
             }
         ],
         {})
