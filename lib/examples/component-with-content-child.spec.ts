@@ -47,7 +47,7 @@ describe('template content child', () => {
       .mock(ListItemComponent, {activate: () => undefined})
       .render(`
         <list-container>
-          <list-item #active>Foo</list-item>
+          <list-item>Foo</list-item>
           <list-item>Bar</list-item>
         </list-container>
       `);

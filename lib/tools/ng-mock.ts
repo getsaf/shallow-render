@@ -12,7 +12,7 @@ export type NgMockable = AngularModule | Type<any> | Type<PipeTransform> | any[]
 const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
   const annotations = directiveResolver.resolve(thing);
   if (!annotations.selector) {
-    TestBed.overrideDirective(mock, { add: { selector: `__${mock.name}-selector` } });
+    TestBed.overrideDirective(mock, { add: { selector: `.__${mock.name}-selector` } });
   }
 };
 
