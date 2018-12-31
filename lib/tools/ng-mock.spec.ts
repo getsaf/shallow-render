@@ -154,4 +154,26 @@ describe('ng-mock', () => {
       declarations: [mocked]
     }).compileComponents();
   });
+
+  it('does not mock things in setup.dontMock', () => {
+    const DontMockMe = class {};
+    testSetup.dontMock.push(DontMockMe);
+    const mocked = ngMock(DontMockMe, testSetup);
+
+    expect(mocked).toBe(DontMockMe);
+  });
+
+  it('does not mock modules when used in an ModuleWithProviders', () => {
+    const DontMockThisModule = class {};
+    const DontMockThisProvider = class {};
+    const moduleWithProviders: ModuleWithProviders = {
+      ngModule: DontMockThisModule,
+      providers: [DontMockThisProvider]
+    };
+
+    testSetup.dontMock.push(DontMockThisModule);
+    const mocked = ngMock(moduleWithProviders, testSetup);
+
+    expect(mocked).toBe(moduleWithProviders);
+  });
 });

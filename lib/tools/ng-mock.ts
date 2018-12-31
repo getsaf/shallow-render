@@ -28,7 +28,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
     return setup.mockCache.add(thing, thing.map(t => ngMock(t, setup))) as any; // Recursion
   }
 
-  if (setup.dontMock.includes(thing)) {
+  if (setup.dontMock.includes(thing) || (isModuleWithProviders(thing) && setup.dontMock.includes(thing.ngModule))) {
     return thing;
   }
 
