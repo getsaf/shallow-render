@@ -24,7 +24,7 @@
     "test:fix": "npm run lint:fix && npm run test",
     "test:watch": "npm test -- --auto-watch=true --single-run=false",
     "test:debug": "npm run test:watch -- --browsers=Chrome",
-    "test:angular-versions": "sh build-with-supported-angluars.sh"
+    "test:angular-versions": "./build-with-supported-angluars.js"
   },
   "repository": {
     "type": "git",
