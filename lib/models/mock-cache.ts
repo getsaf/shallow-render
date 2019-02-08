@@ -1,5 +1,5 @@
 export class MockCache {
-  private readonly _cache = new Map<any, any>();
+  private readonly _cache = new Map();
 
   find<TMock>(key: TMock): TMock {
     return this._cache.get(key);
