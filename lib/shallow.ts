@@ -1,5 +1,6 @@
 import { InjectionToken, ModuleWithProviders, Type, PipeTransform, Provider } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { RenderOptions, Rendering } from './models/rendering';
 import { Renderer, InvalidStaticPropertyMockError } from './models/renderer';
@@ -11,7 +12,11 @@ export class Shallow<TTestComponent> {
 
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
-  private static readonly _neverMock: any[] = [CommonModule, BrowserModule];
+  private static readonly _neverMock: any[] = [
+    CommonModule,
+    BrowserModule,
+    HAMMER_GESTURE_CONFIG,
+  ];
   static neverMock(...things: any[]) {
     this._neverMock.push(...things);
     return Shallow;
@@ -36,7 +41,9 @@ export class Shallow<TTestComponent> {
   }
 
   // Always replace one module with another replacement module.
-  private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
+  private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>([
+    [BrowserAnimationsModule, NoopAnimationsModule]
+  ]);
   static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any> | ModuleWithProviders): typeof Shallow {
     this._alwaysReplaceModule.set(originalModule, replacementModule);
     return Shallow;
