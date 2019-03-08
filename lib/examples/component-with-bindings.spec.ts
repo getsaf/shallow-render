@@ -66,14 +66,11 @@ describe('component with bindings', () => {
   });
 
   it('displays the number of times the person was updated', async () => {
-    const {find, fixture, bindings} = await shallow.render(
-      '<born-in [person]="testPerson"></born-in>',
-      {bind: {testPerson}}
-    );
+    const {find, fixture, bindings} = await shallow.render({bind: {person: testPerson}});
 
     expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('1');
 
-    bindings.testPerson = {firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24')};
+    bindings.person = {firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24')};
     fixture.detectChanges();
 
     expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('2');

@@ -107,27 +107,27 @@ describe('Renderer', () => {
     it('wraps the rendering in a container', async () => {
       const {fixture} = await renderer.render('<thing></thing>');
 
-      expect(fixture.componentInstance instanceof TestComponent).toBe(false);
+      expect(fixture.debugElement.children[0].componentInstance instanceof TestComponent).toBe(true);
     });
   });
 
   describe('with no arguments', () => {
-    it('renders the component directly', async () => {
+    it('wraps the rendering in a container', async () => {
       const {fixture} = await renderer.render();
 
-      expect(fixture.componentInstance instanceof TestComponent).toBe(true);
+      expect(fixture.debugElement.children[0].componentInstance instanceof TestComponent).toBe(true);
     });
 
   });
 
   describe('with only renderOptions', () => {
-    it('renders the component directly', async () => {
+    it('wraps the rendering in a container', async () => {
       const {fixture} = await renderer.render({});
 
-      expect(fixture.componentInstance instanceof TestComponent).toBe(true);
+      expect(fixture.debugElement.children[0].componentInstance instanceof TestComponent).toBe(true);
     });
 
-    it('binds directly to the component', async () => {
+    it('binds through the wrapper to the component', async () => {
       const {instance} = await renderer.render({
         bind: {myInput: 'FOO'}
       });
