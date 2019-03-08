@@ -9,7 +9,7 @@ Angular 5+ testing made easy with shallow rendering and easy mocking.
 ## The Docs
 * [API Docs](https://github.com/getsaf/shallow-render/wiki)
 * [StackBlitz Playground](https://stackblitz.com/github/getsaf/shallow-render-stackblitz)
-* [Release Notes](https://github.com/getsaf/shallow-render/wiki/Releases)
+* [Release Notes](https://github.com/getsaf/shallow-render/releases)
 
 ## The problem
 Testing in Angular is **HARD**. TestBed is powerful but its use in component specs ends with lots of duplication.
