@@ -55,6 +55,17 @@ export class Renderer<TComponent> {
     });
   }
 
+  private _createTemplateString(directive: Directive, bindings: any) {
+    const componentInputs = (directive.inputs || [])
+      .map(key => [key.replace(/:.*/, ''), key.replace(/.*: ?/, '')])
+      .reduce(
+        (acc, [name, renamed]) => ({...acc, [name]: renamed}),
+        {} as any
+      );
+    const inputBindings = Object.keys(bindings).map(key => `[${componentInputs[key]}]="${key}"`).join(' ');
+    return `<${directive.selector} ${inputBindings}></${directive.selector}>`;
+  }
+
   render<TBindings extends Partial<TComponent>>(
     options: Partial<RenderOptions<TBindings>>
   ): Promise<Rendering<TComponent, TBindings>>;
@@ -82,13 +93,20 @@ export class Renderer<TComponent> {
     // Go ahead and mock static things
     this._mockStatics();
 
-    const ComponentClass = template
-      ? createContainer(template, finalOptions.bind)
-      : this._setup.testComponent;
+    const resolvedTestComponent = directiveResolver.resolve(this._setup.testComponent);
+    if (!template) {
+      // If no template is used, the bindings should be verified to match the
+      // component @Input properties
+      this._verifyComponentBindings(resolvedTestComponent, finalOptions.bind);
+    }
+
+    const ComponentClass = createContainer(
+      template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
+      finalOptions.bind
+    );
 
     // Components may have their own providers, If the test component does,
     // we will mock them out here..
-    const resolvedTestComponent = directiveResolver.resolve(this._setup.testComponent);
     if (resolvedTestComponent.providers && resolvedTestComponent.providers.length) {
       TestBed.overrideComponent(this._setup.testComponent, {
         set: {
@@ -110,12 +128,6 @@ export class Renderer<TComponent> {
 
     this._spyOnOutputs(instance, resolvedTestComponent);
 
-    if (!template) {
-      // If no template is used, the bindings should go directly to the
-      // component @Inputs
-      this._bindInputsDirectlyToComponent(instance, resolvedTestComponent, finalOptions.bind);
-    }
-
     await this._runComponentLifecycle(fixture, finalOptions);
     const element = this._getElement(fixture);
 
@@ -133,14 +145,13 @@ export class Renderer<TComponent> {
     }
   }
 
-  private _bindInputsDirectlyToComponent(instance: TComponent, directive: Directive, bindings: Partial<TComponent>) {
+  private _verifyComponentBindings(directive: Directive, bindings: Partial<TComponent>) {
     const inputPropertyNames = (directive.inputs || [])
       .map(k => k.split(':')[0]);
     Object.keys(bindings).forEach(k => {
       if (!inputPropertyNames.includes(k)) {
         throw new InvalidInputBindError(inputPropertyNames, k);
       }
-      (instance as any)[k] = (bindings as any)[k];
     });
   }
 
