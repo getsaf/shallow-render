@@ -47,7 +47,6 @@
     "@angular/common": ">=5.x <=7.x",
     "@angular/compiler": ">=5.x <=7.x",
     "@angular/core": ">=5.x <=7.x",
-    "@angular/forms": ">=5.x <=7.x",
     "@angular/platform-browser": ">=5.x <=7.x"
   },
   "dependencies": {
@@ -74,7 +73,7 @@
     "rxjs": "^6.3.3",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
-    "typescript": "2.7.x",
+    "typescript": "2.8.x",
     "zone.js": "^0.8.26"
   }
 }
