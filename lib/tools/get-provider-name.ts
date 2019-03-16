@@ -1,6 +1,6 @@
 import { Provider } from '@angular/core';
 
-export function getProviderName(provider: Provider): string {
+export function getProviderName(provider: Provider | string): string {
   if (typeof provider === 'string') {
     return provider;
   }
