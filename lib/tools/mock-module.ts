@@ -1,11 +1,11 @@
 import { NgModule, Type } from '@angular/core';
 import { MockOf } from 'ng-mocks';
-import { isModuleWithProviders } from './type-checkers';
-import { ngMock } from './ng-mock';
-import { mockProvider } from './mock-provider';
+import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
-import { AngularModule } from '../models/angular-module';
+import { mockProvider } from './mock-provider';
+import { ngMock } from './ng-mock';
+import { isModuleWithProviders } from './type-checkers';
 
 export class InvalidModuleError {
   readonly message: string;

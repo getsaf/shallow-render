@@ -1,7 +1,7 @@
-import { Input, Output, OnInit, Component, EventEmitter, NgModule } from '@angular/core';
-import { Renderer, InvalidStaticPropertyMockError, InvalidInputBindError } from './renderer';
-import { TestSetup } from './test-setup';
 import { NgIf } from '@angular/common';
+import { Component, EventEmitter, Input, NgModule, OnInit, Output } from '@angular/core';
+import { InvalidInputBindError, InvalidStaticPropertyMockError, Renderer } from './renderer';
+import { TestSetup } from './test-setup';
 
 class TestUtility { // tslint:disable-line no-unnecessary-class
   static readonly staticNumber = 123;

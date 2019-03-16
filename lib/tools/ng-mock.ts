@@ -1,11 +1,11 @@
+import { forwardRef, PipeTransform, Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MockDeclaration, MockPipe } from 'ng-mocks';
-import { mockModule } from './mock-module';
-import { TestSetup } from '../models/test-setup';
-import { ngModuleResolver, directiveResolver } from './reflect';
-import { isModuleWithProviders, isPipeTransform } from './type-checkers';
-import { Type, PipeTransform, forwardRef } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
+import { TestSetup } from '../models/test-setup';
+import { mockModule } from './mock-module';
+import { directiveResolver, ngModuleResolver } from './reflect';
+import { isModuleWithProviders, isPipeTransform } from './type-checkers';
 
 export type NgMockable = AngularModule | Type<any> | Type<PipeTransform> | any[];
 
@@ -38,7 +38,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = mockModule(thing, setup);
     } else if (isPipeTransform(thing)) {
       mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
-    } else if (typeof thing === 'function') {
+    } else if (typeof thing === 'function') { // tslint:disable-line strict-type-predicates
       mock = MockDeclaration(thing as Type<any>);
       fixEmptySelector(thing as Type<any>, mock);
       const stubs = setup.mocks.get(thing);

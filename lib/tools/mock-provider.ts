@@ -1,8 +1,8 @@
-import { Provider, ValueProvider, TypeProvider, APP_INITIALIZER } from '@angular/core';
+import { APP_INITIALIZER, Provider, TypeProvider, ValueProvider } from '@angular/core';
 import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
-import { isClassProvider, isFactoryProvider, isExistingProvider, isTypeProvider } from './type-checkers';
 import { getProviderName } from './get-provider-name';
+import { isClassProvider, isExistingProvider, isFactoryProvider, isTypeProvider } from './type-checkers';
 
 const recursiveIncludes = (array: any[], item: any): boolean =>
   !!array.find(i => i === item || (Array.isArray(i) && recursiveIncludes(i, item)));

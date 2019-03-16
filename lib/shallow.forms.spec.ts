@@ -1,4 +1,4 @@
-import { Input, Component, NgModule, OnInit } from '@angular/core';
+import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Shallow } from './shallow';
 /* This spec is really only here because Angular Forms directives can be

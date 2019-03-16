@@ -1,7 +1,7 @@
-import { Type, Component, NgModule } from '@angular/core';
-import { fakeAsync, tick } from '@angular/core/testing';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Component, NgModule, Type } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

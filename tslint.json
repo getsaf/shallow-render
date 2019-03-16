@@ -14,7 +14,6 @@
     "newline-before-return": false,
     "newline-per-chained-call": false,
     "no-any": false,
-    "no-implicit-dependencies": false,
     "no-import-side-effect": false,
     "no-inferred-empty-object-type": false,
     "no-magic-numbers": false,
@@ -25,13 +24,16 @@
     "no-unsafe-any": false,
     "object-literal-sort-keys": false,
     "only-arrow-functions": false,
-    "ordered-imports": false,
     "prefer-function-over-method": false,
     "quotemark": [ true, "single" ],
     "strict-boolean-expressions": false,
-    "strict-type-predicates": false,
     "trailing-comma": false,
     "typedef": false,
-    "variable-name": false
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "require-const-for-all-caps",
+      "allow-pascal-case"
+    ]
   }
 }

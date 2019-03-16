@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Component, NgModule } from '@angular/core';
+import { Component, EventEmitter, Input, NgModule, Output } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

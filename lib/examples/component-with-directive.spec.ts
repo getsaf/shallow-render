@@ -1,4 +1,4 @@
-import { Input, Component, Directive, NgModule } from '@angular/core';
+import { Component, Directive, Input, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

@@ -1,8 +1,8 @@
-import { InjectionToken, ModuleWithProviders, Type, PipeTransform, Provider } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { RenderOptions, Rendering } from './models/rendering';
-import { Renderer, InvalidStaticPropertyMockError } from './models/renderer';
+import { InjectionToken, ModuleWithProviders, PipeTransform, Provider, Type } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
+import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
 import './tools/jasmine-matchers';
 

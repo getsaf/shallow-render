@@ -1,7 +1,7 @@
 import { ExistingProvider, ValueProvider } from '@angular/core';
+import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { mockProvider } from './mock-provider';
-import { MockOfProvider } from '../models/mock-of-provider';
 
 class FooService {
   foo: 'foo';

@@ -1,9 +1,9 @@
-import { Type, Provider } from '@angular/core';
+import { Provider, Type } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations, NgModuleAnnotations } from './get-ng-module-annotations';
-import { isModuleWithProviders } from './type-checkers';
-import { ngMock } from './ng-mock';
 import { mockProvider } from './mock-provider';
+import { ngMock } from './ng-mock';
+import { isModuleWithProviders } from './type-checkers';
 
 export function copyTestModule<TComponent>(setup: TestSetup<TComponent>): NgModuleAnnotations {
   let mod: Type<any>;
