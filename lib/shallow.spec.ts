@@ -1,6 +1,6 @@
-import { Shallow } from './shallow';
-import { Pipe, Component, NgModule, PipeTransform, InjectionToken } from '@angular/core';
+import { Component, InjectionToken, NgModule, Pipe, PipeTransform } from '@angular/core';
 import { InvalidStaticPropertyMockError } from './models/renderer';
+import { Shallow } from './shallow';
 
 class TestService {
   static staticFoo() { return 'static foo'; }

@@ -1,6 +1,6 @@
 import { APP_BASE_HREF, Location } from '@angular/common';
 import { Component, NgModule } from '@angular/core';
-import { RouterModule, Router, Routes } from '@angular/router';
+import { Router, RouterModule, Routes } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Shallow } from '../shallow';
 

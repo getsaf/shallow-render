@@ -1,9 +1,9 @@
-import { Component, Directive, ModuleWithProviders, Pipe, PipeTransform, NgModule } from '@angular/core';
+import { Component, Directive, ModuleWithProviders, NgModule, Pipe, PipeTransform } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ngMock } from './ng-mock';
+import * as ngMocksLib from 'ng-mocks';
 import { TestSetup } from '../models/test-setup';
 import * as mockModuleLib from './mock-module';
-import * as ngMocksLib from 'ng-mocks';
+import { ngMock } from './ng-mock';
 
 @Component({
   template: '<label>foo</label>'

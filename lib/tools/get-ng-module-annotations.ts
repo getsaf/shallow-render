@@ -1,6 +1,6 @@
-import { NgModule, SchemaMetadata, Type, Provider } from '@angular/core';
-import { ngModuleResolver } from './reflect';
+import { NgModule, Provider, SchemaMetadata, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
+import { ngModuleResolver } from './reflect';
 
 export interface NgModuleAnnotations extends NgModule {
   imports: (any[] | AngularModule)[];

@@ -1,11 +1,11 @@
+import { forwardRef, PipeTransform, Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MockDeclaration, MockPipe } from 'ng-mocks';
-import { mockModule } from './mock-module';
-import { TestSetup } from '../models/test-setup';
-import { ngModuleResolver, directiveResolver } from './reflect';
-import { isModuleWithProviders, isPipeTransform } from './type-checkers';
-import { Type, PipeTransform, forwardRef } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
+import { TestSetup } from '../models/test-setup';
+import { mockModule } from './mock-module';
+import { directiveResolver, ngModuleResolver } from './reflect';
+import { isModuleWithProviders, isPipeTransform } from './type-checkers';
 
 export type NgMockable = AngularModule | Type<any> | Type<PipeTransform> | any[];
 

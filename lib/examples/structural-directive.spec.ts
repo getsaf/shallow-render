@@ -1,4 +1,4 @@
-import { Input, Directive, NgModule, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, NgModule, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

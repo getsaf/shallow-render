@@ -1,5 +1,5 @@
 import { DebugElement, Type } from '@angular/core';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { createQueryMatch, QueryMatch } from './query-match';
 import { TestSetup } from './test-setup';

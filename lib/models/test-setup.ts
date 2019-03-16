@@ -1,6 +1,6 @@
-import { Type, Provider, PipeTransform } from '@angular/core';
-import { MockCache } from './mock-cache';
+import { PipeTransform, Provider, Type } from '@angular/core';
 import { AngularModule } from './angular-module';
+import { MockCache } from './mock-cache';
 
 export class TestSetup<TComponent> {
   readonly dontMock: any[] = [];

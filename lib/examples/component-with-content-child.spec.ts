@@ -1,4 +1,4 @@
-import { ContentChild, Component, NgModule, AfterContentInit } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

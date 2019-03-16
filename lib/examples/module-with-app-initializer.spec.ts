@@ -2,7 +2,7 @@
 // APP_INITIALIZERS blow up TestBed!
 // until https://github.com/angular/angular/issues/24218 is fixed
 ///////////////////////////////////////////////////////////////////
-import { Component, NgModule, APP_INITIALIZER } from '@angular/core';
+import { APP_INITIALIZER, Component, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

@@ -1,5 +1,5 @@
 import { Type } from '@angular/core';
-import { createQueryMatch, NoMatchesError, MultipleMatchesError, QueryMatch } from './query-match';
+import { createQueryMatch, MultipleMatchesError, NoMatchesError, QueryMatch } from './query-match';
 
 class Foo {
   fooProperty: string;

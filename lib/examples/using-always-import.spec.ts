@@ -1,4 +1,4 @@
-import { Injectable, Component, NgModule } from '@angular/core';
+import { Component, Injectable, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
 /////// Global Service Module ///////

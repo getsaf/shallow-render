@@ -1,9 +1,9 @@
-import { Type, Component, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { getNgModuleAnnotations } from './get-ng-module-annotations';
-import { mockModule, InvalidModuleError } from './mock-module';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, NgModule, Type } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
-import * as _ngMock from './ng-mock';
+import { getNgModuleAnnotations } from './get-ng-module-annotations';
+import { InvalidModuleError, mockModule } from './mock-module';
 import * as _mockProvider from './mock-provider';
+import * as _ngMock from './ng-mock';
 
 @Component({
   selector: 'foo-component',

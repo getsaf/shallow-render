@@ -1,6 +1,6 @@
-import { PipeTransform, Provider, ClassProvider, ExistingProvider, FactoryProvider, ValueProvider, TypeProvider } from '@angular/core';
-import { pipeResolver } from './reflect';
+import { ClassProvider, ExistingProvider, FactoryProvider, PipeTransform, Provider, TypeProvider, ValueProvider } from '@angular/core';
 import { BackwardCompatibleModuleWithProviders } from '../models/angular-module';
+import { pipeResolver } from './reflect';
 
 export function isModuleWithProviders(provider: any): provider is BackwardCompatibleModuleWithProviders {
   const key: keyof BackwardCompatibleModuleWithProviders = 'ngModule';

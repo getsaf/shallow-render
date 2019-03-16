@@ -1,13 +1,13 @@
 import { Directive, EventEmitter, Type } from '@angular/core';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { Rendering, RenderOptions } from './rendering';
-import { createContainer } from '../tools/create-container';
-import { TestSetup } from './test-setup';
-import { directiveResolver } from '../tools/reflect';
-import { mockProvider } from '../tools/mock-provider';
-import { copyTestModule } from '../tools/copy-test-module';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { copyTestModule } from '../tools/copy-test-module';
+import { createContainer } from '../tools/create-container';
+import { mockProvider } from '../tools/mock-provider';
+import { directiveResolver } from '../tools/reflect';
 import { CustomError } from './custom-error';
+import { Rendering, RenderOptions } from './rendering';
+import { TestSetup } from './test-setup';
 
 export class InvalidInputBindError extends CustomError {
   constructor(availableInputs: string[], key: string | symbol) {
