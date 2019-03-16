@@ -29,6 +29,11 @@
     "strict-boolean-expressions": false,
     "trailing-comma": false,
     "typedef": false,
-    "variable-name": false
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "require-const-for-all-caps",
+      "allow-pascal-case"
+    ]
   }
 }

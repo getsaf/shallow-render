@@ -38,7 +38,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = mockModule(thing, setup);
     } else if (isPipeTransform(thing)) {
       mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
-    } else if (typeof thing === 'function') {
+    } else if (typeof thing === 'function') { // tslint:disable-line strict-type-predicates
       mock = MockDeclaration(thing as Type<any>);
       fixEmptySelector(thing as Type<any>, mock);
       const stubs = setup.mocks.get(thing);
