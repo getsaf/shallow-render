@@ -1,6 +1,7 @@
-import { DebugElement, Type } from '@angular/core';
+import { DebugElement, EventEmitter, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { outputProxy, PickByType } from '../tools/output-proxy';
 import { createQueryMatch, QueryMatch } from './query-match';
 import { TestSetup } from './test-setup';
 
@@ -49,4 +50,6 @@ export class Rendering<TComponent, TBindings> {
   }
 
   readonly get = <TClass>(queryClass: Type<TClass>): TClass => TestBed.get(queryClass);
+
+  readonly outputs: PickByType<TComponent, EventEmitter<any>> = outputProxy(this.instance);
 }
