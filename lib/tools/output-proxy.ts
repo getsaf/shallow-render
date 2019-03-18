@@ -18,7 +18,7 @@ export type PickByType<TObject, TPropertyType> = Pick<TObject, KeysOfType<TObjec
 export class PropertyNotMarkedAsOutputError extends CustomError {
   constructor(key: string | symbol | number, component: any) {
     super(
-      `${key} is not marked with the @Output() decorator. `
+      `${String(key)} is not marked with the @Output() decorator. `
       + `Check that it is properly defined and set on the ${className(component)} class`
     );
   }
@@ -27,7 +27,7 @@ export class PropertyNotMarkedAsOutputError extends CustomError {
 export class PropertyNotAnEventEmitterError extends CustomError {
   constructor(key: string | symbol | number, component: any) {
     super(
-      `${key} is not an instance of an EventEmitter. `
+      `${String(key)} is not an instance of an EventEmitter. `
       + `Check that it is properly defined and set on the ${className(component)} class`
     );
   }
@@ -45,7 +45,7 @@ export const outputProxy = <TComponent>(component: TComponent): PickByType<TComp
     {},
     {
       get: (_, key: keyof TComponent) => {
-        if (!outputs.includes(key)) {
+        if (!outputs.includes(String(key))) {
           throw new PropertyNotMarkedAsOutputError(key, component);
         }
         if (!(component[key] instanceof EventEmitter)) {
