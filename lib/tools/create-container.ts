@@ -2,7 +2,7 @@ import { Component, Type } from '@angular/core';
 
 const spyOnBindings = (bindings: any) => {
   Object.keys(bindings).forEach(key => {
-    if (typeof bindings[key] === 'function') {
+    if (typeof bindings[key] === 'function' && !(jasmine as any).isSpy(bindings[key])) {
       spyOn(bindings, key).and.callThrough();
     }
   });

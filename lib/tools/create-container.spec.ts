@@ -17,4 +17,12 @@ describe('createContainerComponent', () => {
     container.foo();
     expect(container.foo).toHaveBeenCalled();
   });
+
+  it('does not spy on a spy', () => {
+    const Container = createContainer('', {foo: jasmine.createSpy()});
+    const container: any = new Container();
+
+    container.foo();
+    expect(container.foo).toHaveBeenCalled();
+  });
 });
