@@ -19,6 +19,32 @@ Angular testing made easy with shallow rendering and easy mocking.
 | 5.x        | <= 7.2.0       |
 | 6.x-latest | latest         |
 
+## Super Simple Tests
+
+```typescript
+describe('ColorLinkComponent', () => {
+  let shallow: Shallow<ColorLinkComponent>;
+  
+  beforeEach(() => {
+    shallow = new Shallow(ColorLinkComponent, MyModule);
+  });
+
+  it('renders a link with the name of the color', async () => {
+    const {find} = await shallow.render({bind: {color: 'Blue'}});
+    // or shallow.render(`<color-link color="Blue"></color-link>`);
+
+    expect(find('a').nativeElement.innerText).toBe('Blue');
+  });
+
+  it('emits color when clicked', async () => {
+    const {element, outputs} = await shallow.render({bind: {color: 'Red'}});
+    element.click();
+
+    expect(outputs.handleClick.emit).toHaveBeenCalledWith('Red');
+  });
+});
+```
+
 ## The problem
 Testing in Angular is **HARD**. TestBed is powerful but its use in component specs ends with lots of duplication.
 
@@ -104,19 +130,17 @@ describe('MyComponent', () => {
   });
 
   it('renders a link with the provided label text', async () => {
-    const {find} = await shallow.render(`<my-component linkText="my text"></my-component>`);
+    const {find} = await shallow.render({bind: {linkText: 'my text'}});
+    // or shallow.render(`<my-component linkText="my text"></my-component>`);
 
     expect(find('a').nativeElement.innerText).toBe('my text');
   });
 
   it('sends "foo" to bound click events', async () => {
-    const {element, bindings} = await shallow.render(
-      `<my-component (click)="handleClick($event)"></my-component>`,
-      { bind: { handleClick: () => {} } }
-    );
+    const {element, outputs} = await shallow.render();
     element.click();
 
-    expect(bindings.handleClick).toHaveBeenCalledWith('foo');
+    expect(outputs.handleClick).toHaveBeenCalledWith('foo');
   });
 });
 ```
