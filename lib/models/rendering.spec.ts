@@ -1,4 +1,4 @@
-import { Component, DebugElement, Directive, Type } from '@angular/core';
+import { Component, DebugElement, Directive, EventEmitter, Output, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockComponent, MockDirective } from 'ng-mocks';
@@ -36,7 +36,10 @@ class OtherDirective {}
     </div>
   `,
 })
-class OuterComponent {}
+class OuterComponent {
+  @Output() markedAsOutput = new EventEmitter<string>();
+  notMarkedAsOutput = new EventEmitter<string>();
+}
 
 @Component({
   selector: 'inner',
@@ -59,7 +62,7 @@ class OtherComponent {}
 describe('Rendering', () => {
   let testSetup: TestSetup<OuterComponent>;
   let fixture: ComponentFixture<TestHostComponent>;
-  let instance: ComponentToMock;
+  let instance: OuterComponent;
   let element: DebugElement;
   let MockedComponent: Type<ComponentToMock>;
   let MockedDirective: Type<DirectiveToMock>;
@@ -238,6 +241,14 @@ describe('Rendering', () => {
       const rendering = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(rendering.instance).toBe(instance);
+    });
+  });
+
+  describe('outputs', () => {
+    it('returns properties that are eventEmitters', () => {
+      const rendering = new Rendering(fixture, element, instance, {}, testSetup);
+
+      expect(rendering.outputs);
     });
   });
 });
