@@ -6,13 +6,6 @@ const ANGULAR_PACKAGES = [
   '@angular/router'
 ];
 const VERSIONS = {
-  '5': {
-    packages: {
-      'rxjs': '5.5.5',
-      'zone.js': '0.8.20',
-      'typescript': '2.8.x', // This is wrong for NG5, but TS 2.7 lacks conditional types so #yolo
-    }
-  },
   '6': {
     packages: {
       'rxjs': '^6.0.0',
