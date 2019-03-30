@@ -37,7 +37,7 @@ describe('simple component example', () => {
   });
 
   it('sets the color to the configured color and size', async () => {
-    const {find} = await shallow.render('<label-text>Woot!</label-text>');
+    const {find} = await shallow.render();
 
     const label = find('label');
     expect(label.nativeElement.className).toContain('MOCK-CLASS');

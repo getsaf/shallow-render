@@ -35,7 +35,7 @@ describe('simple component example', () => {
   it('displays text piped through the HighlightPipe', async () => {
     const {find} = await shallow
       .mockPipe(UnderlinePipe, input => `pipe got: ${input}`)
-      .render(`<title-text label="woot"></title-text>`);
+      .render({bind: {label: 'woot'}});
 
     const h1 = find('h4');
     expect(h1.nativeElement.innerText).toBe('pipe got: woot');
