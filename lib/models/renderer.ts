@@ -6,6 +6,7 @@ import { createContainer } from '../tools/create-container';
 import { mockProvider } from '../tools/mock-provider';
 import { directiveResolver } from '../tools/reflect';
 import { CustomError } from './custom-error';
+import { RecursivePartial } from './recursive-partial';
 import { Rendering, RenderOptions } from './rendering';
 import { TestSetup } from './test-setup';
 
@@ -66,7 +67,7 @@ export class Renderer<TComponent> {
     return `<${directive.selector} ${inputBindings}></${directive.selector}>`;
   }
 
-  render<TBindings extends Partial<TComponent>>(
+  render<TBindings extends RecursivePartial<TComponent>>(
     options: Partial<RenderOptions<TBindings>>
   ): Promise<Rendering<TComponent, TBindings>>;
 

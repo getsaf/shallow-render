@@ -39,34 +39,28 @@ describe('component with bindings', () => {
     shallow = new Shallow(BornInComponent, PersonModule);
   });
 
-  const testPerson: Person = {
+  const person: Person = {
     firstName: 'Brandon',
     lastName: 'Domingue',
     birthDate: new Date('1982-05-11')
   };
 
   it('displays the name and year the person was born', async () => {
-    const {find} = await shallow.render(
-      '<born-in [person]="testPerson"></born-in>',
-      {bind: {testPerson}}
-    );
+    const {find} = await shallow.render({bind: {person}});
 
     expect(find('#personLabel').nativeElement.innerText)
       .toBe('Brandon Domingue was born in 1982');
   });
 
   it('emits the person when clicked', async () => {
-    const {find, bindings} = await shallow.render(
-      '<born-in [person]="testPerson" (select)="handleSelect($event)"></born-in>',
-      {bind: {testPerson, handleSelect: () => undefined}}
-    );
+    const {find, outputs} = await shallow.render({bind: {person}});
     find('#personLabel').nativeElement.click();
 
-    expect(bindings.handleSelect).toHaveBeenCalledWith(testPerson);
+    expect(outputs.select.emit).toHaveBeenCalledWith(person);
   });
 
   it('displays the number of times the person was updated', async () => {
-    const {find, fixture, bindings} = await shallow.render({bind: {person: testPerson}});
+    const {find, fixture, bindings} = await shallow.render({bind: {person}});
 
     expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('1');
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { InjectionToken, ModuleWithProviders, PipeTransform, Provider, Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RecursivePartial } from './models/recursive-partial';
 import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
@@ -29,7 +30,7 @@ export class Shallow<TTestComponent> {
 
   // Always mock a thing with a particular implementation.
   private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>(); // tslint:disable-line use-default-type-parameter
-  static alwaysMock<TProvider>(thing: Type<TProvider> | InjectionToken<TProvider>, stubs: Partial<TProvider>): typeof Shallow {
+  static alwaysMock<TProvider>(thing: Type<TProvider> | InjectionToken<TProvider>, stubs: RecursivePartial<TProvider>): typeof Shallow {
     const mock = Shallow._alwaysMock.get(thing) || {};
     this._alwaysMock.set(thing, {...mock, ...stubs as object});
     return Shallow;
@@ -67,14 +68,13 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: Partial<TMock>): this {
+  mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: RecursivePartial<TMock>): this {
     const mock = this.setup.mocks.get(mockClass) || {};
     this.setup.mocks.set(mockClass, {...mock, ...stubs as object});
     return this;
   }
 
-  // TODO: Support property mocks or use a conditional partial type (TS 2.8+)to exclude non-function properties
-  mockStatic<TMock extends object>(obj: TMock, stubs: Partial<TMock>): this {
+  mockStatic<TMock extends object>(obj: TMock, stubs: RecursivePartial<TMock>): this {
     InvalidStaticPropertyMockError
       .checkMockForStaticProperties(stubs);
     const mock = this.setup.staticMocks.get(obj) || {};
@@ -107,7 +107,7 @@ export class Shallow<TTestComponent> {
 
   // Render with just renderOptions, means you must provide bindings that match
   // the TestComponent
-  render<TBindings extends Partial<TTestComponent>>(
+  render<TBindings extends RecursivePartial<TTestComponent>>(
     renderOptions?: Partial<RenderOptions<TBindings>>
   ): Promise<Rendering<TTestComponent, TBindings>>;
 

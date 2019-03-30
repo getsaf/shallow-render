@@ -3,13 +3,21 @@
 [![Build Status](https://travis-ci.org/getsaf/shallow-render.svg?branch=master)](https://travis-ci.org/getsaf/shallow-render)
 [![npm version](https://badge.fury.io/js/shallow-render.svg)](https://www.npmjs.com/package/shallow-render)
 
-Angular 5+ testing made easy with shallow rendering and easy mocking.
+Angular testing made easy with shallow rendering and easy mocking.
 
 ---
+
 ## The Docs
 * [API Docs](https://github.com/getsaf/shallow-render/wiki)
 * [StackBlitz Playground](https://stackblitz.com/github/getsaf/shallow-render-stackblitz)
 * [Release Notes](https://github.com/getsaf/shallow-render/releases)
+
+## Angular Version Support
+
+| Angular    | shallow-render |
+|------------|----------------|
+| 5.x        | <= 7.2.0       |
+| 6.x-latest | latest         |
 
 ## The problem
 Testing in Angular is **HARD**. TestBed is powerful but its use in component specs ends with lots of duplication.
