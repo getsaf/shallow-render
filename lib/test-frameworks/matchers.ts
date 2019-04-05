@@ -1,9 +1,18 @@
 import { QueryMatch } from '../models/query-match';
-// This import ensures JasmineMatchers are available any time
-// shallow is imported
-import './jasmine-matchers-namespace';
+import { Shallow } from '../shallow';
+import { CustomMatcherFactories } from './index';
 
-const jasmineMatchers: jasmine.CustomMatcherFactories = {
+export interface BaseArrayLikeMatchers<T> {
+  toHaveFoundOne(): void;
+
+  toHaveFoundMoreThan(count: number): void;
+
+  toHaveFoundLessThan(count: number): void;
+
+  toHaveFound(count: number): void;
+}
+
+const matcherFactories: CustomMatcherFactories = {
   toHaveFound: () => ({
     compare: (actual: QueryMatch<any>, expected: number) => ({
       pass: actual.length === expected,
@@ -34,5 +43,5 @@ const jasmineMatchers: jasmine.CustomMatcherFactories = {
 };
 
 beforeAll(() => {
-  jasmine.addMatchers(jasmineMatchers);
+  Shallow.testFramework.addMatchers(matcherFactories);
 });

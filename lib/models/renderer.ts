@@ -1,6 +1,7 @@
 import { Directive, EventEmitter, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Shallow } from '../shallow';
 import { copyTestModule } from '../tools/copy-test-module';
 import { createContainer } from '../tools/create-container';
 import { mockProvider } from '../tools/mock-provider';
@@ -45,12 +46,12 @@ export class Renderer<TComponent> {
         .checkMockForStaticProperties(stubs);
       Object.keys(stubs).forEach(key => {
         const stub = stubs[key];
-        if (!(jasmine as any).isSpy(obj[key])) {
-          spyOn(obj, key).and.callFake(stub);
+        if (!Shallow.testFramework.isSpy(obj[key])) {
+          Shallow.testFramework.spyOn(obj, key, stub);
         } else {
-          const spy = obj[key] as jasmine.Spy;
-          spy.calls.reset();
-          spy.and.callFake(stub);
+          const spy = obj[key];
+          Shallow.testFramework.resetSpy(spy);
+          Shallow.testFramework.mockImplementation(spy, stub);
         }
       });
     });
