@@ -1,5 +1,5 @@
 import { QueryMatch } from '../models/query-match';
-import { Shallow } from '../shallow';
+import { testFramework } from '../test-framework';
 import { CustomMatcherFactories } from './index';
 
 export interface BaseArrayLikeMatchers<T> {
@@ -43,5 +43,5 @@ const matcherFactories: CustomMatcherFactories = {
 };
 
 beforeAll(() => {
-  Shallow.testFramework.addMatchers(matcherFactories);
+  testFramework.addMatchers(matcherFactories);
 });

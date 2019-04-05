@@ -1,26 +1,3 @@
-import { JasmineFramework } from './jasmine.framework';
-import { JestFramework } from './jest.framework';
-
-declare var jest: any;
-
-export function getAvailableTestFramework(): TestFramework {
-  function isJestAvailable() {
-    try {
-      return typeof jest.spyOn === 'function';
-    } catch (_jestIsNotDefinedError) {
-      return false;
-    }
-  }
-
-  switch (true) {
-    case isJestAvailable():
-      return new JestFramework();
-
-    default:
-      return new JasmineFramework();
-  }
-}
-
 export interface TestFramework {
   isSpy(mockFunction: AnyFunction): boolean;
 

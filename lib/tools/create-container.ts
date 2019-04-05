@@ -1,10 +1,10 @@
 import { Component, Type } from '@angular/core';
-import { Shallow } from '../shallow';
+import { testFramework } from '../test-framework';
 
 const spyOnBindings = (bindings: any) => {
   Object.keys(bindings).forEach(key => {
-    if (typeof bindings[key] === 'function' && !Shallow.testFramework.isSpy(bindings[key])) {
-      Shallow.testFramework.spyOn(bindings, key);
+    if (typeof bindings[key] === 'function' && !testFramework.isSpy(bindings[key])) {
+      testFramework.spyOn(bindings, key);
     }
   });
   return bindings;
