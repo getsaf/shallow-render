@@ -5,12 +5,10 @@ import { RecursivePartial } from './models/recursive-partial';
 import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
-import { getAvailableTestFramework } from './test-frameworks';
 import './test-frameworks/matchers';
 
 export class Shallow<TTestComponent> {
   readonly setup: TestSetup<TTestComponent>;
-  static readonly testFramework = getAvailableTestFramework();
 
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
