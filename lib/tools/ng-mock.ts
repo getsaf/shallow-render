@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { MockDeclaration, MockPipe } from 'ng-mocks';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
+import { testFramework } from '../test-framework';
 import { mockModule } from './mock-module';
 import { directiveResolver, ngModuleResolver } from './reflect';
 import { isModuleWithProviders, isPipeTransform } from './type-checkers';
@@ -49,7 +50,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
             Object.assign(this, stubs);
             Object.keys(stubs).forEach(key => {
               if (typeof this[key] === 'function') {
-                spyOn(this, key).and.callThrough();
+                testFramework.spyOn(this, key);
               }
             });
           }
