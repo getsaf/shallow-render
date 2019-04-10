@@ -141,7 +141,7 @@ export class Renderer<TComponent> {
       directive.outputs.forEach(k => {
         const value = (instance as any)[k];
         if (value && value instanceof EventEmitter) {
-          spyOn(value, 'emit').and.callThrough();
+          testFramework.spyOn(value, 'emit');
         }
       });
     }
