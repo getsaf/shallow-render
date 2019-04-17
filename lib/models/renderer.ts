@@ -102,6 +102,12 @@ export class Renderer<TComponent> {
       this._verifyComponentBindings(resolvedTestComponent, finalOptions.bind);
     }
 
+    if (resolvedTestComponent.selector === undefined) {
+      const selector = 'shallow-proxy-host';
+      resolvedTestComponent.selector = selector;
+      TestBed.overrideComponent(this._setup.testComponent, {set: {selector}});
+    }
+
     const ComponentClass = createContainer(
       template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
       finalOptions.bind
