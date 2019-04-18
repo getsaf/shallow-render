@@ -152,6 +152,28 @@ describe('Renderer', () => {
         done();
       }
     });
+
+    describe('without a selector defined on the component', () => {
+      @Component({template: '<div>Without selector</div>'})
+      class TestComponentWithoutSelector {}
+
+      @NgModule({declarations: [TestComponentWithoutSelector]})
+      class NoSelectorModule {}
+
+      it('should be able to render without a template specified', async () => {
+        const testSetup = new TestSetup(
+          TestComponentWithoutSelector,
+          NoSelectorModule,
+        );
+        testSetup.dontMock.push(TestComponentWithoutSelector);
+        //tslint:disable-next-line:no-shadowed-variable
+        const renderer = new Renderer(testSetup);
+
+        const {element} = await renderer.render();
+
+        expect(element).toBeTruthy();
+      });
+    });
   });
 
   describe('whenStable', () => {

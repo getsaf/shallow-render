@@ -102,10 +102,10 @@ export class Renderer<TComponent> {
       this._verifyComponentBindings(resolvedTestComponent, finalOptions.bind);
     }
 
-    const ComponentClass = createContainer(
+    const ComponentClass = resolvedTestComponent.selector ? createContainer(
       template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
       finalOptions.bind
-    );
+    ) : this._setup.testComponent;
 
     // Components may have their own providers, If the test component does,
     // we will mock them out here..
