@@ -23,11 +23,13 @@ const makeModule = (params: NgModule = {}): Type<any> => {
   return TestModule;
 };
 
+const dummyMocker = (thing: any) => class Mock { static original = thing; };
+const isMocked = (thing: any) => thing.name.includes('Mock');
+const isMockOf = (mock: any, thing: any) => mock.original === thing;
+
 describe('mockModule', () => {
   let setup: TestSetup<any>;
 
-  const isMocked = (thing: any) => thing.name.includes('Mock');
-  const isMockOf = (mock: any, thing: any) => mock.original === thing;
   const makeMock = <TParams extends NgModule>(params: TParams) => {
     const ngModule = makeModule(params);
     const mockedModule = mockModule(ngModule, setup);
@@ -39,9 +41,6 @@ describe('mockModule', () => {
   };
 
   beforeEach(() => {
-    const dummyMocker = (thing: any) => class Mock { static original = thing; };
-    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    spyOn(_mockProvider, 'mockProvider').and.callFake(dummyMocker);
     setup = new TestSetup(class Foo {}, class Bar {});
   });
 
@@ -99,7 +98,8 @@ describe('mockModule', () => {
   });
 
   it('mocks imports', () => {
-    const imports = [class FooModule {}, class BarModule {}];
+    const imports = [makeModule(), makeModule()];
+    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
     const {annotations} = makeMock({imports});
 
     expect(isMockOf(annotations.imports, imports)).toBe(true);
@@ -107,6 +107,7 @@ describe('mockModule', () => {
 
   it('mocks declarations', () => {
     const declarations = [FooComponent, BarComponent];
+    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
     const {annotations} = makeMock({declarations});
 
     expect(isMockOf(annotations.declarations, declarations)).toBe(true);
@@ -114,6 +115,7 @@ describe('mockModule', () => {
 
   it('mocks entryComponents', () => {
     const entryComponents = [FooComponent, BarComponent];
+    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
     const {annotations} = makeMock({entryComponents});
 
     expect(isMockOf(annotations.entryComponents, entryComponents)).toBe(true);
@@ -122,6 +124,7 @@ describe('mockModule', () => {
   it('mocks providers', () => {
     class FooService {}
     class BarService {}
+    spyOn(_mockProvider, 'mockProvider').and.callFake(dummyMocker);
     const {annotations} = makeMock({
       providers: [FooService, BarService]
     });
@@ -142,5 +145,17 @@ describe('mockModule', () => {
     const bogusModule = 'NOT A REAL MODULE';
     expect(() => mockModule(bogusModule as any, setup))
       .toThrow(new InvalidModuleError(bogusModule));
+  });
+
+  it('does NOT pass through ngModuleWithProviders to the exports', () => {
+    const originalModule = makeModule();
+    const actualReplacementModule = makeModule();
+    const replacementModuleWithProviders = {ngModule: actualReplacementModule, providers: []};
+    setup.moduleReplacements.set(originalModule, replacementModuleWithProviders);
+    const {annotations} = makeMock({
+      exports: [originalModule]
+    });
+
+    expect(annotations.exports[0]).toBe(actualReplacementModule as any);
   });
 });

@@ -14,6 +14,15 @@ export class InvalidModuleError {
   }
 }
 
+const collapseModuleWithProviders = <TThing>(mod: TThing): TThing => {
+  if (Array.isArray(mod)) {
+    return mod.map(collapseModuleWithProviders) as any;
+  } else if (isModuleWithProviders(mod)) {
+    return collapseModuleWithProviders(mod.ngModule) as any;
+  }
+  return mod;
+};
+
 export type AnyNgModule = any[] | AngularModule;
 export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: TestSetup<any>): TModule {
   const cached = setup.mockCache.find(mod);
@@ -44,7 +53,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
     declarations: ngMock(declarations, setup),
-    exports: ngMock(exports, setup),
+    exports: collapseModuleWithProviders(ngMock(exports, setup)),
     entryComponents: ngMock(entryComponents, setup),
     providers: providers.map(p => mockProvider(p, setup)),
     schemas,
