@@ -40,7 +40,7 @@ describe('component with routing', () => {
 
   beforeEach(() => {
     shallow = new Shallow(GoHomeLinkComponent, GoHomeModule)
-      .replaceModule(RouterModule, RouterTestingModule.withRoutes(routes));
+      .import(RouterTestingModule.withRoutes(routes));
   });
 
   it('uses the route', async () => {
