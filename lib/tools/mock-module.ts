@@ -43,7 +43,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
       ngModule: mockModule(mod.ngModule, setup), // Recursion
       providers: mod.providers && mod.providers.map(p => mockProvider(p, setup))
     } as TModule;
-  } else if (typeof mod !== 'function') {
+  } else if (typeof (mod as any) !== 'function') {
     throw new InvalidModuleError(mod);
   }
 

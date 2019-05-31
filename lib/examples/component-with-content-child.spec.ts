@@ -21,7 +21,7 @@ class ListItemComponent {
   template: '<ul><ng-content></ng-content></ul>',
 })
 class ListContainerComponent implements AfterContentInit {
-  @ContentChild(ListItemComponent) listItem: ListItemComponent;
+  @ContentChild(ListItemComponent, ({static: false} as any /* static was added in ng8 and is required */)) listItem: ListItemComponent;
   ngAfterContentInit() {
     if (this.listItem) {
       this.listItem.activate();

@@ -1,10 +1,9 @@
-import { AnyFunction, CustomMatcherFactories, TestFramework } from './index';
-import { BaseArrayLikeMatchers } from './matchers';
+import { AnyFunction, CustomMatcherFactories, TestFramework } from './types';
 
 declare var jasmine: any;
 
-export class JasmineFramework implements TestFramework {
-  isSpy = (mockFunction: AnyFunction): boolean => jasmine.isSpy(mockFunction);
+export const jasmineFramework: TestFramework = {
+  isSpy: (mockFunction: AnyFunction): boolean => jasmine.isSpy(mockFunction),
 
   spyOn<T>(object: T, method: keyof T, mockImplementation?: AnyFunction) {
     const spy = spyOn(object, method);
@@ -16,23 +15,17 @@ export class JasmineFramework implements TestFramework {
     this.mockImplementation(spy, mockImplementation);
 
     return spy;
-  }
+  },
 
   mockImplementation(spy: any, mockImplementation: (args?: any) => any): void {
     spy.and.callFake(mockImplementation);
-  }
+  },
 
   resetSpy(spy: any): void {
     spy.calls.reset();
-  }
+  },
 
   addMatchers(matcherFactories: CustomMatcherFactories): void {
     jasmine.addMatchers(matcherFactories);
   }
-}
-
-declare global {
-  namespace jasmine {
-    export interface ArrayLikeMatchers<T> extends BaseArrayLikeMatchers<T> {}
-  }
-}
+};

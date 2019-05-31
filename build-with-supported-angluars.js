@@ -20,6 +20,13 @@ const VERSIONS = {
       'typescript': '3.1.x',
     }
   },
+  '8': {
+    packages: {
+      'rxjs': '~6.4.0',
+      'zone.js': '~0.9.1',
+      'typescript': '~3.4.3',
+    }
+  },
 }
  
 const run = cmd => {

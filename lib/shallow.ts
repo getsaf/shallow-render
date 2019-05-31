@@ -5,7 +5,7 @@ import { RecursivePartial } from './models/recursive-partial';
 import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
-import './test-frameworks/matchers';
+import './test-framework';
 
 export class Shallow<TTestComponent> {
   readonly setup: TestSetup<TTestComponent>;
