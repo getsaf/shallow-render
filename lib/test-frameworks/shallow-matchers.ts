@@ -1,6 +1,5 @@
 import { QueryMatch } from '../models/query-match';
-import { testFramework } from '../test-framework';
-import { CustomMatcherFactories } from './index';
+import { CustomMatcherFactories } from './types';
 
 export interface BaseArrayLikeMatchers<T> {
   toHaveFoundOne(): void;
@@ -12,7 +11,7 @@ export interface BaseArrayLikeMatchers<T> {
   toHaveFound(count: number): void;
 }
 
-const matcherFactories: CustomMatcherFactories = {
+export const shallowMatchers: CustomMatcherFactories = {
   toHaveFound: () => ({
     compare: (actual: QueryMatch<any>, expected: number) => ({
       pass: actual.length === expected,
@@ -41,7 +40,3 @@ const matcherFactories: CustomMatcherFactories = {
     })
   }),
 };
-
-beforeAll(() => {
-  testFramework.addMatchers(matcherFactories);
-});
