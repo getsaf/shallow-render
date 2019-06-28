@@ -231,4 +231,33 @@ describe('Renderer', () => {
       expect(instance instanceof NgIf).toBe(true);
     });
   });
+
+  describe('entry components', () => {
+    it('allows rendering entryComponents with some module magic', async () => {
+      @Component({
+        template: '<i class="my-entry">My Entry</i>'
+      })
+      class EntryComponent { }
+
+      @Component({
+        selector: 'my-normal-component',
+        template: '<i *ngComponentOutlet="entryComponentClass"></i>'
+      })
+      class NormalComponent {
+        entryComponentClass = EntryComponent;
+      }
+
+      @NgModule({
+        declarations: [NormalComponent, EntryComponent],
+        entryComponents: [EntryComponent]
+      })
+      class EntryTestModule {}
+
+      const mySetup = new TestSetup(NormalComponent, EntryTestModule);
+      mySetup.dontMock.push(NormalComponent, EntryComponent);
+      const {find} = await new Renderer(mySetup).render({whenStable: true});
+
+      expect(find('.my-entry')).toHaveFoundOne();
+    });
+  });
 });

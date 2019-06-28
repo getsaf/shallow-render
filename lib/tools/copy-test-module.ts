@@ -1,4 +1,4 @@
-import { Provider, Type } from '@angular/core';
+import { NgModule, Provider, Type } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations, NgModuleAnnotations } from './get-ng-module-annotations';
 import { mockProvider } from './mock-provider';
@@ -16,15 +16,29 @@ export function copyTestModule<TComponent>(setup: TestSetup<TComponent>): NgModu
   }
   const ngModule = getNgModuleAnnotations(mod);
 
+  // Test Modules cannot directly define entryComponents. To work around this,
+  // we create a new module which declares/exports all entryComponents and import
+  // the module into the TestModule.
+  const entryComponents = [...ngModule.entryComponents, ...setup.declarations];
+  @NgModule({
+    declarations: entryComponents,
+    entryComponents,
+    exports: entryComponents
+  })
+  class EntryComponentTestModule {}
+
   return {
-    imports: ngMock([...ngModule.imports, ...setup.imports], setup),
-    declarations: ngMock(ngModule.declarations, setup),
-    entryComponents: ngMock(ngModule.entryComponents, setup),
+    imports: ngMock([ EntryComponentTestModule, ...ngModule.imports, ...setup.imports ], setup),
+    declarations: ngMock(
+      [...ngModule.declarations, ...setup.declarations].filter(d => !entryComponents.includes(d)),
+      setup
+    ),
     providers: [
       ...ngModule.providers,
       ...providers,
       ...setup.providers,
     ].map(p => mockProvider(p, setup)),
+    entryComponents: [],
     exports: [],
     schemas: [...(ngModule.schemas || [])],
   };

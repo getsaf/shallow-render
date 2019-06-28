@@ -15,7 +15,7 @@ class TestService {
 
 @Pipe({name: 'test'})
 class TestPipe implements PipeTransform {
-  transform(key: string) {
+  transform() {
     return {test: 'pipe'};
   }
 }
@@ -142,6 +142,16 @@ describe('Shallow', () => {
         .provide(MyService);
 
       expect(shallow.setup.providers).toContain(MyService);
+    });
+  });
+
+  describe('declare', () => {
+    it('adds to the setup.declarations array', () => {
+      class MyComponent {}
+      const shallow = new Shallow(TestComponent, TestModule)
+        .declare(MyComponent);
+
+      expect(shallow.setup.declarations).toContain(MyComponent);
     });
   });
 
