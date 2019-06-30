@@ -58,6 +58,11 @@ export class Shallow<TTestComponent> {
     Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
   }
 
+  declare(...declarations: Type<any>[]): this {
+    this.setup.declarations.push(...declarations);
+    return this;
+  }
+
   provide(...providers: Provider[]): this {
     this.setup.providers.push(...providers);
     return this;

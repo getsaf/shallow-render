@@ -10,6 +10,7 @@ export class TestSetup<TComponent> {
   readonly mockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>(); /* tslint:disable-line ban-types */
   readonly mockCache = new MockCache();
   readonly providers: Provider[] = [];
+  readonly declarations: Type<any>[] = [];
   readonly imports: AngularModule[] = [];
 
   constructor(
