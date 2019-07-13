@@ -17,6 +17,12 @@ export class InvalidInputBindError extends CustomError {
   }
 }
 
+export class InvalidBindOnEntryComponentError extends CustomError {
+  constructor(component: Type<any>) {
+    super(`Tried to bind @Inputs to component that has no selector (${component.name}). EntryComponents cannot have template-bound inputs.\nIf you need to set properties on an EntryComponent, you must set them on the \`instance\`.\nIf this is not meant to be an EntryComoponent, please add a selector in th component definition.\n\nFor more details see the docs:\nhttps://github.com/getsaf/shallow-render/wiki/FAQ#bindings-on-entrycomponents`);
+  }
+}
+
 export class MissingTestComponentError extends CustomError {
   constructor(testComponent: Type<any>) {
     super(`${testComponent.name} was not found in test template`);
@@ -102,10 +108,9 @@ export class Renderer<TComponent> {
       this._verifyComponentBindings(resolvedTestComponent, finalOptions.bind);
     }
 
-    const ComponentClass = resolvedTestComponent.selector ? createContainer(
-      template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
-      finalOptions.bind
-    ) : this._setup.testComponent;
+    const ComponentClass = resolvedTestComponent.selector
+      ? createContainer(template || this._createTemplateString(resolvedTestComponent, finalOptions.bind), finalOptions.bind)
+      : this._setup.testComponent;
 
     // Components may have their own providers, If the test component does,
     // we will mock them out here..
@@ -148,6 +153,10 @@ export class Renderer<TComponent> {
   }
 
   private _verifyComponentBindings(directive: Directive, bindings: Partial<TComponent>) {
+    if (!directive.selector && Object.keys(bindings).length) {
+      throw new InvalidBindOnEntryComponentError(this._setup.testComponent);
+    }
+
     const inputPropertyNames = (directive.inputs || [])
       .map(k => k.split(':')[0]);
     Object.keys(bindings).forEach(k => {

@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, NgModule, OnInit, Output } from '@angular/core';
-import { InvalidInputBindError, InvalidStaticPropertyMockError, Renderer } from './renderer';
+import { InvalidBindOnEntryComponentError, InvalidInputBindError, InvalidStaticPropertyMockError, Renderer } from './renderer';
 import { TestSetup } from './test-setup';
 
 class TestUtility { // tslint:disable-line no-unnecessary-class
@@ -258,6 +258,31 @@ describe('Renderer', () => {
       const {find} = await new Renderer(mySetup).render({whenStable: true});
 
       expect(find('.my-entry')).toHaveFoundOne();
+    });
+
+    it('does not allow bindings to be set for entry components', async () => {
+      @Component({
+        template: '<i class="my-entry">My Entry</i>'
+      })
+      class EntryComponent {
+        @Input() devMadeAMistakeAndCreatedAnInputOnAnEntryComponent: string;
+      }
+
+      @NgModule({
+        declarations: [EntryComponent],
+        entryComponents: [EntryComponent]
+      })
+      class EntryTestModule {}
+
+      const mySetup = new TestSetup(EntryComponent, EntryTestModule);
+      try {
+        await new Renderer(mySetup).render({
+          bind: {devMadeAMistakeAndCreatedAnInputOnAnEntryComponent: 'Whoops!'}
+        });
+        fail('Should not have rendered the entry component');
+      } catch (e) {
+        expect(e instanceof InvalidBindOnEntryComponentError).toBe(true);
+      }
     });
   });
 });
