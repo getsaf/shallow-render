@@ -110,7 +110,7 @@ class TestHostComponent {
 ```
 
 Whew!!! That was a lot of boilerplate. Here's just some of the issues:
-* Our TestBed module looks very similar if not identical to the `NgModule` I've probably already added `MyComponent` to.  Total module duplication.
+* Our TestBed module looks very similar if not identical to the `NgModule` I've probably already added `MyComponent` too.  Total module duplication.
 * Since I've duplicated my module in my spec, I'm not actually sure the real module was setup correctly.
 * I've used REAL components and services in my spec which means I have not isolated the component I'm interested in testing.
 	* This also means I have to follow, and provide all the dependencies of those real components to the `TestBed` module.
