@@ -23,8 +23,8 @@ export interface CustomMatcherFactories {
 }
 
 export type CustomMatcherFactory = (
-  util: MatchersUtil,
-  customEqualityTesters: CustomEqualityTester[],
+  util?: MatchersUtil,
+  customEqualityTesters?: CustomEqualityTester[],
 ) => CustomMatcher;
 
 export interface MatchersUtil {
