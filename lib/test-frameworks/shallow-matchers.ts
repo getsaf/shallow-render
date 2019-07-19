@@ -1,5 +1,5 @@
 import { QueryMatch } from '../models/query-match';
-import { CustomMatcherFactories } from './types';
+import { CustomMatcherFactories, CustomMatcherFactory } from './types';
 
 export interface BaseArrayLikeMatchers<T> {
   toHaveFoundOne(): void;
@@ -11,7 +11,7 @@ export interface BaseArrayLikeMatchers<T> {
   toHaveFound(count: number): void;
 }
 
-export const shallowMatchers: CustomMatcherFactories = {
+const jasmineMatchers: CustomMatcherFactories = {
   toHaveFound: () => ({
     compare: (actual: QueryMatch<any>, expected: number) => ({
       pass: actual.length === expected,
@@ -40,3 +40,16 @@ export const shallowMatchers: CustomMatcherFactories = {
     })
   }),
 };
+
+const jasmineToJestMatcher = (jasmineMatcher: CustomMatcherFactory) => (actual: any, expected: any) => {
+  const {pass, message} = jasmineMatcher().compare(actual, expected);
+  return { pass, message: () => message };
+};
+
+const jestMatchers: CustomMatcherFactories = Object.keys(jasmineMatchers).reduce(
+  (acc, name) => ({...acc, [name]: jasmineToJestMatcher(jasmineMatchers[name])}),
+  {}
+);
+
+declare const jest: any;
+export const shallowMatchers: CustomMatcherFactories = typeof jest === 'undefined' ? jasmineMatchers : jestMatchers;
