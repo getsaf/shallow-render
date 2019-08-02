@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, NgModule, OnInit, Output } from '@angular/core';
+import { Component, Directive, EventEmitter, Input, NgModule, OnInit, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 import { InvalidBindOnEntryComponentError, InvalidInputBindError, InvalidStaticPropertyMockError, Renderer } from './renderer';
 import { TestSetup } from './test-setup';
 
@@ -210,25 +209,45 @@ describe('Renderer', () => {
   });
 
   describe('structural directives', () => {
+    @Directive({ selector: '[ifOdd]'})
+    class IfOddDirective {
+      private hasView = false;
+
+      constructor(private readonly _templateRef: TemplateRef<any>, private readonly _viewContainer: ViewContainerRef) { }
+
+      @Input() set ifOdd(possiblyOdd: number) {
+        const isOdd = possiblyOdd % 2 !== 0;
+        if (!isOdd && !this.hasView) {
+          this._viewContainer.createEmbeddedView(this._templateRef);
+          this.hasView = true;
+        } else if (isOdd && this.hasView) {
+          this._viewContainer.clear();
+          this.hasView = false;
+        }
+      }
+    }
+    @NgModule({declarations: [IfOddDirective]})
+    class OddModule {}
+
     it('element is the first child element when testing a structural directive', async () => {
-      const myRenderer = new Renderer(new TestSetup(NgIf, TestModule));
-      const {element} = await myRenderer.render('<b *ngIf="true"></b>');
+      const myRenderer = new Renderer(new TestSetup(IfOddDirective, OddModule));
+      const {element} = await myRenderer.render('<b *ifOdd="2"></b>');
 
       expect(element.nativeElement.tagName).toBe('B');
     });
 
     it('element is undefined when the structural directive does not render an element', async () => {
-      const myRenderer = new Renderer(new TestSetup(NgIf, TestModule));
-      const {element} = await myRenderer.render('<b *ngIf="false"></b>');
+      const myRenderer = new Renderer(new TestSetup(IfOddDirective, OddModule));
+      const {element} = await myRenderer.render('<b *ifOdd="1"></b>');
 
       expect(element).not.toBeDefined();
     });
 
     it('instance is the directive instance when testing a structural directive', async () => {
-      const myRenderer = new Renderer(new TestSetup(NgIf, TestModule));
-      const {instance} = await myRenderer.render('<b *ngIf="true"></b>');
+      const myRenderer = new Renderer(new TestSetup(IfOddDirective, OddModule));
+      const {instance} = await myRenderer.render('<b *ifOdd="2"></b>');
 
-      expect(instance instanceof NgIf).toBe(true);
+      expect(instance instanceof IfOddDirective).toBe(true);
     });
   });
 
@@ -249,6 +268,39 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [NormalComponent, EntryComponent],
+        entryComponents: [EntryComponent]
+      })
+      class EntryTestModule {}
+
+      const mySetup = new TestSetup(NormalComponent, EntryTestModule);
+      mySetup.dontMock.push(NormalComponent, EntryComponent);
+      const {find} = await new Renderer(mySetup).render({whenStable: true});
+
+      expect(find('.my-entry')).toHaveFoundOne();
+    });
+
+    it('allows rendering entryComponents with dependencies', async () => {
+      @Component({
+        selector: 'child-component',
+        template: '<i class="my-child">My Dependency</i>'
+      })
+      class ChildComponent { }
+
+      @Component({
+        template: '<i class="my-entry"><child-component></child-component></i>'
+      })
+      class EntryComponent { }
+
+      @Component({
+        selector: 'normal-component',
+        template: '<i *ngComponentOutlet="entryComponentClass"></i>'
+      })
+      class NormalComponent {
+        entryComponentClass = EntryComponent;
+      }
+
+      @NgModule({
+        declarations: [NormalComponent, EntryComponent, ChildComponent],
         entryComponents: [EntryComponent]
       })
       class EntryTestModule {}
