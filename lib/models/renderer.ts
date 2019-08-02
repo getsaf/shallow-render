@@ -2,8 +2,8 @@ import { Directive, EventEmitter, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { testFramework } from '../test-framework';
-import { copyTestModule } from '../tools/copy-test-module';
 import { createContainer } from '../tools/create-container';
+import { createTestModule } from '../tools/create-test-module';
 import { mockProvider } from '../tools/mock-provider';
 import { directiveResolver } from '../tools/reflect';
 import { CustomError } from './custom-error';
@@ -122,12 +122,8 @@ export class Renderer<TComponent> {
       });
     }
 
-    const {imports, providers, declarations, schemas} = copyTestModule(this._setup);
     await TestBed.configureTestingModule({
-      imports,
-      providers,
-      declarations: [...declarations, ComponentClass],
-      schemas,
+      imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);
