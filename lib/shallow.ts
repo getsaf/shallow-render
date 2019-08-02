@@ -68,6 +68,12 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
+  provideMock(...providers: Provider[]): this {
+    this.setup.providers.push(...providers);
+    this.setup.dontMock.push(...providers);
+    return this;
+  }
+
   dontMock(...things: any[]): this {
     this.setup.dontMock.push(...things);
     return this;

@@ -145,6 +145,17 @@ describe('Shallow', () => {
     });
   });
 
+  describe('provideMock', () => {
+    it('adds to the setup.providers and setup.dontMock', () => {
+      class MyService {}
+      const shallow = new Shallow(TestComponent, TestModule)
+          .provideMock(MyService);
+
+      expect(shallow.setup.providers).toContain(MyService);
+      expect(shallow.setup.dontMock).toContain(MyService);
+    });
+  });
+
   describe('declare', () => {
     it('adds to the setup.declarations array', () => {
       class MyComponent {}
