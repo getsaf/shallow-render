@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
 
 describe('getNgModuleAnnotations', () => {
@@ -31,5 +31,15 @@ describe('getNgModuleAnnotations', () => {
 
     expect(getNgModuleAnnotations(DummyModule))
       .toEqual(annotations);
+  });
+
+  it('includes providers from capturedProviders', () => {
+    @NgModule({})
+    class FooModule {}
+
+    @Injectable({providedIn: FooModule})
+    class FooService {}
+
+    expect(getNgModuleAnnotations(FooModule).providers).toContain(FooService);
   });
 });

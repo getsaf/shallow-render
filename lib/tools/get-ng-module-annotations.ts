@@ -1,5 +1,6 @@
 import { NgModule, Provider, SchemaMetadata, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
+import { capturedProviders } from './intercept-root-providers';
 import { ngModuleResolver } from './reflect';
 
 export interface NgModuleAnnotations extends NgModule {
@@ -21,5 +22,11 @@ export function getNgModuleAnnotations(ngModule: Type<any>): NgModuleAnnotations
     schemas = [],
   } = ngModuleResolver.resolve(ngModule) || {};
 
-  return {imports, providers, declarations, exports, entryComponents, schemas};
+  return {
+    imports,
+    providers: [...providers, ...(capturedProviders.get(ngModule) || [])],
+    declarations,
+    exports,
+    entryComponents,
+    schemas};
 }

@@ -3,6 +3,7 @@ import { NgModule, Provider, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
+import { capturedProviders } from './intercept-root-providers';
 import { mockProvider } from './mock-provider';
 import { ngMock } from './ng-mock';
 import { isModuleWithProviders } from './type-checkers';
@@ -38,6 +39,7 @@ export function createTestModule<TComponent>(setup: TestSetup<TComponent>, testC
       ...ngModule.providers,
       ...additionalProviders,
       ...setup.providers,
+      ...(capturedProviders.get('root') || [])
     ].map(p => mockProvider(p, setup)),
     exports: [...declarations, ...entryComponents],
     schemas: ngModule.schemas || []
