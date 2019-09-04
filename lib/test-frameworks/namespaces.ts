@@ -6,6 +6,6 @@ declare global {
     export interface ArrayLikeMatchers<T> extends BaseArrayLikeMatchers<T> {}
   }
   namespace jest {
-    export interface ArrayLikeMatchers<T> extends BaseArrayLikeMatchers<T> {}
+    export interface Matchers<R> extends BaseArrayLikeMatchers<R> {}
   }
 }
