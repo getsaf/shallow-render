@@ -47,6 +47,7 @@
     "@angular/common": ">=6.x <=8.x",
     "@angular/compiler": ">=6.x <=8.x",
     "@angular/core": ">=6.x <=8.x",
+    "@angular/forms": ">=6.x <=8.x",
     "@angular/platform-browser": ">=6.x <=8.x"
   },
   "dependencies": {
