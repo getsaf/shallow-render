@@ -1,18 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { InjectionToken, ModuleWithProviders, PipeTransform, Provider, Type } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { RecursivePartial } from './models/recursive-partial';
 import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
 import './test-framework';
 
+const NEVER_MOCKED_ANGULAR_STUFF = [
+  CommonModule,
+  BrowserModule,
+  FormsModule,
+  ReactiveFormsModule,
+  HAMMER_GESTURE_CONFIG
+];
 export class Shallow<TTestComponent> {
   readonly setup: TestSetup<TTestComponent>;
 
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
-  private static readonly _neverMock: any[] = [CommonModule, BrowserModule];
+  private static readonly _neverMock: any[] = [...NEVER_MOCKED_ANGULAR_STUFF];
   static neverMock(...things: any[]) {
     this._neverMock.push(...things);
     return Shallow;
