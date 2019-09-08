@@ -1,7 +1,6 @@
 import { APP_INITIALIZER, Provider, TypeProvider, ValueProvider } from '@angular/core';
-import { MockOfProvider } from '../models/mock-of-provider';
+import { mockProviderClass } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
-import { getProviderName } from './get-provider-name';
 import { isClassProvider, isExistingProvider, isFactoryProvider, isTypeProvider } from './type-checkers';
 
 const recursiveIncludes = (array: any[], item: any): boolean =>
@@ -30,12 +29,7 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
     return provider;
   }
 
-  class MockProvider extends MockOfProvider { /* tslint:disable-line no-unnecessary-class */
-    constructor() {
-      super(provider, userMocks);
-    }
-  }
-  Object.defineProperty(MockProvider, 'name', {value: `MockOf${getProviderName(provider)}`});
+  const MockProvider = mockProviderClass(provide, userMocks);
 
   const prov = {
     provide,

@@ -64,7 +64,8 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       throw new Error(`Shallow doesn't know how to mock: ${thing}`);
     }
   } catch (e) {
-    throw new Error(`Shallow ran into some trouble mocking ${(thing as any).name || thing}. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${e && e.stack || e}\n----------- END MOCK ERROR -----------`);
+    const name = (thing && (thing as any).name) || thing;
+    throw new Error(`Shallow ran into some trouble mocking ${name}. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${e && e.stack || e}\n----------- END MOCK ERROR -----------`);
   }
   return setup.mockCache.add(thing, mock) as TThing;
 }

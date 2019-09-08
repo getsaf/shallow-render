@@ -7,6 +7,7 @@ import { createTestModule } from '../tools/create-test-module';
 import { mockProvider } from '../tools/mock-provider';
 import { directiveResolver } from '../tools/reflect';
 import { CustomError } from './custom-error';
+import { mockProviderClass } from './mock-of-provider';
 import { RecursivePartial } from './recursive-partial';
 import { Rendering, RenderOptions } from './rendering';
 import { TestSetup } from './test-setup';
@@ -121,6 +122,14 @@ export class Renderer<TComponent> {
         }
       });
     }
+
+    // This takes care of providedIn 'root'
+    this._setup.mocks.forEach((mock, thingToMock) => {
+      if (!directiveResolver.isDirective(thingToMock)) {
+        const MockProvider = mockProviderClass(thingToMock, mock);
+        TestBed.overrideProvider(thingToMock, {useValue: new MockProvider()});
+      }
+    });
 
     await TestBed.configureTestingModule({
       imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])],
