@@ -1,4 +1,4 @@
-import { Component, DebugElement, Directive, EventEmitter, Output, Type } from '@angular/core';
+import { Component, DebugElement, Directive, EventEmitter, Input, Output, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockComponent, MockDirective } from 'ng-mocks';
@@ -16,6 +16,14 @@ class TestHostComponent {}
 class DirectiveToMock {}
 
 @Directive({
+  selector: '[structuralDirectiveToMock]',
+})
+class StructuralDirectiveToMock {
+  @Input() structuralDirectiveToMock: string;
+
+}
+
+@Directive({
   selector: '[test-directive]',
 })
 class TestDirective {}
@@ -23,16 +31,28 @@ class TestDirective {}
 @Directive({
   selector: '[other-directive]',
 })
-class OtherDirective {}
+class OtherDirective {
+  @Input('other-directive') otherDirective: string;
+}
 
 @Component({
   selector: 'outer',
   template: `
     <div class="outer">
-      <inner directive-to-mock></inner>
-      <component-to-mock></component-to-mock>
-      <other other-directive>one</other>
-      <other other-directive>two</other>
+      <inner directive-to-mock id="innerThing"></inner>
+      <component-to-mock id="ctm"></component-to-mock>
+      <other other-directive="one" id="one">one</other>
+      <div id="two-container">
+        <other other-directive="two" id="two">two</other>
+      </div>
+      <div *structuralDirectiveToMock="'first-one'" class="first">
+        first foo
+      </div>
+      <div class="second-directive-container">
+        <div *structuralDirectiveToMock="'second-one'" class="second">
+          second foo
+        </div>
+      </div>
     </div>
   `,
 })
@@ -66,9 +86,11 @@ describe('Rendering', () => {
   let element: DebugElement;
   let MockedComponent: Type<ComponentToMock>;
   let MockedDirective: Type<DirectiveToMock>;
+  let MockedStructuralDirective: Type<StructuralDirectiveToMock>;
 
   beforeEach(async () => {
     MockedDirective = MockDirective(DirectiveToMock);
+    MockedStructuralDirective = MockDirective(StructuralDirectiveToMock);
     MockedComponent = MockComponent(ComponentToMock);
     testSetup = new TestSetup(OuterComponent, class {});
     testSetup.mockCache.add(DirectiveToMock, MockedDirective);
@@ -83,6 +105,7 @@ describe('Rendering', () => {
         OtherDirective,
         MockedComponent,
         MockedDirective,
+        MockedStructuralDirective
       ],
     }).compileComponents().then(() => {
       fixture = TestBed.createComponent(TestHostComponent);
@@ -159,6 +182,24 @@ describe('Rendering', () => {
       expect(find('inner')).toHaveFound(1);
       expect(find('inner').nativeElement).toBeDefined();
     });
+
+    it('can search by by Component --and-- cssQuery', () => {
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      expect(find(OtherComponent, {query: '#two'}).nativeElement.id).toBe('two');
+    });
+
+    it('can search by by Directive --and-- cssQuery', () => {
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      expect(find(OtherDirective, {query: '#two'}).nativeElement.id).toBe('two');
+    });
+
+    it('can search by by css --and-- cssQuery', () => {
+      const {find} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      expect(find('other', {query: '#two'}).nativeElement.id).toBe('two');
+    });
   });
 
   describe('findComponent', () => {
@@ -187,6 +228,14 @@ describe('Rendering', () => {
       expect(found).toHaveFound(2);
       found.forEach(i => expect(i instanceof OtherComponent).toBe(true));
     });
+
+    it('finds components that match a css query', () => {
+      const {findComponent} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      const found = findComponent(OtherComponent, {query: '#two'});
+      expect(found).toHaveFoundOne();
+      expect(found[0]).toBe(fixture.debugElement.query(By.css('#two')).componentInstance);
+    });
   });
 
   describe('findDirective', () => {
@@ -214,6 +263,91 @@ describe('Rendering', () => {
       const found = findDirective(OtherDirective);
       expect(found).toHaveFound(2);
       found.forEach(i => expect(i instanceof OtherDirective).toBe(true));
+    });
+
+    it('finds directives that match a css query', () => {
+      const {findDirective} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      const found = findDirective(OtherDirective, {query: '#two'});
+      expect(found.otherDirective).toBe('two');
+    });
+  });
+
+  describe('renderStructuralDirective', () => {
+    it('renders the contents of a structural directive', () => {
+      const {renderStructuralDirective, find} = new Rendering(fixture, element, instance, {}, testSetup);
+      renderStructuralDirective(StructuralDirectiveToMock);
+
+      expect(find('.first').nativeElement.innerText).toContain('first foo');
+      expect(find('.second').nativeElement.innerText).toContain('second foo');
+    });
+
+    it('clears directive when renderContents is false', () => {
+      const {renderStructuralDirective, find} = new Rendering(fixture, element, instance, {}, testSetup);
+      renderStructuralDirective(StructuralDirectiveToMock);
+      renderStructuralDirective(StructuralDirectiveToMock, false);
+
+      expect(find('.first')).toHaveFound(0);
+      expect(find('.second')).toHaveFound(0);
+    });
+
+    it('renders an instances of a directive from a QueryMatch', () => {
+      const {renderStructuralDirective, findStructuralDirective, find} = new Rendering(fixture, element, instance, {}, testSetup);
+      const found = findStructuralDirective(
+        StructuralDirectiveToMock,
+        {query: d => d.structuralDirectiveToMock === 'second-one'}
+      );
+      renderStructuralDirective(found);
+
+      expect(find('.first')).toHaveFound(0);
+      expect(find('.second')).toHaveFound(1);
+    });
+
+    it('renders an instances of a directive', () => {
+      const {renderStructuralDirective, findStructuralDirective, find} = new Rendering(fixture, element, instance, {}, testSetup);
+      const found = findStructuralDirective(StructuralDirectiveToMock);
+      renderStructuralDirective(found[0]);
+
+      expect(find('.first')).toHaveFound(1);
+      expect(find('.second')).toHaveFound(0);
+    });
+
+    it('renders multiple instances of a directive', () => {
+      const {renderStructuralDirective, findStructuralDirective, find} = new Rendering(fixture, element, instance, {}, testSetup);
+      const found = findStructuralDirective(StructuralDirectiveToMock);
+      renderStructuralDirective(found);
+
+      expect(find('.first')).toHaveFound(1);
+      expect(find('.second')).toHaveFound(1);
+    });
+
+    it('throws an error when attempting to render a non-mocked structural directive', () => {
+      const {renderStructuralDirective, findStructuralDirective} = new Rendering(fixture, element, instance, {}, testSetup);
+      const found = findStructuralDirective(OtherDirective);
+
+      // tslint:disable-next-line no-void-expression
+      expect(() => renderStructuralDirective(found))
+        .toThrowError(/You may only manually.*OtherDirective/);
+    });
+  });
+
+  describe('findStructuralDirective', () => {
+    it('finds structural directives when they are not rendered', () => {
+      const {findStructuralDirective} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      expect(findStructuralDirective(StructuralDirectiveToMock))
+        .toHaveFound(2);
+    });
+
+    it('finds structural directives by a query', () => {
+      const {findStructuralDirective} = new Rendering(fixture, element, instance, {}, testSetup);
+
+      const found = findStructuralDirective(
+        StructuralDirectiveToMock,
+        {query: d => d.structuralDirectiveToMock === 'second-one'}
+      );
+
+      expect(found.structuralDirectiveToMock).toBe('second-one');
     });
   });
 

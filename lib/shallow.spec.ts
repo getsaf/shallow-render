@@ -126,6 +126,21 @@ describe('Shallow', () => {
     });
   });
 
+  describe('alwaysWithStructuralDirective', () => {
+    it('adds the directive to the test setup', () => {
+      class DummyDirective {}
+      class DummyFalseDirective {}
+      Shallow.alwaysWithStructuralDirective(DummyDirective, true);
+      Shallow.alwaysWithStructuralDirective(DummyFalseDirective, false);
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.withStructuralDirectives.get(DummyDirective))
+        .toBe(true);
+      expect(shallow.setup.withStructuralDirectives.get(DummyFalseDirective))
+        .toBe(false);
+    });
+  });
+
   describe('dontMock', () => {
     it('adds things to setup.dontMock', () => {
       const shallow = new Shallow(TestComponent, TestModule)
@@ -258,6 +273,21 @@ describe('Shallow', () => {
 
       expect(shallow.setup.moduleReplacements.get(TestModule))
         .toBe(ReplacementModule);
+    });
+  });
+
+  describe('withStructuralDirective', () => {
+    it('adds the directive to the test setup', () => {
+      class DummyDirective {}
+      class DummyFalseDirective {}
+      const shallow = new Shallow(TestComponent, TestModule)
+        .withStructuralDirective(DummyDirective, true)
+        .withStructuralDirective(DummyFalseDirective, false);
+
+      expect(shallow.setup.withStructuralDirectives.get(DummyDirective))
+        .toBe(true);
+      expect(shallow.setup.withStructuralDirectives.get(DummyFalseDirective))
+        .toBe(false);
     });
   });
 

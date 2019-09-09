@@ -57,13 +57,32 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
+  private static _alwaysRenderStructuralDirectives = false;
+  public static alwaysRenderStructuralDirectives() {
+    this._alwaysRenderStructuralDirectives = true;
+    return Shallow;
+  }
+
+  private static readonly _alwaysWithStructuralDirectives = new Map<Type<any>, boolean>();
+  public static alwaysWithStructuralDirective(directive: Type<any>, renderContents: boolean = true) {
+    this._alwaysWithStructuralDirectives.set(directive, renderContents);
+    return Shallow;
+  }
+
   constructor(testComponent: Type<TTestComponent>, testModule: Type<any> | ModuleWithProviders) {
     this.setup = new TestSetup(testComponent, testModule);
     this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
     this.setup.imports.push(...Shallow._alwaysImport);
+    this.setup.alwaysRenderStructuralDirectives = Shallow._alwaysRenderStructuralDirectives;
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
     Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
+    Shallow._alwaysWithStructuralDirectives.forEach((value, key) => this.setup.withStructuralDirectives.set(key, value));
+  }
+
+  withStructuralDirective(directive: Type<any>, renderContents = true) {
+    this.setup.withStructuralDirectives.set(directive, renderContents);
+    return this;
   }
 
   declare(...declarations: Type<any>[]): this {
@@ -143,4 +162,5 @@ export class Shallow<TTestComponent> {
       return renderer.render();
     }
   }
+
 }

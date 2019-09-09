@@ -12,6 +12,8 @@ export class TestSetup<TComponent> {
   readonly providers: Provider[] = [];
   readonly declarations: Type<any>[] = [];
   readonly imports: AngularModule[] = [];
+  readonly withStructuralDirectives = new Map<Type<any>, boolean>();
+  public alwaysRenderStructuralDirectives = false;
 
   constructor(
     public readonly testComponent: Type<TComponent>,
