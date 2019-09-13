@@ -1,5 +1,5 @@
 import { Component, Type } from '@angular/core';
-import { testFramework } from '../test-framework';
+import { testFramework } from '../test-frameworks/test-framework';
 
 const spyOnBindings = (bindings: any) => {
   Object.keys(bindings).forEach(key => {

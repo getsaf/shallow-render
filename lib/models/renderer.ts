@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { testFramework } from '../test-framework';
+import { testFramework } from '../test-frameworks/test-framework';
 import { createContainer } from '../tools/create-container';
 import { createTestModule } from '../tools/create-test-module';
 import { mockProvider } from '../tools/mock-provider';

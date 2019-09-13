@@ -1,5 +1,5 @@
 import { Type } from '@angular/core';
-import { testFramework } from '../test-framework';
+import { testFramework } from '../test-frameworks/test-framework';
 import { getProviderName } from '../tools/get-provider-name';
 
 export class MockOfProvider {

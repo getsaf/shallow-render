@@ -22,6 +22,7 @@
     "no-submodule-imports": false,
     "no-unbound-method": false,
     "no-unsafe-any": false,
+    "no-void-expression": false,
     "object-literal-sort-keys": false,
     "only-arrow-functions": false,
     "prefer-function-over-method": false,
