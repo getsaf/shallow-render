@@ -12,6 +12,9 @@
   "typescript": {
     "definition": "dist/index"
   },
+  "publishConfig":{
+    "registry":"https://registry.npmjs.org"
+  },
   "scripts": {
     "clean": "rm -rf dist coverage",
     "lint": "tslint -t stylish --project tsconfig.json",
