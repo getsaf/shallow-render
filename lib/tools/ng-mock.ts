@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { MockDeclaration, MockPipe } from 'ng-mocks';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
-import { testFramework } from '../test-framework';
+import { testFramework } from '../test-frameworks/test-framework';
 import { mockModule } from './mock-module';
 import { directiveResolver, ngModuleResolver } from './reflect';
 import { isModuleWithProviders, isPipeTransform } from './type-checkers';

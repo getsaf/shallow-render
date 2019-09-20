@@ -1,9 +1,5 @@
 import { createQueryMatch } from '../models/query-match';
-// Importing Shallow automatically hooks up the matchers
-// I import it and toString() it to avoid the linter from
-// dinging me.
-import { Shallow } from '../shallow';
-Shallow.toString();
+import './shallow-matchers';
 
 describe('JasmineMatchers', () => {
   describe('toHaveFound', () => {

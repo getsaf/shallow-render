@@ -6,7 +6,7 @@ import { RecursivePartial } from './models/recursive-partial';
 import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
-import './test-framework';
+import './test-frameworks/shallow-matchers';
 
 const NEVER_MOCKED_ANGULAR_STUFF = [
   CommonModule,

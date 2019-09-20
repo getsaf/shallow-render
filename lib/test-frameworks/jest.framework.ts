@@ -1,7 +1,6 @@
-import { AnyFunction, CustomMatcherFactories, TestFramework } from './types';
+import { AnyFunction, TestFramework } from './types';
 
 declare var jest: any;
-declare var expect: any;
 
 export const jestFramework: TestFramework = {
   isSpy: (mockFunction: any): boolean => jest.isMockFunction(mockFunction),
@@ -23,8 +22,4 @@ export const jestFramework: TestFramework = {
   resetSpy(spy: any): void {
     spy.mockReset();
   },
-
-  addMatchers(matcherFactories: CustomMatcherFactories): void {
-    expect.extend(matcherFactories);
-  }
 };

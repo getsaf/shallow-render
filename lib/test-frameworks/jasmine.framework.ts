@@ -1,4 +1,4 @@
-import { AnyFunction, CustomMatcherFactories, TestFramework } from './types';
+import { AnyFunction, TestFramework } from './types';
 
 declare var jasmine: any;
 
@@ -24,8 +24,4 @@ export const jasmineFramework: TestFramework = {
   resetSpy(spy: any): void {
     spy.calls.reset();
   },
-
-  addMatchers(matcherFactories: CustomMatcherFactories): void {
-    jasmine.addMatchers(matcherFactories);
-  }
 };
