@@ -176,4 +176,36 @@ describe('ng-mock', () => {
 
     expect(mocked).toBe(moduleWithProviders);
   });
+
+  it('renders on ngOnInit for all directives when alwaysRenderStructuralDirectives is true', () => {
+    testSetup.alwaysRenderStructuralDirectives = true;
+    const mocked = ngMock(FooDirective, testSetup);
+    const instance = new mocked() as ngMocksLib.MockedDirective<{}>;
+    spyOn(instance, '__render');
+    (instance as any).ngOnInit();
+
+    expect(instance.__render).toHaveBeenCalled();
+  });
+
+  it('renders on ngOnInit for directives specified in withStructuralDirective', () => {
+    testSetup.alwaysRenderStructuralDirectives = false;
+    testSetup.withStructuralDirectives.set(FooDirective, true);
+    const mocked = ngMock(FooDirective, testSetup);
+    const instance = new mocked() as ngMocksLib.MockedDirective<{}>;
+    spyOn(instance, '__render');
+    (instance as any).ngOnInit();
+
+    expect(instance.__render).toHaveBeenCalled();
+  });
+
+  it('does not render on ngOnInit for directives not specified in withStructuralDirective', () => {
+    testSetup.alwaysRenderStructuralDirectives = false;
+    testSetup.withStructuralDirectives.set(FooDirective, false);
+    const mocked = ngMock(FooDirective, testSetup);
+    const instance = new mocked() as ngMocksLib.MockedDirective<{}>;
+    spyOn(instance, '__render');
+    (instance as any).ngOnInit();
+
+    expect(instance.__render).not.toHaveBeenCalled();
+  });
 });

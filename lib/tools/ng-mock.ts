@@ -41,6 +41,16 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
     } else if (typeof thing === 'function') { // tslint:disable-line strict-type-predicates
       mock = MockDeclaration(thing as Type<any>);
+      if (
+        setup.withStructuralDirectives.get(thing as Type<any>)
+        || (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing as Type<any>) !== false)
+      ) {
+        mock.prototype.ngOnInit = () => undefined;
+        testFramework.spyOn(mock.prototype, 'ngOnInit', function() {
+          // tslint:disable-next-line: no-empty
+          try { this.__render(); } catch (e) { }
+        });
+      }
       fixEmptySelector(thing as Type<any>, mock);
       const stubs = setup.mocks.get(thing);
       if (stubs) {
