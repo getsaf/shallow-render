@@ -21,7 +21,7 @@ Angular testing made easy with shallow rendering and easy mocking.
 | Angular    | shallow-render |
 |------------|----------------|
 | 5.x        | <= 7.2.0       |
-| 6.x-latest | latest         |
+| 6.x-8.x.   | 8x             |
 
 ## Super Simple Tests
 
