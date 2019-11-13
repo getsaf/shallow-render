@@ -14,7 +14,7 @@ declare global {
     // tslint:disable-next-line
     interface ArrayLikeMatchers<T> extends ShallowMatchers { }
     // tslint:disable-next-line
-    interface Matchers<T> extends ShallowMatchers { }
+    interface Matchers<R> extends ShallowMatchers { }
   }
 }
 
