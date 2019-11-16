@@ -12,8 +12,8 @@
   "typescript": {
     "definition": "dist/index"
   },
-  "publishConfig":{
-    "registry":"https://registry.npmjs.org"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "clean": "rm -rf dist coverage",
