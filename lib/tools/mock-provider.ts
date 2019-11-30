@@ -4,7 +4,7 @@ import { TestSetup } from '../models/test-setup';
 import { isClassProvider, isExistingProvider, isFactoryProvider, isTypeProvider } from './type-checkers';
 
 const recursiveIncludes = (array: any[], item: any): boolean =>
-  !!array.find(i => i === item || (Array.isArray(i) && recursiveIncludes(i, item)));
+  !!array.find(i => i === item || (i && i.provide === item) || (Array.isArray(i) && recursiveIncludes(i, item)));
 
 export function mockProvider(provider: TypeProvider, setup: TestSetup<any>): ValueProvider | TypeProvider;
 export function mockProvider<TProvider extends Provider>(provider: TProvider, setup: TestSetup<any>): TProvider;
