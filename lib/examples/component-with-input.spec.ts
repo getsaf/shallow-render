@@ -7,8 +7,8 @@ import { Shallow } from '../shallow';
 @Component({
   selector: 'custom-form',
   template: `
-      <input id="customInput" [(ngModel)]="text">
-  `,
+    <input id="customInput" [(ngModel)]="text" />
+  `
 })
 class CustomFormComponent {
   text = 'I am complete';
@@ -29,21 +29,18 @@ describe('component with input', () => {
   });
 
   it('displays an input with default value', async () => {
-    const {find} = await shallow.render();
+    const { find } = await shallow.render();
 
-    expect(find('#customInput').nativeElement.value)
-      .toBe('I am complete');
+    expect(find('#customInput').nativeElement.value).toBe('I am complete');
   });
 
   it('input updates ngModel', async () => {
-    const {find, instance} = await shallow.render();
+    const { find, instance } = await shallow.render();
 
     const input = find('#customInput');
     input.nativeElement.value = 'It works!';
-    input.triggerEventHandler('input', {target: input.nativeElement});
+    input.triggerEventHandler('input', { target: input.nativeElement });
 
-    expect(instance.text)
-      .toBe('It works!');
+    expect(instance.text).toBe('It works!');
   });
-
 });

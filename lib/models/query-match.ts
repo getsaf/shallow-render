@@ -3,13 +3,17 @@ export type QueryMatch<TMatch> = TMatch[] & TMatch;
 
 export class NoMatchesError extends CustomError {
   constructor(propertyName: string) {
-    super(`Could not find the element you were looking for. Your test tried to access the '${propertyName}' property on a QueryResult but your query had no results.`);
+    super(
+      `Could not find the element you were looking for. Your test tried to access the '${propertyName}' property on a QueryResult but your query had no results.`
+    );
   }
 }
 
 export class MultipleMatchesError extends CustomError {
   constructor(propertyName: string, matchLength: number) {
-    super(`Tried to access ${propertyName} on query match but your query found multiple (${matchLength} results. Try narrowing your query or targeting the specific match you are interested in from the array`);
+    super(
+      `Tried to access ${propertyName} on query match but your query found multiple (${matchLength} results. Try narrowing your query or targeting the specific match you are interested in from the array`
+    );
     // this.message = 'foo';
   }
 }
@@ -25,7 +29,7 @@ const throwErrorIfNotOneMatch = (key: string, matches: any[]) => {
 export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> {
   const match: any = matches.length ? matches[0] : {};
   return new Proxy(matches, {
-    get: (obj: any, key: string) => {
+    get: (_obj: any, key: string) => {
       if (key in matches) {
         return (matches as any)[key];
       } else {
@@ -33,14 +37,14 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
         return match[key];
       }
     },
-    set: (obj: any, key: string, value: any) => {
+    set: (_obj: any, key: string, value: any) => {
       throwErrorIfNotOneMatch(key, matches);
       match[key] = value;
       return true;
     },
-    has: (obj: any, key: string) => {
+    has: (_obj: any, key: string) => {
       if (matches.length === 1) {
-        return (key in matches || key in match);
+        return key in matches || key in match;
       }
       return key in matches;
     },
@@ -52,17 +56,17 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
     //     return Object.keys(matches);
     //   }
     // },
-    defineProperty: (obj, key: string, descriptor: any) => {
+    defineProperty: (_obj, key: string, descriptor: any) => {
       throwErrorIfNotOneMatch(key, matches);
       Object.defineProperty(match, key, descriptor);
       return true;
     },
-    deleteProperty: (obj, key: string) => {
+    deleteProperty: (_obj, key: string) => {
       throwErrorIfNotOneMatch(key, matches);
       delete match[key]; /* tslint:disable-line no-dynamic-delete */
       return true;
     },
-    getPrototypeOf: (target: any) => {
+    getPrototypeOf: (_target: any) => {
       throwErrorIfNotOneMatch('prototype', matches);
       return Object.getPrototypeOf(match);
     }

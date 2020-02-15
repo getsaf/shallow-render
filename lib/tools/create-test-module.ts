@@ -22,10 +22,7 @@ export function createTestModule<TComponent>(setup: TestSetup<TComponent>, testC
   // we create a new module which declares/exports all entryComponents and import
   // the module into the TestModule.
   const declarations = ngMock(
-    [
-      ...ngModule.declarations,
-      ...setup.declarations
-    ].filter(d => d !== setup.testComponent),
+    [...ngModule.declarations, ...setup.declarations].filter(d => d !== setup.testComponent),
     setup
   );
   const entryComponents = [...ngMock([...ngModule.entryComponents], setup), ...setup.declarations];
@@ -34,11 +31,7 @@ export function createTestModule<TComponent>(setup: TestSetup<TComponent>, testC
     imports: [...ngMock([...ngModule.imports, ...setup.imports], setup), CommonModule],
     declarations: [...declarations, ...testComponents],
     entryComponents,
-    providers: [
-      ...ngModule.providers,
-      ...additionalProviders,
-      ...setup.providers,
-    ].map(p => mockProvider(p, setup)),
+    providers: [...ngModule.providers, ...additionalProviders, ...setup.providers].map(p => mockProvider(p, setup)),
     exports: [...declarations, ...entryComponents],
     schemas: ngModule.schemas || []
   })

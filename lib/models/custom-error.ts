@@ -5,8 +5,9 @@ import { Type } from '@angular/core';
  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Custom_Error_Types
 */
 
-const ExtendableBuiltIn = function<T>(cls: Type<T>): Type<T> {
+const ExtendableBuiltIn = <T>(cls: Type<T>): Type<T> => {
   function Extendable() {
+    // @ts-ignore
     cls.apply(this, arguments);
   }
   Extendable.prototype = Object.create(cls.prototype);
@@ -20,8 +21,8 @@ export class CustomError extends ExtendableBuiltIn(Error) {
     super();
     this.message = message;
     // Maintains proper stack trace for where our error was thrown (only available on V8)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, CustomError);
+    if ('captureStackTrace' in Error) {
+      (Error as any).captureStackTrace(this, CustomError);
     }
   }
 }

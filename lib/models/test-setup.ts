@@ -15,8 +15,5 @@ export class TestSetup<TComponent> {
   readonly withStructuralDirectives = new Map<Type<any>, boolean>();
   public alwaysRenderStructuralDirectives = false;
 
-  constructor(
-    public readonly testComponent: Type<TComponent>,
-    public readonly testModule: AngularModule
-  ) { }
+  constructor(public readonly testComponent: Type<TComponent>, public readonly testModule: AngularModule) {}
 }

@@ -1,0 +1,6 @@
+dist
+coverage
+LICENSE
+.editorconfig
+.gitignore
+.prettierignore

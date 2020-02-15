@@ -8,20 +8,26 @@ export interface ShallowMatchers {
 declare global {
   namespace jasmine {
     // tslint:disable-next-line
-    interface ArrayLikeMatchers<T> extends ShallowMatchers { }
+    interface ArrayLikeMatchers<T> extends ShallowMatchers {}
   }
   namespace jest {
     // tslint:disable-next-line
-    interface ArrayLikeMatchers<T> extends ShallowMatchers { }
+    interface ArrayLikeMatchers<T> extends ShallowMatchers {}
     // tslint:disable-next-line
-    interface Matchers<R> extends ShallowMatchers { }
+    interface Matchers<R> extends ShallowMatchers {}
   }
 }
 
-type JasmineMatcher<TActual, TExpected> = () => {compare(actual: TActual, expected: TExpected): {pass: boolean; message: string}};
-type JestMatcher<TActual, TExpected> = (actual: TActual, expected: TExpected) => {pass: boolean; message(): string};
-const jasmineToJestMatcher = <TActual, TExpected>(jasmineMatcher: JasmineMatcher<TActual, TExpected>): JestMatcher<TActual, TExpected> => (actual: TActual, expected: TExpected) => {
-  const {pass, message} = jasmineMatcher().compare(actual, expected);
+declare const beforeEach: (callback: () => void) => void;
+
+type JasmineMatcher<TActual, TExpected> = () => {
+  compare(actual: TActual, expected: TExpected): { pass: boolean; message: string };
+};
+type JestMatcher<TActual, TExpected> = (actual: TActual, expected: TExpected) => { pass: boolean; message(): string };
+const jasmineToJestMatcher = <TActual, TExpected>(
+  jasmineMatcher: JasmineMatcher<TActual, TExpected>
+): JestMatcher<TActual, TExpected> => (actual: TActual, expected: TExpected) => {
+  const { pass, message } = jasmineMatcher().compare(actual, expected);
   return { pass, message: () => message };
 };
 
@@ -52,25 +58,26 @@ const jasmineMatchers = {
       pass: actual.length < expected,
       message: `Expected to find less than ${expected} but found ${actual.length}`
     })
-  }),
+  })
 };
 
 const jestMatchers = {
   toHaveFound: jasmineToJestMatcher(jasmineMatchers.toHaveFound),
   toHaveFoundLessThan: jasmineToJestMatcher(jasmineMatchers.toHaveFoundLessThan),
   toHaveFoundMoreThan: jasmineToJestMatcher(jasmineMatchers.toHaveFoundMoreThan),
-  toHaveFoundOne: jasmineToJestMatcher(jasmineMatchers.toHaveFoundOne),
+  toHaveFoundOne: jasmineToJestMatcher(jasmineMatchers.toHaveFoundOne)
 };
 
 /////////////////////
 // For Type-Safe enforcement only
-const _jasmineTypeCheck: {[K in keyof ShallowMatchers]: JasmineMatcher<any, any>} = jasmineMatchers;
-const _jestTypeCheck: {[K in keyof ShallowMatchers]: JestMatcher<any, any>} = jestMatchers;
+const _jasmineTypeCheck: { [K in keyof ShallowMatchers]: JasmineMatcher<any, any> } = jasmineMatchers;
+const _jestTypeCheck: { [K in keyof ShallowMatchers]: JestMatcher<any, any> } = jestMatchers;
 _jasmineTypeCheck.toString();
 _jestTypeCheck.toString();
 /////////////////////
 
 declare const jest: any;
+declare const jasmine: any;
 declare const expect: any;
 if (typeof jest === 'undefined') {
   beforeEach(() => jasmine.addMatchers(jasmineMatchers));

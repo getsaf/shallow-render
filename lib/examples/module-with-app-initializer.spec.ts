@@ -8,15 +8,13 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'foo',
-  template: '<label>foo</label>',
+  template: '<label>foo</label>'
 })
-class FooComponent {
-  labelText: string;
-}
+class FooComponent {}
 
 @NgModule({
   declarations: [FooComponent],
-  providers: [{provide: APP_INITIALIZER, multi: true, useFactory: () => undefined}],
+  providers: [{ provide: APP_INITIALIZER, multi: true, useFactory: () => undefined }]
 })
 class FooLabelModule {}
 //////////////////////////
@@ -30,5 +28,6 @@ describe('using an APP_INITIALIZER', () => {
 
   it('does not blow up', async () => {
     await shallow.render();
+    expect(true).toBe(true);
   });
 });

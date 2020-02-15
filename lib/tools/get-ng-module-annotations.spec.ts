@@ -6,15 +6,14 @@ describe('getNgModuleAnnotations', () => {
     @NgModule({})
     class DummyModule {}
 
-    expect(getNgModuleAnnotations(DummyModule))
-      .toEqual({
-        imports: [],
-        providers: [],
-        declarations: [],
-        exports: [],
-        entryComponents: [],
-        schemas: [],
-      });
+    expect(getNgModuleAnnotations(DummyModule)).toEqual({
+      imports: [],
+      providers: [],
+      declarations: [],
+      exports: [],
+      entryComponents: [],
+      schemas: []
+    });
   });
 
   it('returns annotations from the module', () => {
@@ -24,12 +23,11 @@ describe('getNgModuleAnnotations', () => {
       declarations: [class {}],
       exports: [class {}],
       entryComponents: [class {}],
-      schemas: [class {}],
+      schemas: [class {}]
     };
     @NgModule(annotations)
     class DummyModule {}
 
-    expect(getNgModuleAnnotations(DummyModule))
-      .toEqual(annotations);
+    expect(getNgModuleAnnotations(DummyModule)).toEqual(annotations);
   });
 });

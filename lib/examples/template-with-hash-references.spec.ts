@@ -4,7 +4,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'list-container',
-  template: '<ul><ng-content *ngIf="!collapsed"></ng-content></ul>',
+  template: '<ul><ng-content *ngIf="!collapsed"></ng-content></ul>'
 })
 class ListContainerComponent {
   protected collapsed = false;
@@ -19,7 +19,7 @@ class ListContainerComponent {
 
 @Component({
   selector: 'list-item',
-  template: '<li [class.bold]="bold"><ng-content></ng-content></li>',
+  template: '<li [class.bold]="bold"><ng-content></ng-content></li>'
 })
 class ListItemComponent {
   @Input() bold = false;
@@ -31,9 +31,9 @@ class ListItemComponent {
     <list-container #container>
       <list-item (click)="container.collapse()">Chuck Norris</list-item>
     </list-container>
-  `,
+  `
 })
-class AwesomeListComponent { }
+class AwesomeListComponent {}
 
 @NgModule({
   declarations: [ListContainerComponent, ListItemComponent, AwesomeListComponent]
@@ -49,9 +49,7 @@ describe('template hash references', () => {
   });
 
   it('collapses the parent when clicked', async () => {
-    const {find, findComponent} = await shallow
-      .mock(ListContainerComponent, {collapse: () => undefined})
-      .render();
+    const { find, findComponent } = await shallow.mock(ListContainerComponent, { collapse: () => undefined }).render();
 
     const container = findComponent(ListContainerComponent);
     find(ListItemComponent).triggerEventHandler('click', {});

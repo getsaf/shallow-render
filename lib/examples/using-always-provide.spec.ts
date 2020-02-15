@@ -24,13 +24,15 @@ import { Shallow } from '../shallow';
 // }
 
 class AppConfiguration {
-  title: string;
+  title?: string;
   // ... other configuration here
 }
 
 @Component({
   selector: 'app-title',
-  template: `<h1>{{config.title}}</h1>`,
+  template: `
+    <h1>{{ config.title }}</h1>
+  `
 })
 class AppTitleComponent {
   constructor(public config: AppConfiguration) {}
@@ -38,16 +40,15 @@ class AppTitleComponent {
 
 @NgModule({
   declarations: [AppTitleComponent],
-  exports: [AppTitleComponent],
+  exports: [AppTitleComponent]
 })
-class TitleModule { }
+class TitleModule {}
 
 // In your Karma test shim:
-Shallow
-  .alwaysProvide(AppConfiguration);
+Shallow.alwaysProvide(AppConfiguration);
 // You may also alwaysMock the provider with your specific values
 // Or you can leave this for your specs to mock
-//.alwaysMock(AppConfiguration, {title: 'Always this title'})
+// .alwaysMock(AppConfiguration, {title: 'Always this title'})
 
 //////////////////////////
 
@@ -59,9 +60,7 @@ describe('alwaysProvide', () => {
   });
 
   it('renders the configured title', async () => {
-    const {find} = await shallow
-      .mock(AppConfiguration, {title: 'Mocked title'})
-      .render(`<app-title></app-title>`);
+    const { find } = await shallow.mock(AppConfiguration, { title: 'Mocked title' }).render(`<app-title></app-title>`);
 
     expect(find('h1').nativeElement.innerText).toContain('Mocked title');
   });

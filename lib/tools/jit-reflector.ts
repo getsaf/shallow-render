@@ -12,12 +12,14 @@ export class JitReflector implements CompileReflector {
     return this._reflectionCapabilities.annotations(typeOrFunc);
   }
 
-  componentModuleUrl(type: any, cmpMetadata: Component): string { /* tslint:disable-line prefer-function-over-method */
+  componentModuleUrl(type: any, _cmpMetadata: Component): string {
+    /* tslint:disable-line prefer-function-over-method */
     return `./${stringify(type)}`;
   }
 
   // This does not exist in Angular 5.1.x but is required to exist in 5.2+
-  guards(type: any): {[key: string]: any} { /* tslint:disable-line prefer-function-over-method */
+  guards(_type: any): { [key: string]: any } {
+    /* tslint:disable-line prefer-function-over-method */
     return {};
   }
 
@@ -29,17 +31,18 @@ export class JitReflector implements CompileReflector {
     return this._reflectionCapabilities.parameters(typeOrFunc);
   }
 
-  propMetadata(typeOrFunc: any): {[key: string]: any[]} {
+  propMetadata(typeOrFunc: any): { [key: string]: any[] } {
     return this._reflectionCapabilities.propMetadata(typeOrFunc);
   }
 
-  resolveExternalReference(ref: ExternalReference): any { /* tslint:disable-line prefer-function-over-method */
+  resolveExternalReference(ref: ExternalReference): any {
+    /* tslint:disable-line prefer-function-over-method */
     return ref.runtime;
   }
 
-  shallowAnnotations = (typeOrFunc: any): any[] => {
+  shallowAnnotations = (_typeOrFunc: any): any[] => {
     throw new Error('Not supported in JIT mode');
-  }
+  };
 
   tryAnnotations(typeOrFunc: any): any[] {
     return this.annotations(typeOrFunc);

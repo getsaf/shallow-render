@@ -6,16 +6,10 @@ import { TestSetup } from '../models/test-setup';
 import { testFramework } from '../test-frameworks/test-framework';
 import { mockModule } from './mock-module';
 import { directiveResolver, ngModuleResolver } from './reflect';
-import { isModuleWithProviders, isPipeTransform } from './type-checkers';
+import { isModuleWithProviders, isPipeTransform, isClass } from './type-checkers';
+import { CustomError } from '../models/custom-error';
 
 export type NgMockable = AngularModule | Type<any> | Type<PipeTransform> | any[];
-
-const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
-  const annotations = directiveResolver.resolve(thing);
-  if (!annotations.selector) {
-    TestBed.overrideDirective(mock, { add: { selector: `.__${mock.name}-selector` } });
-  }
-};
 
 export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, setup: TestSetup<any>): TThing {
   const cached = setup.mockCache.find(thing);
@@ -25,8 +19,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
   }
 
   if (Array.isArray(thing)) {
-    // tslint:disable-next-line no-unnecessary-type-assertion
-    return setup.mockCache.add(thing, thing.map(t => ngMock(t, setup))) as any; // Recursion
+    return setup.mockCache.add(thing, thing.map(t => ngMock(t, setup)) as TThing); // Recursion
   }
 
   if (setup.dontMock.includes(thing) || (isModuleWithProviders(thing) && setup.dontMock.includes(thing.ngModule))) {
@@ -38,44 +31,99 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
     if (ngModuleResolver.isNgModule(thing) || isModuleWithProviders(thing)) {
       mock = mockModule(thing, setup);
     } else if (isPipeTransform(thing)) {
-      mock = MockPipe(thing as Type<any>, setup.mockPipes.get(thing));
-    } else if (typeof thing === 'function') { // tslint:disable-line strict-type-predicates
-      mock = MockDeclaration(thing as Type<any>);
-      if (
-        setup.withStructuralDirectives.get(thing as Type<any>)
-        || (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing as Type<any>) !== false)
-      ) {
-        mock.prototype.ngOnInit = () => undefined;
-        testFramework.spyOn(mock.prototype, 'ngOnInit', function() {
-          // tslint:disable-next-line: no-empty
-          try { this.__render(); } catch (e) { }
-        });
+      mock = MockPipe(thing, setup.mockPipes.get(thing));
+    } else if (isClass(thing)) {
+      mock = MockDeclaration(thing);
+      fixEmptySelector(thing, mock);
+      if (shouldRenderOnInit(setup, thing)) {
+        renderTemplateOnInit(mock);
       }
-      fixEmptySelector(thing as Type<any>, mock);
       const stubs = setup.mocks.get(thing);
       if (stubs) {
-        mock = class extends (mock as Type<any>) {
-          constructor() {
-            super();
-            Object.assign(this, stubs);
-            Object.keys(stubs).forEach(key => {
-              if (typeof this[key] === 'function') {
-                testFramework.spyOn(this, key);
-              }
-            });
-          }
-        };
-        Object.defineProperty(mock, 'name', {value: `MockOf${(thing as Type<any>).name}`});
+        mock = extendMockWithStubs(mock, stubs, `MockOf${thing.name}`);
       }
       // Provide our mock in place of any other usage of 'thing'.
       // This makes `ViewChild` and `ContentChildren` selectors work!
-      TestBed.overrideComponent(mock, {add: {providers: [{provide: thing, useExisting: forwardRef(() => mock)}]}});
+      TestBed[isComponent(mock) ? 'overrideComponent' : 'overrideDirective'](mock, {
+        add: { providers: [{ provide: thing, useExisting: forwardRef(() => mock) }] }
+      });
     } else {
-      throw new Error(`Shallow doesn't know how to mock: ${thing}`);
+      throw new DoNotKnowHowToMockError(thing);
     }
   } catch (e) {
-    const name = (thing && (thing as any).name) || thing;
-    throw new Error(`Shallow ran into some trouble mocking ${name}. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${e && e.stack || e}\n----------- END MOCK ERROR -----------`);
+    throw new MockError(thing, e);
   }
   return setup.mockCache.add(thing, mock) as TThing;
 }
+
+class DoNotKnowHowToMockError extends CustomError {
+  constructor(thing: any) {
+    super(`Shallow doesn't know how to mock: ${thing}`);
+  }
+}
+
+class MockError extends CustomError {
+  constructor(thing: any, error: any) {
+    super(
+      `Shallow ran into some trouble mocking ${thing?.name ||
+        thing}. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${error?.stack ||
+        error}\n----------- END MOCK ERROR -----------`
+    );
+  }
+}
+
+const extendMockWithStubs = (mock: Type<any>, stubs: object, className: string): Type<any> => {
+  class WithStubs extends createExtendableNgMockClass(mock) {
+    constructor() {
+      super();
+      Object.assign(this, stubs);
+      Object.keys(stubs).forEach(key => {
+        if (typeof this[key] === 'function') {
+          testFramework.spyOn(this, key);
+        }
+      });
+    }
+  }
+  Object.defineProperty(WithStubs, 'name', { value: className });
+  return WithStubs;
+};
+
+const createExtendableNgMockClass = (from: Type<any>): Type<any> => {
+  // For some reason I cannot directly extend classes from ng-mocks?
+  // tslint:disable-next-line: only-arrow-functions
+  const OldMock = function() {};
+  OldMock.prototype = from.prototype;
+  return OldMock as any;
+};
+
+const shouldRenderOnInit = (setup: TestSetup<any>, thing: any) =>
+  setup.withStructuralDirectives.get(thing as Type<any>) ||
+  (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing as Type<any>) !== false);
+
+const isComponent = (thing: Type<any>) => {
+  if (directiveResolver.isDirective(thing)) {
+    const metadata = directiveResolver.resolve(thing);
+    return 'template' in metadata || 'templateUrl' in metadata;
+  }
+  return false;
+};
+
+const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
+  const annotations = directiveResolver.resolve(thing);
+  if (!annotations.selector) {
+    TestBed.overrideDirective(mock, { add: { selector: `.__${mock.name}-selector` } });
+  }
+  return thing;
+};
+
+const renderTemplateOnInit = (mock: Type<any>) => {
+  const originalInit = (mock.prototype.ngOnInit = mock.prototype.ngOnInit ?? (() => {}));
+  testFramework.spyOn(mock.prototype, 'ngOnInit', function() {
+    try {
+      // @ts-ignore
+      originalInit.call(this);
+      // @ts-ignore
+      this.__render();
+    } catch (e) {}
+  });
+};

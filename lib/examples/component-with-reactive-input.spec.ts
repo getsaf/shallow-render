@@ -8,21 +8,19 @@ import { Shallow } from '../shallow';
 @Component({
   selector: 'custom-form',
   template: `
-      <input id="customInput" [formControl]="myControl">
-  `,
+    <input id="customInput" [formControl]="myControl" />
+  `
 })
 class CustomFormComponent implements OnInit, OnDestroy {
   myControl = new FormControl('I am complete');
   subscription = new Subscription();
 
   ngOnInit() {
-    this.subscription.add(
-        this.myControl.valueChanges.subscribe(change => this.inputHandler(change))
-    );
+    this.subscription.add(this.myControl.valueChanges.subscribe(change => this.inputHandler(change)));
   }
 
-  inputHandler(text: string) {
-  //  implementation
+  inputHandler(_text: string) {
+    //  implementation
     return 2 + 2;
   }
 
@@ -46,14 +44,13 @@ describe('component with reactive input', () => {
   });
 
   it('displays an input with default value', async () => {
-    const {find} = await shallow.render();
+    const { find } = await shallow.render();
 
-    expect(find('#customInput').nativeElement.value)
-      .toBe('I am complete');
+    expect(find('#customInput').nativeElement.value).toBe('I am complete');
   });
 
   it('destroy cancel subscriptions', async () => {
-    const {instance} = await shallow.render();
+    const { instance } = await shallow.render();
     spyOn(instance.subscription, 'unsubscribe');
 
     instance.ngOnDestroy();
@@ -62,14 +59,13 @@ describe('component with reactive input', () => {
   });
 
   it('input change calls inputHandler', async () => {
-    const {find, instance} = await shallow.dontMock(ReactiveFormsModule).render();
+    const { find, instance } = await shallow.dontMock(ReactiveFormsModule).render();
     spyOn(instance, 'inputHandler');
 
     const input = find('#customInput');
     input.nativeElement.value = 'It works!';
-    input.triggerEventHandler('input', {target: input.nativeElement});
+    input.triggerEventHandler('input', { target: input.nativeElement });
 
     expect(instance.inputHandler).toHaveBeenCalledWith('It works!');
   });
-
 });

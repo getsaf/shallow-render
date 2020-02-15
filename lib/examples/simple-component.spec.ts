@@ -4,7 +4,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'big-text',
-  template: '<h1><ng-content></ng-content></h1>',
+  template: '<h1><ng-content></ng-content></h1>'
 })
 class BigTextComponent {}
 
@@ -22,7 +22,7 @@ describe('simple component example', () => {
   });
 
   it('places content in an h1', async () => {
-    const {find} = await shallow.render('<big-text>Woot!</big-text>');
+    const { find } = await shallow.render('<big-text>Woot!</big-text>');
 
     const h1 = find('h1');
     expect(h1.nativeElement.innerText).toBe('Woot!');

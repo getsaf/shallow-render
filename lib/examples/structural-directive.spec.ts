@@ -15,7 +15,7 @@ export class ShowIfFooDirective {
 }
 
 @NgModule({
-  declarations: [ShowIfFooDirective],
+  declarations: [ShowIfFooDirective]
 })
 class MyModule {}
 //////////////////////////
@@ -28,13 +28,13 @@ describe('Structural Directive', () => {
   });
 
   it('shows content when value is "foo"', async () => {
-    const {element} = await shallow.render('<div *showIfFoo="\'foo\'">Show Me</div>');
+    const { element } = await shallow.render('<div *showIfFoo="\'foo\'">Show Me</div>');
 
     expect(element.nativeElement.textContent).toBe('Show Me');
   });
 
   it('does not show content when value is not "foo"', async () => {
-    const {element} = await shallow.render('<div *showIfFoo="\'bar\'">Show Me</div>');
+    const { element } = await shallow.render('<div *showIfFoo="\'bar\'">Show Me</div>');
 
     expect(element).not.toBeDefined();
   });

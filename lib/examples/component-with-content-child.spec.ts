@@ -4,7 +4,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'list-item',
-  template: '<li [class.bold]="active"><ng-content></ng-content></li>',
+  template: '<li [class.bold]="active"><ng-content></ng-content></li>'
 })
 class ListItemComponent {
   protected active = false;
@@ -18,10 +18,10 @@ class ListItemComponent {
 
 @Component({
   selector: 'list-container',
-  template: '<ul><ng-content></ng-content></ul>',
+  template: '<ul><ng-content></ng-content></ul>'
 })
 class ListContainerComponent implements AfterContentInit {
-  @ContentChild(ListItemComponent, ({static: false} as any /* static was added in ng8 and is required */)) listItem: ListItemComponent;
+  @ContentChild(ListItemComponent, { static: false }) listItem!: ListItemComponent;
   ngAfterContentInit() {
     if (this.listItem) {
       this.listItem.activate();
@@ -43,9 +43,7 @@ describe('template content child', () => {
   });
 
   it('activates the first item in the list', async () => {
-    const {findComponent} = await shallow
-      .mock(ListItemComponent, {activate: () => undefined})
-      .render(`
+    const { findComponent } = await shallow.mock(ListItemComponent, { activate: () => undefined }).render(`
         <list-container>
           <list-item>Foo</list-item>
           <list-item>Bar</list-item>

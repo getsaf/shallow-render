@@ -6,11 +6,11 @@ import { getNgModuleAnnotations } from './get-ng-module-annotations';
 import { mockProvider } from './mock-provider';
 import { ngMock } from './ng-mock';
 import { isModuleWithProviders } from './type-checkers';
+import { CustomError } from '../models/custom-error';
 
-export class InvalidModuleError {
-  readonly message: string;
-  constructor(public mod: any) {
-    this.message = `Don't know how to mock module: ${mod}`;
+export class InvalidModuleError extends CustomError {
+  constructor(mod: any) {
+    super(`Don't know how to mock module: ${mod}`);
   }
 }
 
@@ -30,13 +30,17 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     return cached;
   }
 
-  const replacementModule = setup.moduleReplacements.get(mod as any) || setup.moduleReplacements.get((mod as any).ngModule);
+  const replacementModule =
+    setup.moduleReplacements.get(mod as any) || setup.moduleReplacements.get((mod as any).ngModule);
   if (replacementModule) {
     return setup.mockCache.add(mod, replacementModule) as TModule;
   }
 
   if (Array.isArray(mod)) {
-    return setup.mockCache.add(mod, mod.map(i => mockModule(i, setup))) as TModule; // Recursion
+    return setup.mockCache.add(
+      mod,
+      mod.map(i => mockModule(i, setup))
+    ) as TModule; // Recursion
   } else if (isModuleWithProviders(mod)) {
     // If we have a moduleWithProviders, make sure we return the same
     return {
@@ -49,14 +53,14 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
 
   const modClass = mod as Type<any>;
 
-  const {imports, declarations, exports, entryComponents, providers, schemas} = getNgModuleAnnotations(modClass);
+  const { imports, declarations, exports, entryComponents, providers, schemas } = getNgModuleAnnotations(modClass);
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
     declarations: ngMock(declarations, setup),
     exports: collapseModuleWithProviders(ngMock(exports, setup)),
     entryComponents: ngMock(entryComponents, setup),
     providers: providers.map(p => mockProvider(p, setup)),
-    schemas,
+    schemas
   };
   @NgModule(mockedModule)
   @MockOf(modClass)

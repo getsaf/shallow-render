@@ -3,10 +3,10 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Directive({
-  selector: '[red]',
+  selector: '[red]'
 })
 class RedDirective {
-  @Input() tooltip: string;
+  @Input() tooltip!: string;
   constructor(el: ElementRef) {
     el.nativeElement.style.backgroundColor = 'red';
   }
@@ -26,7 +26,7 @@ describe('RedDirective', () => {
   });
 
   it('makes the background color red', async () => {
-    const {element} = await shallow.render('<div red></div>');
+    const { element } = await shallow.render('<div red></div>');
 
     expect(element.nativeElement.style.backgroundColor).toBe('red');
   });

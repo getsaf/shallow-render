@@ -18,7 +18,7 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
   // APP_INITIALIZERS break TestBed!
   // Do this until https://github.com/angular/angular/issues/24218 is fixed
   if (!isTypeProvider(provider) && provider.provide === APP_INITIALIZER) {
-     return [];
+    return [];
   }
 
   const provide = isTypeProvider(provider) ? provider : provider.provide;
@@ -37,10 +37,10 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
   };
 
   if (isClassProvider(provider)) {
-    return {...prov, useClass: MockProvider};
+    return { ...prov, useClass: MockProvider };
   }
   if (isFactoryProvider(provider)) {
-    return {...prov, useFactory: () => new MockProvider()};
+    return { ...prov, useFactory: () => new MockProvider() };
   }
-  return {...prov, useValue: new MockProvider()};
+  return { ...prov, useValue: new MockProvider() };
 }

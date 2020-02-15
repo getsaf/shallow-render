@@ -1,8 +1,8 @@
 import { MockCache } from './mock-cache';
 
 describe('MockCache', () => {
-  const foo = {foo: 'foo'};
-  const mockFoo = {foo: 'mock foo'};
+  const foo = { foo: 'foo' };
+  const mockFoo = { foo: 'mock foo' };
 
   describe('add', () => {
     it('adds an item to the cache', () => {
@@ -22,8 +22,8 @@ describe('MockCache', () => {
   describe('find', () => {
     it('finds an item by key', () => {
       const cache = new MockCache();
-      const bar = {bar: 'bar'};
-      const mockBar = {bar: 'mock bar'};
+      const bar = { bar: 'bar' };
+      const mockBar = { bar: 'mock bar' };
       cache.add(foo, mockFoo);
       cache.add(bar, mockBar);
 

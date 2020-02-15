@@ -11,7 +11,9 @@ class TitleService {
 
 @Component({
   selector: 'app-title',
-  template: `<h1>{{titleService.getTitle()}}</h1>`,
+  template: `
+    <h1>{{ titleService.getTitle() }}</h1>
+  `
 })
 class AppTitleComponent {
   constructor(public titleService: TitleService) {}
@@ -20,13 +22,12 @@ class AppTitleComponent {
 @NgModule({
   declarations: [AppTitleComponent],
   exports: [AppTitleComponent],
-  providers: [TitleService],
+  providers: [TitleService]
 })
-class TitleModule { }
+class TitleModule {}
 
 // In your Karma test shim:
-Shallow
-  .alwaysMock(TitleService, {getTitle: () => 'Always mocked'});
+Shallow.alwaysMock(TitleService, { getTitle: () => 'Always mocked' });
 
 //////////////////////////
 
@@ -38,7 +39,7 @@ describe('alwaysMock', () => {
   });
 
   it('renders the title from the title service', async () => {
-    const {find} = await shallow.render(`<app-title></app-title>`);
+    const { find } = await shallow.render(`<app-title></app-title>`);
 
     expect(find('h1').nativeElement.innerText).toContain('Always mocked');
   });

@@ -11,7 +11,7 @@ class RedService {
 
 @Component({
   selector: 'color-label',
-  template: '<label>{{redService.color()}}</label>',
+  template: '<label>{{redService.color()}}</label>'
 })
 class ColorLabelComponent {
   constructor(public redService: RedService) {}
@@ -19,7 +19,7 @@ class ColorLabelComponent {
 
 @NgModule({
   declarations: [ColorLabelComponent],
-  providers: [RedService],
+  providers: [RedService]
 })
 class ColorModule {}
 //////////////////////////
@@ -32,9 +32,7 @@ describe('using dontMock', () => {
   });
 
   it('Uses the color from the RedService', async () => {
-    const {element} = await shallow
-      .dontMock(RedService)
-      .render('<color-label></color-label>');
+    const { element } = await shallow.dontMock(RedService).render('<color-label></color-label>');
 
     // Using the actual service response here (not mocked)
     expect(element.nativeElement.innerText).toBe('RED');

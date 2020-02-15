@@ -1,7 +1,8 @@
 import { Component, Input, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
-class Foo { // tslint:disable-line no-unnecessary-class
+class Foo {
+  // tslint:disable-line no-unnecessary-class
   static fooify(name: string) {
     return `${name}-foo`;
   }
@@ -10,11 +11,13 @@ class Foo { // tslint:disable-line no-unnecessary-class
 
 @Component({
   selector: 'foo',
-  template: '<div>{{fooified}}</div>',
+  template: '<div>{{fooified}}</div>'
 })
 class FooComponent {
-  @Input() name: string;
-  get fooified() { return Foo.fooify(this.name); }
+  @Input() name!: string;
+  get fooified() {
+    return Foo.fooify(this.name);
+  }
 }
 
 @NgModule({
@@ -30,16 +33,15 @@ describe('Mocking static methods', () => {
   });
 
   it('can mock a static method on a class', async () => {
-    const {element} = await shallow
-      .mockStatic(Foo, {fooify: (name: string) => `${name}-MOCK FOO`})
+    const { element } = await shallow
+      .mockStatic(Foo, { fooify: (name: string) => `${name}-MOCK FOO` })
       .render('<foo name="blah"></foo>');
 
     expect(element.nativeElement.textContent).toBe('blah-MOCK FOO');
   });
 
   it('does not mock static methods by default', async () => {
-    const {element} = await shallow
-      .render('<foo name="blah"></foo>');
+    const { element } = await shallow.render('<foo name="blah"></foo>');
 
     expect(element.nativeElement.textContent).toBe('blah-foo');
   });

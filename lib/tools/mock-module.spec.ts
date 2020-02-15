@@ -7,13 +7,13 @@ import * as _ngMock from './ng-mock';
 
 @Component({
   selector: 'foo-component',
-  template: '<div>FOO</div>',
+  template: '<div>FOO</div>'
 })
 class FooComponent {}
 
 @Component({
   selector: 'bar-component',
-  template: '<div>BAR</div>',
+  template: '<div>BAR</div>'
 })
 class BarComponent {}
 
@@ -23,7 +23,10 @@ const makeModule = (params: NgModule = {}): Type<any> => {
   return TestModule;
 };
 
-const dummyMocker = (thing: any) => class Mock { static original = thing; };
+const dummyMocker: any = (thing: any) =>
+  class Mock {
+    static original = thing;
+  };
 const isMocked = (thing: any) => thing.name.includes('Mock');
 const isMockOf = (mock: any, thing: any) => mock.original === thing;
 
@@ -36,7 +39,7 @@ describe('mockModule', () => {
     return {
       ngModule,
       mockedModule,
-      annotations: getNgModuleAnnotations(mockedModule) as TParams,
+      annotations: getNgModuleAnnotations(mockedModule) as TParams
     };
   };
 
@@ -61,7 +64,7 @@ describe('mockModule', () => {
   });
 
   it('does not break apart replacementModules ModuleWithProviders', () => {
-    const original = {ngModule: makeModule(), providers: [class FooClass {}]};
+    const original = { ngModule: makeModule(), providers: [class FooClass {}] };
     const replacement = makeModule();
     setup.moduleReplacements.set(original, replacement);
     const result = mockModule(original, setup);
@@ -71,7 +74,7 @@ describe('mockModule', () => {
 
   it('looks for a match on ModuleWithProviders#ngModule', () => {
     const originalModule = makeModule();
-    const moduleWithProviders = {ngModule: originalModule, providers: [class FooClass {}]};
+    const moduleWithProviders = { ngModule: originalModule, providers: [class FooClass {}] };
     const replacement = makeModule();
     setup.moduleReplacements.set(originalModule, replacement);
     const result = mockModule(moduleWithProviders, setup);
@@ -81,26 +84,23 @@ describe('mockModule', () => {
 
   it('memoizes mocks of modules', () => {
     const mod = makeModule();
-    expect(mockModule(mod, setup))
-      .toBe(mockModule(mod, setup));
+    expect(mockModule(mod, setup)).toBe(mockModule(mod, setup));
   });
 
   it('memoizes mocks of arrays', () => {
     const mod = [makeModule()];
-    expect(mockModule(mod, setup))
-      .toBe(mockModule(mod, setup));
+    expect(mockModule(mod, setup)).toBe(mockModule(mod, setup));
   });
 
   it('memoizes mocks of arrays', () => {
     const mod = [makeModule()];
-    expect(mockModule(mod, setup))
-      .toBe(mockModule(mod, setup));
+    expect(mockModule(mod, setup)).toBe(mockModule(mod, setup));
   });
 
   it('mocks imports', () => {
     const imports = [makeModule(), makeModule()];
     spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    const {annotations} = makeMock({imports});
+    const { annotations } = makeMock({ imports });
 
     expect(isMockOf(annotations.imports, imports)).toBe(true);
   });
@@ -108,7 +108,7 @@ describe('mockModule', () => {
   it('mocks declarations', () => {
     const declarations = [FooComponent, BarComponent];
     spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    const {annotations} = makeMock({declarations});
+    const { annotations } = makeMock({ declarations });
 
     expect(isMockOf(annotations.declarations, declarations)).toBe(true);
   });
@@ -116,7 +116,7 @@ describe('mockModule', () => {
   it('mocks entryComponents', () => {
     const entryComponents = [FooComponent, BarComponent];
     spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    const {annotations} = makeMock({entryComponents});
+    const { annotations } = makeMock({ entryComponents });
 
     expect(isMockOf(annotations.entryComponents, entryComponents)).toBe(true);
   });
@@ -125,7 +125,7 @@ describe('mockModule', () => {
     class FooService {}
     class BarService {}
     spyOn(_mockProvider, 'mockProvider').and.callFake(dummyMocker);
-    const {annotations} = makeMock({
+    const { annotations } = makeMock({
       providers: [FooService, BarService]
     });
 
@@ -134,7 +134,7 @@ describe('mockModule', () => {
   });
 
   it('applies schemas', () => {
-    const {annotations} = makeMock({
+    const { annotations } = makeMock({
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
 
@@ -143,16 +143,15 @@ describe('mockModule', () => {
 
   it('throws an error when module is not a recognized Angular module', () => {
     const bogusModule = 'NOT A REAL MODULE';
-    expect(() => mockModule(bogusModule as any, setup))
-      .toThrow(new InvalidModuleError(bogusModule));
+    expect(() => mockModule(bogusModule as any, setup)).toThrow(new InvalidModuleError(bogusModule));
   });
 
   it('does NOT pass through ngModuleWithProviders to the exports', () => {
     const originalModule = makeModule();
     const actualReplacementModule = makeModule();
-    const replacementModuleWithProviders = {ngModule: actualReplacementModule, providers: []};
+    const replacementModuleWithProviders = { ngModule: actualReplacementModule, providers: [] };
     setup.moduleReplacements.set(originalModule, replacementModuleWithProviders);
-    const {annotations} = makeMock({
+    const { annotations } = makeMock({
       exports: [originalModule]
     });
 
