@@ -17,12 +17,9 @@ If that all passes, you're good!
 
 ## Code formatting and linting
 
-For now, there's just TSLint.
 `npm run lint`
 -- or --
 `npm run lint:fix`
-
-## Architectural Rules
 
 ### Third party packages
 

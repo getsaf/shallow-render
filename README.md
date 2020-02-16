@@ -21,11 +21,11 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 ## Angular Version Support
 
-| Angular  | shallow-render |
-| -------- | -------------- |
-| 9.x      | 9x             |
-| 6.x-8.x. | 8x             |
-| 5.x      | <= 7.2.0       |
+| Angular | shallow-render |
+| ------- | -------------- |
+| 9x      | 9x             |
+| 6x-8x   | 8x             |
+| 5x      | <= 7.2.0       |
 
 ## Super Simple Tests
 
@@ -160,4 +160,5 @@ Here's the difference:
 - Reuses (and verifies) `MyModule` contains your component and all its dependencies.
 - All components inside `MyModule` are mocked using the awesome [ng-mocks](https://github.com/ike18t/ng-mocks) library. This is what makes the rendering "shallow".
 - The tests have much less boilerplate which makes the specs easier to follow.
-- The HTML used to render the component is IN THE SPEC and easy to find. \* This means specs now double examples of how to use your component.
+- The HTML used to render the component is IN THE SPEC and easy to find.
+  - This means specs now double examples of how to use your component.
