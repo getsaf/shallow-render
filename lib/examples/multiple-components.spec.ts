@@ -4,13 +4,13 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'list-container',
-  template: '<ul><ng-content></ng-content></ul>',
+  template: '<ul><ng-content></ng-content></ul>'
 })
 class ListContainerComponent {}
 
 @Component({
   selector: 'list-item',
-  template: '<li [class.bold]="bold"><ng-content></ng-content></li>',
+  template: '<li [class.bold]="bold"><ng-content></ng-content></li>'
 })
 class ListItemComponent {
   @Input() bold = false;
@@ -20,14 +20,14 @@ class ListItemComponent {
   selector: 'awesome-list',
   template: `
     <list-container>
-      <list-item class="top-item" *ngIf="topItem !== undefined" [bold]="boldTopItem">{{topItem}}</list-item>
+      <list-item class="top-item" *ngIf="topItem !== undefined" [bold]="boldTopItem">{{ topItem }}</list-item>
       <list-item [bold]="true">Chuck Norris</list-item>
       <list-item>Tom Hanks</list-item>
     </list-container>
-  `,
+  `
 })
 class AwesomeListComponent {
-  @Input() topItem: string;
+  @Input() topItem!: string;
   @Input() boldTopItem = false;
 }
 
@@ -45,21 +45,20 @@ describe('multiple components', () => {
   });
 
   it('renders Chuck and Tom', async () => {
-    const {find} = await shallow.render('<awesome-list></awesome-list>');
+    const { find } = await shallow.render('<awesome-list></awesome-list>');
 
     // Note we query by the component here
-    expect(find(ListItemComponent).map(li => li.nativeElement.innerText.trim()))
-      .toEqual(['Chuck Norris', 'Tom Hanks']);
+    expect(find(ListItemComponent).map(li => li.nativeElement.innerText.trim())).toEqual(['Chuck Norris', 'Tom Hanks']);
   });
 
   it('renders a top-item when provided', async () => {
-    const {find} = await shallow.render('<awesome-list topItem="Brandon"></awesome-list>');
+    const { find } = await shallow.render('<awesome-list topItem="Brandon"></awesome-list>');
 
     expect(find('.top-item').nativeElement.innerText.trim()).toBe('Brandon');
   });
 
   it('renders the top-item as bold', async () => {
-    const {find} = await shallow.render(`
+    const { find } = await shallow.render(`
       <awesome-list [boldTopItem]="true" topItem="Bolded"></awesome-list>
     `);
 
@@ -67,7 +66,7 @@ describe('multiple components', () => {
   });
 
   it('does not add a top-item when not provided', async () => {
-    const {find} = await shallow.render('<awesome-list></awesome-list>');
+    const { find } = await shallow.render('<awesome-list></awesome-list>');
 
     const li = find('list-item');
     expect(li).toHaveFound(2);

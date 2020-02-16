@@ -11,13 +11,15 @@ interface Person {
 @Component({
   selector: 'born-in',
   template: `
-    <label id="personLabel" (click)="select.emit(person)">{{person.firstName}} {{person.lastName}} was born in {{person.birthDate.getFullYear()}}</label>
-    <label id="ngOnChangesCount">{{ngOnChangesCount}}</label>
-  `,
+    <label id="personLabel" (click)="selected.emit(person)">
+      {{ person.firstName }} {{ person.lastName }} was born in {{ person.birthDate.getFullYear() }}
+    </label>
+    <label id="ngOnChangesCount">{{ ngOnChangesCount }}</label>
+  `
 })
 class BornInComponent implements OnChanges {
-  @Input() person: Person;
-  @Output() select = new EventEmitter<Person>();
+  @Input() person!: Person;
+  @Output() selected = new EventEmitter<Person>();
 
   public ngOnChangesCount = 0;
 
@@ -46,25 +48,24 @@ describe('component with bindings', () => {
   };
 
   it('displays the name and year the person was born', async () => {
-    const {find} = await shallow.render({bind: {person}});
+    const { find } = await shallow.render({ bind: { person } });
 
-    expect(find('#personLabel').nativeElement.innerText)
-      .toBe('Brandon Domingue was born in 1982');
+    expect(find('#personLabel').nativeElement.innerText).toContain('Brandon Domingue was born in 1982');
   });
 
   it('emits the person when clicked', async () => {
-    const {find, outputs} = await shallow.render({bind: {person}});
+    const { find, outputs } = await shallow.render({ bind: { person } });
     find('#personLabel').nativeElement.click();
 
-    expect(outputs.select.emit).toHaveBeenCalledWith(person);
+    expect(outputs.selected.emit).toHaveBeenCalledWith(person);
   });
 
   it('displays the number of times the person was updated', async () => {
-    const {find, fixture, bindings} = await shallow.render({bind: {person}});
+    const { find, fixture, bindings } = await shallow.render({ bind: { person } });
 
     expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('1');
 
-    bindings.person = {firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24')};
+    bindings.person = { firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24') };
     fixture.detectChanges();
 
     expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('2');

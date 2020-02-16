@@ -14,11 +14,12 @@ export class MockOfProvider {
 }
 
 export const mockProviderClass = <TProvider extends Type<any>>(provider: TProvider, stubs: any): TProvider => {
-  class MockProvider extends MockOfProvider { /* tslint:disable-line no-unnecessary-class */
+  class MockProvider extends MockOfProvider {
+    /* tslint:disable-line no-unnecessary-class */
     constructor() {
       super(provider, stubs);
     }
   }
-  Object.defineProperty(MockProvider, 'name', {value: `MockOf${getProviderName(provider)}`});
+  Object.defineProperty(MockProvider, 'name', { value: `MockOf${getProviderName(provider)}` });
   return MockProvider as TProvider;
 };

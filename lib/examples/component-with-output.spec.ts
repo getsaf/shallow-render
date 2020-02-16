@@ -12,7 +12,7 @@ interface MyEvent {
   selector: 'inner-component',
   template: `
     <p>Hello</p>
-  `,
+  `
 })
 class InnerComponent {
   @Output() output = new EventEmitter<MyEvent>();
@@ -21,11 +21,11 @@ class InnerComponent {
   selector: 'outer-component',
   template: `
     <inner-component (output)="outputHandler($event)"></inner-component>
-  `,
+  `
 })
 class OuterComponent {
-  outputHandler(event: MyEvent) {
-  // implementation
+  outputHandler(_event: MyEvent) {
+    // implementation
   }
 }
 
@@ -43,19 +43,18 @@ describe('component with output', () => {
   });
 
   it('displays an inner component', async () => {
-    const {find} = await shallow.render();
+    const { find } = await shallow.render();
 
     expect(find('inner-component')).toHaveFound(1);
   });
 
   it('input updates ngModel', async () => {
-    const {find, instance} = await shallow.render();
+    const { find, instance } = await shallow.render();
     spyOn(instance, 'outputHandler');
 
     const innerComponent = find('inner-component');
-    innerComponent.triggerEventHandler('output', {id: 1, name: 'myEvent'} as MyEvent);
+    innerComponent.triggerEventHandler('output', { id: 1, name: 'myEvent' } as MyEvent);
 
-    expect(instance.outputHandler).toHaveBeenCalledWith({id: 1, name: 'myEvent'});
+    expect(instance.outputHandler).toHaveBeenCalledWith({ id: 1, name: 'myEvent' });
   });
-
 });

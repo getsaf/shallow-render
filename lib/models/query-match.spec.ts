@@ -2,7 +2,7 @@ import { Type } from '@angular/core';
 import { createQueryMatch, MultipleMatchesError, NoMatchesError, QueryMatch } from './query-match';
 
 class Foo {
-  fooProperty: string;
+  fooProperty?: string;
   constructor(public which: string) {}
 }
 
@@ -28,7 +28,7 @@ describe('QueryMatch', () => {
     });
 
     it('defines properties on the first match', () => {
-      Object.defineProperty(match, 'fooProperty', {value: 'foo value'});
+      Object.defineProperty(match, 'fooProperty', { value: 'foo value' });
 
       expect(match[0].fooProperty).toBe('foo value');
     });
@@ -59,10 +59,7 @@ describe('QueryMatch', () => {
     let matches: QueryMatch<Foo>;
 
     beforeEach(() => {
-      matches = createQueryMatch([
-        new Foo('ONE'),
-        new Foo('TWO'),
-      ]);
+      matches = createQueryMatch([new Foo('ONE'), new Foo('TWO')]);
     });
 
     it('throws an error on instanceof checks', () => {
@@ -70,36 +67,23 @@ describe('QueryMatch', () => {
     });
 
     it('throws an error when you try to get a property and there are multiple results', () => {
-      shouldThrow(
-        () => Object.keys(matches.which),
-        MultipleMatchesError
-      );
+      shouldThrow(() => Object.keys(matches.which), MultipleMatchesError);
     });
 
     it('throws an error when you try to set a property and there are multiple results', () => {
-      shouldThrow(
-        () => matches.which = 'BOOM',
-        MultipleMatchesError
-      );
+      shouldThrow(() => (matches.which = 'BOOM'), MultipleMatchesError);
     });
 
     it('throws an error when you try to define a property and there are multiple results', () => {
-      shouldThrow(
-        () => Object.defineProperty(matches, 'foo', {value: 'foo value'}),
-        MultipleMatchesError
-      );
+      shouldThrow(() => Object.defineProperty(matches, 'foo', { value: 'foo value' }), MultipleMatchesError);
     });
 
     it('throws an error when you try to delete a property and there are multiple results', () => {
-      shouldThrow(
-        () => delete matches.fooProperty,
-        MultipleMatchesError
-      );
+      shouldThrow(() => delete matches.fooProperty, MultipleMatchesError);
     });
 
     it('allows mapping over results', () => {
-      expect(matches.map(i => i.which))
-        .toEqual(['ONE', 'TWO']);
+      expect(matches.map(i => i.which)).toEqual(['ONE', 'TWO']);
     });
 
     it('allows forEach over results', () => {
@@ -115,38 +99,23 @@ describe('QueryMatch', () => {
     });
 
     it('throws an error on instanceof checks', () => {
-      shouldThrow(
-        () => emptyMatch instanceof Foo,
-        NoMatchesError
-      );
+      shouldThrow(() => emptyMatch instanceof Foo, NoMatchesError);
     });
 
     it('throws an error when trying to get a property on an empty query match', () => {
-      shouldThrow(
-        () => emptyMatch.which,
-        NoMatchesError
-      );
+      shouldThrow(() => emptyMatch.which, NoMatchesError);
     });
 
     it('throws an error when trying to set a property on an empty query match', () => {
-      shouldThrow(
-        () => emptyMatch.which = 'BOOM',
-        NoMatchesError
-      );
+      shouldThrow(() => (emptyMatch.which = 'BOOM'), NoMatchesError);
     });
 
     it('throws an error when you try to define a property on an empty match', () => {
-      shouldThrow(
-        () => Object.defineProperty(emptyMatch, 'foo', {value: 'foo value'}),
-        NoMatchesError
-      );
+      shouldThrow(() => Object.defineProperty(emptyMatch, 'foo', { value: 'foo value' }), NoMatchesError);
     });
 
     it('throws an error when you try to delete a property on an empty match', () => {
-      shouldThrow(
-        () => delete emptyMatch.fooProperty,
-        NoMatchesError
-      );
+      shouldThrow(() => delete emptyMatch.fooProperty, NoMatchesError);
     });
 
     it('does not match when trying to check a property on empty results', () => {
@@ -159,6 +128,7 @@ describe('QueryMatch', () => {
 
     it('allows forEach over results', () => {
       emptyMatch.forEach(fail);
+      expect(true).toBe(true);
     });
   });
 });

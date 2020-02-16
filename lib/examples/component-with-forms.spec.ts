@@ -1,4 +1,3 @@
-
 import { Component, NgModule } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Shallow } from '../shallow';
@@ -6,8 +5,8 @@ import { Shallow } from '../shallow';
 @Component({
   selector: 'foo',
   template: `
-    <input id="name" type="text" [(ngModel)]="name"/>
-    <input id="nickname" type="text" [formControl]="nicknameControl"/>
+    <input id="name" type="text" [(ngModel)]="name" />
+    <input id="nickname" type="text" [formControl]="nicknameControl" />
   `
 })
 class FooComponent {
@@ -29,8 +28,7 @@ describe('component with forms', () => {
   });
 
   it('updates the name property when the input changes', async () => {
-    const {find, instance, fixture} = await shallow
-      .render();
+    const { find, instance, fixture } = await shallow.render();
     find('#name').nativeElement.value = 'foo';
     find('#name').nativeElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
@@ -39,8 +37,7 @@ describe('component with forms', () => {
   });
 
   it('updates the nickname property when the input changes', async () => {
-    const {find, instance, fixture} = await shallow
-      .render();
+    const { find, instance, fixture } = await shallow.render();
     find('#nickname').nativeElement.value = 'foo';
     find('#nickname').nativeElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();

@@ -1,6 +1,7 @@
 import { AnyFunction, TestFramework } from './types';
 
 declare var jasmine: any;
+declare var spyOn: any;
 
 export const jasmineFramework: TestFramework = {
   isSpy: (mockFunction: AnyFunction): boolean => jasmine.isSpy(mockFunction),
@@ -23,5 +24,5 @@ export const jasmineFramework: TestFramework = {
 
   resetSpy(spy: any): void {
     spy.calls.reset();
-  },
+  }
 };

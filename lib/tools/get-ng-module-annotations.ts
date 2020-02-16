@@ -12,14 +12,8 @@ export interface NgModuleAnnotations extends NgModule {
 }
 
 export function getNgModuleAnnotations(ngModule: Type<any>): NgModuleAnnotations {
-  const {
-    imports = [],
-    providers = [],
-    declarations = [],
-    exports = [],
-    entryComponents = [],
-    schemas = [],
-  } = ngModuleResolver.resolve(ngModule) || {};
+  const { imports = [], providers = [], declarations = [], exports = [], entryComponents = [], schemas = [] } =
+    ngModuleResolver.resolve(ngModule) || {};
 
-  return {imports, providers, declarations, exports, entryComponents, schemas};
+  return { imports, providers, declarations, exports, entryComponents, schemas };
 }

@@ -4,11 +4,12 @@ import { outputProxy, PropertyNotAnEventEmitterError, PropertyNotMarkedAsOutputE
 describe('outputProxy', () => {
   @Component({
     selector: 'Foo',
-    template: '<h1/>',
+    template: '<h1/>'
   })
   class FooComponent {
     @Output() normalOutput = new EventEmitter<string>();
     @Output() notAnEventEmitter = 'foo';
+    // tslint:disable-next-line: no-output-rename
     @Output('renamed') renamedOutput = new EventEmitter<string>();
     notMarkedAsOutput = new EventEmitter<string>();
   }
@@ -16,13 +17,11 @@ describe('outputProxy', () => {
   const outputs = outputProxy(component);
 
   it('allows access to eventEmitters that are marked as @Output', () => {
-    expect(outputs.normalOutput)
-      .toBe(component.normalOutput);
+    expect(outputs.normalOutput).toBe(component.normalOutput);
   });
 
   it('works with renamed outputs', () => {
-    expect(outputs.renamedOutput)
-      .toBe(component.renamedOutput);
+    expect(outputs.renamedOutput).toBe(component.renamedOutput);
   });
 
   it('throws an error if the property is not an EventEmitter', () => {

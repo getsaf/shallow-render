@@ -14,13 +14,19 @@ import { TestSetup } from './test-setup';
 
 export class InvalidInputBindError extends CustomError {
   constructor(availableInputs: string[], key: string | symbol) {
-    super(`Tried to bind to a property that is not marked as @Input: ${String(key)}\nAvailable input bindings: ${availableInputs}`);
+    super(
+      `Tried to bind to a property that is not marked as @Input: ${String(
+        key
+      )}\nAvailable input bindings: ${availableInputs}`
+    );
   }
 }
 
 export class InvalidBindOnEntryComponentError extends CustomError {
   constructor(component: Type<any>) {
-    super(`Tried to bind @Inputs to component that has no selector (${component.name}). EntryComponents cannot have template-bound inputs.\nIf you need to set properties on an EntryComponent, you must set them on the \`instance\`.\nIf this is not meant to be an EntryComoponent, please add a selector in th component definition.\n\nFor more details see the docs:\nhttps://github.com/getsaf/shallow-render/wiki/FAQ#bindings-on-entrycomponents`);
+    super(
+      `Tried to bind @Inputs to component that has no selector (${component.name}). EntryComponents cannot have template-bound inputs.\nIf you need to set properties on an EntryComponent, you must set them on the \`instance\`.\nIf this is not meant to be an EntryComoponent, please add a selector in th component definition.\n\nFor more details see the docs:\nhttps://github.com/getsaf/shallow-render/wiki/FAQ#bindings-on-entrycomponents`
+    );
   }
 }
 
@@ -49,8 +55,7 @@ export class Renderer<TComponent> {
 
   private _mockStatics() {
     this._setup.staticMocks.forEach((stubs, obj) => {
-      InvalidStaticPropertyMockError
-        .checkMockForStaticProperties(stubs);
+      InvalidStaticPropertyMockError.checkMockForStaticProperties(stubs);
       Object.keys(stubs).forEach(key => {
         const stub = stubs[key];
         if (!testFramework.isSpy(obj[key])) {
@@ -67,11 +72,10 @@ export class Renderer<TComponent> {
   private _createTemplateString(directive: Directive, bindings: any) {
     const componentInputs = (directive.inputs || [])
       .map(key => [key.replace(/:.*/, ''), key.replace(/.*: ?/, '')])
-      .reduce(
-        (acc, [name, renamed]) => ({...acc, [name]: renamed}),
-        {} as any
-      );
-    const inputBindings = Object.keys(bindings).map(key => `[${componentInputs[key]}]="${key}"`).join(' ');
+      .reduce((acc, [name, renamed]) => ({ ...acc, [name]: renamed }), {} as any);
+    const inputBindings = Object.keys(bindings)
+      .map(key => `[${componentInputs[key]}]="${key}"`)
+      .join(' ');
     return `<${directive.selector} ${inputBindings}></${directive.selector}>`;
   }
 
@@ -88,15 +92,14 @@ export class Renderer<TComponent> {
     templateOrOptions?: string | Partial<RenderOptions<TBindings>>,
     optionsOrUndefined?: Partial<RenderOptions<TBindings>>
   ) {
-    const [template, options] = typeof templateOrOptions === 'string'
-      ? [templateOrOptions, optionsOrUndefined]
-      : [undefined, templateOrOptions];
+    const [template, options] =
+      typeof templateOrOptions === 'string' ? [templateOrOptions, optionsOrUndefined] : [undefined, templateOrOptions];
 
     const finalOptions: RenderOptions<TBindings> = {
       detectChanges: true,
       whenStable: true,
       bind: {} as TBindings,
-      ...options,
+      ...options
     };
 
     // Go ahead and mock static things
@@ -110,7 +113,10 @@ export class Renderer<TComponent> {
     }
 
     const ComponentClass = resolvedTestComponent.selector
-      ? createContainer(template || this._createTemplateString(resolvedTestComponent, finalOptions.bind), finalOptions.bind)
+      ? createContainer(
+          template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
+          finalOptions.bind
+        )
       : this._setup.testComponent;
 
     // Components may have their own providers, If the test component does,
@@ -127,12 +133,12 @@ export class Renderer<TComponent> {
     this._setup.mocks.forEach((mock, thingToMock) => {
       if (!directiveResolver.isDirective(thingToMock)) {
         const MockProvider = mockProviderClass(thingToMock, mock);
-        TestBed.overrideProvider(thingToMock, {useValue: new MockProvider()});
+        TestBed.overrideProvider(thingToMock, { useValue: new MockProvider() });
       }
     });
 
     await TestBed.configureTestingModule({
-      imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])],
+      imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])]
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);
@@ -162,8 +168,7 @@ export class Renderer<TComponent> {
       throw new InvalidBindOnEntryComponentError(this._setup.testComponent);
     }
 
-    const inputPropertyNames = (directive.inputs || [])
-      .map(k => k.split(':')[0]);
+    const inputPropertyNames = (directive.inputs || []).map(k => k.split(':')[0]);
     Object.keys(bindings).forEach(k => {
       if (!inputPropertyNames.includes(k)) {
         throw new InvalidInputBindError(inputPropertyNames, k);

@@ -4,7 +4,7 @@ import { TestSetup } from '../models/test-setup';
 import { mockProvider } from './mock-provider';
 
 class FooService {
-  foo: 'foo';
+  foo = 'foo';
 }
 
 describe('mockPrivider', () => {
@@ -27,7 +27,7 @@ describe('mockPrivider', () => {
   });
 
   it('auto-mocks ClassProviders', () => {
-    const provider = mockProvider({provide: FooService, useClass: FooService}, testSetup);
+    const provider = mockProvider({ provide: FooService, useClass: FooService }, testSetup);
 
     expect(provider.provide).toBe(FooService);
     const instance = new provider.useClass();
@@ -35,14 +35,14 @@ describe('mockPrivider', () => {
   });
 
   it('auto-mocks ValueProviders', () => {
-    const provider = mockProvider({provide: FooService, useValue: {}}, testSetup);
+    const provider = mockProvider({ provide: FooService, useValue: {} }, testSetup);
 
     expect(provider.provide).toBe(FooService);
     expect(provider.useValue instanceof MockOfProvider).toBe(true);
   });
 
   it('auto-mocks FactoryProviders', () => {
-    const provider = mockProvider({provide: FooService, useFactory: () => ({})}, testSetup);
+    const provider = mockProvider({ provide: FooService, useFactory: () => ({}) }, testSetup);
 
     expect(provider.provide).toBe(FooService);
     const instance = provider.useFactory();
@@ -50,14 +50,14 @@ describe('mockPrivider', () => {
   });
 
   it('passes through ExistingProviders', () => {
-    const existingProvider: ExistingProvider  = {provide: FooService, useExisting: 'anything goes here'};
+    const existingProvider: ExistingProvider = { provide: FooService, useExisting: 'anything goes here' };
     const provider = mockProvider(existingProvider, testSetup);
 
     expect(provider).toBe(existingProvider);
   });
 
   it('prefers mocks from setup.mocks', () => {
-    testSetup.mocks.set(FooService, {foo: 'mocked foo'});
+    testSetup.mocks.set(FooService, { foo: 'mocked foo' });
     const provider = mockProvider(FooService, testSetup) as ValueProvider;
 
     expect(provider.provide).toBe(FooService);
@@ -66,7 +66,7 @@ describe('mockPrivider', () => {
 
   it('mocks from setup.mocks even if the class is in the setup.dontMock array', () => {
     testSetup.dontMock.push(FooService);
-    testSetup.mocks.set(FooService, {foo: 'mocked foo'});
+    testSetup.mocks.set(FooService, { foo: 'mocked foo' });
     const provider = mockProvider(FooService, testSetup) as ValueProvider;
 
     expect(provider.provide).toBe(FooService);
@@ -103,7 +103,7 @@ describe('mockPrivider', () => {
   });
 
   it('does not mock services when they are part of a Type/Value/Factory provider in dontMock', () => {
-    testSetup.dontMock.push({provide: FooService, useValue: 'TEST VALUE'});
+    testSetup.dontMock.push({ provide: FooService, useValue: 'TEST VALUE' });
     const providers = mockProvider([FooService], testSetup) as any[];
 
     expect(providers[0]).toBe(FooService);

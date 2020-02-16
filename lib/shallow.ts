@@ -16,6 +16,7 @@ const NEVER_MOCKED_ANGULAR_STUFF = [
   HAMMER_GESTURE_CONFIG
 ];
 export class Shallow<TTestComponent> {
+  // tslint:disable: member-ordering
   readonly setup: TestSetup<TTestComponent>;
 
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
@@ -37,16 +38,22 @@ export class Shallow<TTestComponent> {
   }
 
   // Always mock a thing with a particular implementation.
-  private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>(); // tslint:disable-line use-default-type-parameter
-  static alwaysMock<TProvider>(thing: Type<TProvider> | InjectionToken<TProvider>, stubs: RecursivePartial<TProvider>): typeof Shallow {
+  private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>();
+  static alwaysMock<TProvider>(
+    thing: Type<TProvider> | InjectionToken<TProvider>,
+    stubs: RecursivePartial<TProvider>
+  ): typeof Shallow {
     const mock = Shallow._alwaysMock.get(thing) || {};
-    this._alwaysMock.set(thing, {...mock, ...stubs as object});
+    this._alwaysMock.set(thing, { ...mock, ...(stubs as object) });
     return Shallow;
   }
 
   // Always replace one module with another replacement module.
   private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
-  static alwaysReplaceModule(originalModule: Type<any>, replacementModule: Type<any> | ModuleWithProviders): typeof Shallow {
+  static alwaysReplaceModule(
+    originalModule: Type<any>,
+    replacementModule: Type<any> | ModuleWithProviders
+  ): typeof Shallow {
     this._alwaysReplaceModule.set(originalModule, replacementModule);
     return Shallow;
   }
@@ -77,7 +84,9 @@ export class Shallow<TTestComponent> {
     this.setup.alwaysRenderStructuralDirectives = Shallow._alwaysRenderStructuralDirectives;
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
     Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
-    Shallow._alwaysWithStructuralDirectives.forEach((value, key) => this.setup.withStructuralDirectives.set(key, value));
+    Shallow._alwaysWithStructuralDirectives.forEach((value, key) =>
+      this.setup.withStructuralDirectives.set(key, value)
+    );
   }
 
   withStructuralDirective(directive: Type<any>, renderContents = true) {
@@ -108,15 +117,14 @@ export class Shallow<TTestComponent> {
 
   mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: RecursivePartial<TMock>): this {
     const mock = this.setup.mocks.get(mockClass) || {};
-    this.setup.mocks.set(mockClass, {...mock, ...stubs as object});
+    this.setup.mocks.set(mockClass, { ...mock, ...(stubs as object) });
     return this;
   }
 
   mockStatic<TMock extends object>(obj: TMock, stubs: RecursivePartial<TMock>): this {
-    InvalidStaticPropertyMockError
-      .checkMockForStaticProperties(stubs);
+    InvalidStaticPropertyMockError.checkMockForStaticProperties(stubs);
     const mock = this.setup.staticMocks.get(obj) || {};
-    this.setup.staticMocks.set(obj, {...mock, ...stubs as object});
+    this.setup.staticMocks.set(obj, { ...mock, ...(stubs as object) });
     return this;
   }
 
@@ -125,7 +133,10 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  replaceModule(originalModule: Type<any> | ModuleWithProviders, replacementModule: Type<any> | ModuleWithProviders): this {
+  replaceModule(
+    originalModule: Type<any> | ModuleWithProviders,
+    replacementModule: Type<any> | ModuleWithProviders
+  ): this {
     this.setup.moduleReplacements.set(originalModule, replacementModule);
     return this;
   }
@@ -162,5 +173,4 @@ export class Shallow<TTestComponent> {
       return renderer.render();
     }
   }
-
 }

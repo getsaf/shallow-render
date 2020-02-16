@@ -3,10 +3,11 @@
     "lib": ["dom", "es2016"],
     "module": "commonjs",
     "target": "es5",
-    "noImplicitAny": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
     "sourceMap": true,
     "declaration": true,
     "rootDir": ".",
@@ -15,11 +16,9 @@
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "experimentalDecorators": true,
-    "types" : ["node", "jasmine"],
-    "strictNullChecks": true
+    "types": ["node", "jasmine"],
+    "strict": true,
+    "alwaysStrict": true
   },
-  "include": [
-    "index.ts",
-    "lib/**/*"
-  ]
+  "include": ["index.ts", "lib/**/*"]
 }

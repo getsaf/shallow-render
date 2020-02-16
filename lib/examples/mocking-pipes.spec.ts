@@ -4,10 +4,10 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'title-text',
-  template: '<h4>{{label | underline}}</h4>',
+  template: '<h4>{{label | underline}}</h4>'
 })
 class TitleTextComponent {
-  @Input() label: string;
+  @Input() label!: string;
 }
 
 @Pipe({
@@ -33,9 +33,9 @@ describe('simple component example', () => {
   });
 
   it('displays text piped through the HighlightPipe', async () => {
-    const {find} = await shallow
+    const { find } = await shallow
       .mockPipe(UnderlinePipe, input => `pipe got: ${input}`)
-      .render({bind: {label: 'woot'}});
+      .render({ bind: { label: 'woot' } });
 
     const h1 = find('h4');
     expect(h1.nativeElement.innerText).toBe('pipe got: woot');

@@ -11,7 +11,7 @@ class RedService {
 
 @Component({
   selector: 'color-label',
-  template: '<label>{{redService.color()}}</label>',
+  template: '<label>{{redService.color()}}</label>'
 })
 class ColorLabelComponent {
   constructor(public redService: RedService) {}
@@ -19,7 +19,7 @@ class ColorLabelComponent {
 
 @NgModule({
   declarations: [ColorLabelComponent],
-  providers: [RedService],
+  providers: [RedService]
 })
 class ColorModule {}
 //////////////////////////
@@ -39,16 +39,16 @@ describe('using neverMock', () => {
   });
 
   it('Uses the color from the RedService', async () => {
-    const {element} = await shallow.render('<color-label></color-label>');
+    const { element } = await shallow.render('<color-label></color-label>');
 
     // Using the actual service response here (not mocked)
     expect(element.nativeElement.innerText).toBe('RED');
   });
 
   it('Uses the color from the mocked RedService', async () => {
-    const {element} = await shallow
+    const { element } = await shallow
       // User mocks always override things that are 'neverMocked'
-      .mock(RedService, {color: () => 'MOCKED VALUE'})
+      .mock(RedService, { color: () => 'MOCKED VALUE' })
       .render('<color-label></color-label>');
 
     expect(element.nativeElement.innerText).toBe('MOCKED VALUE');

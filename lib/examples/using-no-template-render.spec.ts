@@ -5,12 +5,12 @@ import { Shallow } from '../shallow';
 @Component({
   selector: 'name',
   template: `
-    <label (click)="select.emit(name)">{{name}}</label>
-  `,
+    <label (click)="selected.emit(name)">{{ name }}</label>
+  `
 })
 class NameComponent {
   @Input() name = 'DEFAULT NAME';
-  @Output() select = new EventEmitter<string>();
+  @Output() selected = new EventEmitter<string>();
 }
 
 @NgModule({
@@ -27,20 +27,20 @@ describe('No-Template Rendering', () => {
   });
 
   it('displays and tracks the name', async () => {
-    const {find, outputs} = await shallow.render({
+    const { find, outputs } = await shallow.render({
       bind: { name: 'Chuck Norris' }
     });
     const label = find('label');
     label.nativeElement.click();
 
     expect(label.nativeElement.textContent).toBe('Chuck Norris');
-    expect(outputs.select.emit).toHaveBeenCalledWith('Chuck Norris');
+    expect(outputs.selected.emit).toHaveBeenCalledWith('Chuck Norris');
   });
 
   it('uses the default name', async () => {
-    const {find, outputs} = await shallow.render();
+    const { find, outputs } = await shallow.render();
 
     find('label').nativeElement.click();
-    expect(outputs.select.emit).toHaveBeenCalledWith('DEFAULT NAME');
+    expect(outputs.selected.emit).toHaveBeenCalledWith('DEFAULT NAME');
   });
 });

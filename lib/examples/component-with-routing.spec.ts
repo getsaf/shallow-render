@@ -12,25 +12,21 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'go-home-link',
-  template: '<a (click)="goHome()">Go somewhere</a>',
+  template: '<a (click)="goHome()">Go somewhere</a>'
 })
 class GoHomeLinkComponent {
-  labelText: string;
-
   constructor(public router: Router) {}
 
   async goHome() {
     await this.router.navigate(['home']);
   }
 }
-const routes: Routes = [
-  {path: 'home', component: class DummyComponent {}}
-];
+const routes: Routes = [{ path: 'home', component: class DummyComponent {} }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  providers: [{provide: APP_BASE_HREF, useValue: '/'}],
-  declarations: [GoHomeLinkComponent],
+  providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
+  declarations: [GoHomeLinkComponent]
 })
 class GoHomeModule {}
 //////////////////////////
@@ -39,13 +35,15 @@ describe('component with routing', () => {
   let shallow: Shallow<GoHomeLinkComponent>;
 
   beforeEach(() => {
-    shallow = new Shallow(GoHomeLinkComponent, GoHomeModule)
-      .replaceModule(RouterModule, RouterTestingModule.withRoutes(routes));
+    shallow = new Shallow(GoHomeLinkComponent, GoHomeModule).replaceModule(
+      RouterModule,
+      RouterTestingModule.withRoutes(routes)
+    );
   });
 
   it('uses the route', async () => {
-    const {fixture, find, get} = await shallow.render();
-    const location = get(Location);
+    const { fixture, find, inject } = await shallow.render();
+    const location = inject(Location);
     find('a').triggerEventHandler('click', {});
     await fixture.whenStable();
 
