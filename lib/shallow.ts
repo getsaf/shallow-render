@@ -115,9 +115,13 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  mock<TMock>(mockClass: Type<TMock> | InjectionToken<TMock>, stubs: RecursivePartial<TMock>): this {
-    const mock = this.setup.mocks.get(mockClass) || {};
-    this.setup.mocks.set(mockClass, { ...mock, ...(stubs as object) });
+  mock<TMock>(thingToMock: Type<TMock> | InjectionToken<TMock>, stubs: RecursivePartial<TMock>): this {
+    const mock = this.setup.mocks.get(thingToMock);
+    if (typeof mock === 'object') {
+      this.setup.mocks.set(thingToMock, { ...mock, ...(stubs as object) });
+    } else {
+      this.setup.mocks.set(thingToMock, stubs);
+    }
     return this;
   }
 

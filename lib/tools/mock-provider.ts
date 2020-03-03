@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, Provider, TypeProvider, ValueProvider } from '@angular/core';
+import { APP_INITIALIZER, Provider, InjectionToken, TypeProvider, ValueProvider } from '@angular/core';
 import { mockProviderClass } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { isClassProvider, isExistingProvider, isFactoryProvider, isTypeProvider } from './type-checkers';
@@ -23,6 +23,10 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
 
   const provide = isTypeProvider(provider) ? provider : provider.provide;
   const userMocks = setup.mocks.get(provide);
+
+  if (provide instanceof InjectionToken) {
+    return userMocks ? { provide, useValue: userMocks } : provider;
+  }
 
   // TODO: What if setup.dontMock.includes(provide.useClass)?
   if (!userMocks && recursiveIncludes(setup.dontMock, provide)) {

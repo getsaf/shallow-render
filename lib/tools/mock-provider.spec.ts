@@ -1,4 +1,4 @@
-import { ExistingProvider, ValueProvider } from '@angular/core';
+import { ExistingProvider, ValueProvider, InjectionToken } from '@angular/core';
 import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { mockProvider } from './mock-provider';
@@ -107,5 +107,22 @@ describe('mockPrivider', () => {
     const providers = mockProvider([FooService], testSetup) as any[];
 
     expect(providers[0]).toBe(FooService);
+  });
+
+  it('mocks non-object injection tokens', () => {
+    const STRING_TOKEN = new InjectionToken<string>('My string token');
+    const FUNCTION_TOKEN = new InjectionToken<() => string>('My function token');
+    testSetup.mocks.set(STRING_TOKEN, 'FOO');
+    testSetup.mocks.set(FUNCTION_TOKEN, () => 'BAR');
+    const providers = mockProvider(
+      [
+        { provide: STRING_TOKEN, useValue: 'ORIGINAL-STRING' },
+        { provide: FUNCTION_TOKEN, useValue: () => 'ORIGINAL-FUNCTION' }
+      ],
+      testSetup
+    ) as any[];
+
+    expect(providers[0].useValue).toBe('FOO');
+    expect(providers[1].useValue()).toBe('BAR');
   });
 });

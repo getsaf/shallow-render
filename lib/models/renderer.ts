@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Type } from '@angular/core';
+import { Directive, EventEmitter, Type, InjectionToken } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { testFramework } from '../test-frameworks/test-framework';
@@ -7,7 +7,6 @@ import { createTestModule } from '../tools/create-test-module';
 import { mockProvider } from '../tools/mock-provider';
 import { directiveResolver } from '../tools/reflect';
 import { CustomError } from './custom-error';
-import { mockProviderClass } from './mock-of-provider';
 import { RecursivePartial } from './recursive-partial';
 import { Rendering, RenderOptions } from './rendering';
 import { TestSetup } from './test-setup';
@@ -132,8 +131,16 @@ export class Renderer<TComponent> {
     // This takes care of providedIn 'root'
     this._setup.mocks.forEach((mock, thingToMock) => {
       if (!directiveResolver.isDirective(thingToMock)) {
-        const MockProvider = mockProviderClass(thingToMock, mock);
-        TestBed.overrideProvider(thingToMock, { useValue: new MockProvider() });
+        if (thingToMock instanceof InjectionToken) {
+          TestBed.overrideProvider(thingToMock, { useValue: mock });
+        } else {
+          const provider = mockProvider(thingToMock, this._setup);
+          TestBed.overrideProvider(thingToMock, {
+            useValue: provider.useValue,
+            useFactory: provider.useFactory,
+            deps: provider.deps
+          });
+        }
       }
     });
 
