@@ -1,3 +1,7 @@
+# shallow-render
+
+Angular testing made easy with shallow rendering and easy mocking.
+
 ## Why not just use TestBed?
 
 In a nutshell, I wanted to make component isolation easy for Angular component tests. I thought it was too difficult with the out-of-the-box solution. Even the Angular docs don't solve for type-safety and component isolation without adding duplication.
@@ -23,7 +27,7 @@ I want a few things from my unit tests that fall into two categories:
 
 TestBed alone struggles with a lot of things on this list. I'll run through the standard options, all of which can be found in various places in the Angular docs.
 
-## My Components
+#### My Components
 
 Say you have a component you want to test:
 
@@ -425,22 +429,6 @@ describe("CarComponent", () => {
   });
 });
 ```
-
-## Configuration
-
-### Global Configuration
-
-In your karma test init, you may setup mocks, providers, etc. globally. These settings will automatically apply to _all_ shallow-render tests. Any mocks you provide directly in your spec will override the global mocks so you still have total control over your mocks.
-
-```typescript
-Shallow.alwaysMock(WeatherService, {
-  willItRain: async () => true
-}).alwaysReplaceModule(HttpClientModule, HttpClientTestingModule);
-```
-
-### Per-spec Configuration
-
-Most of the time, you will configure shallow specs via your `beforeEach` block. These settings will only apply to the tests in your `describe` block. Any mocks you provide directly in your spec will override the mocks from your `beforeEach` setup so you still have total control.
 
 ## `Shallow` class
 
@@ -861,19 +849,19 @@ it("is large", async () => {
 See [Structural Directives](Structural-Directives#querying)
 
 
-## Structural Direectives
+## Structural Directives
 
 Structural directive mocks are not rendered by default. You may configure this setting globally with:
 
-## Rendering
+### Rendering
 
-### Enable ALL structural directives to be rendered globally
+#### Enable ALL structural directives to be rendered globally
 
 ```typescript
 Shallow.alwaysRenderStructuralDirectives();
 ```
 
-### Enable _certain_ structural directives to be rendered globally
+#### Enable _certain_ structural directives to be rendered globally
 
 ```typescript
 Shallow.withStructuralDirective(FooDirective).withStructuralDirective(
@@ -881,7 +869,7 @@ Shallow.withStructuralDirective(FooDirective).withStructuralDirective(
 );
 ```
 
-### Enable ALL structural directives except certain ones
+#### Enable ALL structural directives except certain ones
 
 ```typescript
 Shallow.alwaysRenderStructuralDirectives().withStructuralDirective(
@@ -892,7 +880,7 @@ Shallow.alwaysRenderStructuralDirectives().withStructuralDirective(
 
 You may also address this per-test. There are two ways to handle structural directives in a test:
 
-### During the shallow configuration (before the render)
+#### During the shallow configuration (before the render)
 
 You may instruct shallow to always render a particular directive with `withStructuralDirective`.
 
@@ -906,7 +894,7 @@ it("can render structural directives", async () => {
 });
 ```
 
-### After the render (fine grained control)
+#### After the render (fine grained control)
 
 Here, we render all of the `FooDirective` instances:
 
@@ -944,7 +932,7 @@ it("can render structural directives", async () => {
 });
 ```
 
-## Querying
+### Querying
 
 Structural directives that are not rendered will NOT be available in the DOM. You can still query for them using shallow-render:
 
