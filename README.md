@@ -2,13 +2,13 @@
 
 Angular testing made easy with shallow rendering and easy mocking.
 
-## Why not just use TestBed?
+# Why not just use TestBed?
 
 In a nutshell, I wanted to make component isolation easy for Angular component tests. I thought it was too difficult with the out-of-the-box solution. Even the Angular docs don't solve for type-safety and component isolation without adding duplication.
 
 I want a few things from my unit tests that fall into two categories:
 
-#### How trustworthy is the test
+## How trustworthy is the test
 
 - It should fail when:
   - If a type changes and my component _directly_ misuses that type, I want my tests to fail for that component.
@@ -17,7 +17,7 @@ I want a few things from my unit tests that fall into two categories:
   - If I use a component that is not accessible from my module.
   - If I mistype an input/output on a child-component.
 
-#### How brittle is the test
+## How brittle is the test
 
 - It should _not_ fail when:
   - A child component adds a private dependency but the public contract does not change.
@@ -27,7 +27,7 @@ I want a few things from my unit tests that fall into two categories:
 
 TestBed alone struggles with a lot of things on this list. I'll run through the standard options, all of which can be found in various places in the Angular docs.
 
-#### My Components
+## Demo Test Components
 
 Say you have a component you want to test:
 
@@ -244,7 +244,7 @@ beforeEach(() => {
 
 Your mock is _fully type-safe_ so if you try to return a mismatching type, the compiler complains.
 
-## Getting Started
+# Getting Started
 
 First, install `shallow-render`:
 
@@ -254,7 +254,7 @@ That's it, you're be ready to write a test!
 
 ---
 
-### Your first test
+## Your first test
 
 Start by identifying the component you want to test, and the Angular module that component lives in.
 
@@ -368,9 +368,9 @@ This is a pretty standard expectation, just make sure that our `FooComponent` ac
 
 That's it! There are lots of [examples](https://github.com/getsaf/shallow-render/blob/master/lib/examples) for all kinds of scenarios.
 
-## Pro Tips
+# Pro Tips
 
-### Optional Templates
+## Optional Templates
 
 You aren't _required_ to use template HTML to render your components if you don't want to!
 
@@ -388,7 +388,7 @@ const { find } = await shallow.render({ bind: { label: "My Label" } });
 
 In this case, `Shallow` will force the `bind` properties to match the names and types of the inputs for your component. If you want to use HTML templates, that's cool too. This is just a type-safe alternative.
 
-### RecursivePartial mocks
+## RecursivePartial mocks
 
 Shallow allows you to provide partials of many arguments. For example:
 
@@ -430,9 +430,9 @@ describe("CarComponent", () => {
 });
 ```
 
-## `Shallow` class
+# `Shallow` class
 
-### Static Properties
+## Static Properties
 
 Shallow has some global configuration options. These can be applied in your top-level test setup (the same place where TestBed is initialized).
 
@@ -444,7 +444,7 @@ Shallow has some global configuration options. These can be applied in your top-
 | alwaysReplaceModule(ngModule, replacementModule) | Replaces a module in all tests         |
 | alwaysImport(ngModule)                           | Imports a module in all tests          |
 
-### Instance Properties
+## Instance Properties
 
 Setup mocks and other options for your test. Usually used in your `beforeEach` or directly in your test.
 
@@ -460,7 +460,7 @@ Setup mocks and other options for your test. Usually used in your `beforeEach` o
 | import(...ngModules)                       | Imports an additional module into your test module                       | self (chainable)                    |
 | declare(...components)                     | Adds components to the test module's declarations and entryComponents    | self (chainable)                    |
 
-## Mocking
+# Mocking
 
 When writing a spec, you generally want to isolate the component as much as possible and stub/mock out everything else. This lets you really hone in on just the component and reduce the noise of things the component depends on. Mocking in Angular can be tricky, you want to mock things in the most type-safe manner possible.
 
@@ -541,7 +541,7 @@ it('can override previously defined mocks', async () => {
 });
 ```
 
-### Mocking component instance properties
+## Mocking component instance properties
 
 When a component is written using the template-hash pattern, we sometimes need to mock methods on these components when we use them. For example:
 
@@ -563,7 +563,7 @@ find("list-item").triggerEventHandler("click", {});
 expect(findComponent(ListContainerComponent).collapse).toHaveBeenCalled();
 ```
 
-### Skip mocking with `dontMock`
+## Skip mocking with `dontMock`
 
 Have a service/injection token/component/directive/pipe, etc. that you don't want to be mocked? Use `dontMock` to bypass automatic mocking.
 
@@ -573,7 +573,7 @@ shallow.dontMock(FooService, FooComponent);
 
 Configures `Shallow` to use the _real_ `FooService` and `FooComponent` in the spec.
 
-### Skip mocking globally with `neverMock`
+## Skip mocking globally with `neverMock`
 
 Some components/directives/pipes you may want to always use the real thing. You may choose to "never mock" in the global test setup for all specs.
 
@@ -585,11 +585,19 @@ Shallow.neverMock(FooService, FooPipe);
 
 Configures `Shallow` to always use the _real_ `FooService` and `FooPipe` in all specs.
 
-### Provide a mock with `provideMock`
+## Use a manual mock instance or class
 
-Sometimes, you may want to use a custom mock class or factory for your tests. This can be done in a few ways:
+Sometimes, you may want to use a custom mock class or factory for your tests. This can be done in a few ways.
 
-#### With a combination of `provide` and `dontMock`
+### With a single-line `provideMock`
+
+This automatically issues a `provide` and `dontMock` in a simple short-hand:
+
+```typescript
+shallow.provideMock({ provide: MyService, useClass: MyMockService });
+```
+
+### Combining `provide` and `dontMock`
 
 This tells Shallow, to provide this mock service-class but don't run it though Shallow's auto-mocking.
 
@@ -599,15 +607,7 @@ shallow
   .dontMock(MyService);
 ```
 
---OR--
-
-#### With a single-line `provideMock`
-
-```typescript
-shallow.provideMock({ provide: MyService, useClass: MyMockService });
-```
-
-### Global mocks with `alwaysMock`
+## Global mocks with `alwaysMock`
 
 Sometimes you will have things that you're constantly re-mocking for a spec. You can setup global mocks for these things by using `alwaysMock` in the global test setup and shallow will always provide the mock in modules that use the provider you specified. Note that doing `alwaysMock` is _NOT_ a mock-once-for-all-specs solution. Use this feature sparingly, remember specs should generally be self-contained as far as mock data goes. Using `alwaysMock` is just as bad as using global variables. TL;DR; Use sparingly or not-at-all.
 
@@ -620,7 +620,7 @@ Shallow.alwaysMock(FooService, {
 });
 ```
 
-### Global providers with `alwaysProvide`
+## Global providers with `alwaysProvide`
 
 There are some use cases when an Angular app provides something (usually a configuration) at the top-level of the application. These instances should follow the [`forRoot`](https://angular.io/guide/singleton-services) pattern. For these cases, you may want specs to have a similar environment setup where the 'root' providers are globally provided to all specs. This can be accomplished by using `Shallow.alwaysProvide`.
 
@@ -648,7 +648,7 @@ Shallow.alwaysProvide(MyGlobalService).alwaysMock(MyGlobalService, {
 
 Now, all specs will receive a _MOCKED_ `MyGlobalService` when requested for injection.
 
-### Mocking Pipes with `mockPipe`
+## Mocking Pipes with `mockPipe`
 
 Angular pipes are a little special. They are used to transform data in your templates. By default, Shallow will mock all pipes to have no output. Your specs may want to provide mocks for these transforms to allow validation that a pipe received the correct input data.
 
@@ -658,7 +658,7 @@ shallow.mockPipe(MyPipe, input => `MyPipe: ${input}`);
 
 Configures `Shallow` to have the `MyPipe` always perform the following action on input data. This lets you inspect your templates and controls for your Pipe's side-effects.
 
-### Replace a module with a test module
+## Replace a module with a test module
 
 Angular has a pattern in which they provide full-module replacements specifically designed for testing (see: [HttpClientTestingModule](https://angular.io/api/common/http/testing/HttpClientTestingModule)). These testing modules can be used in `Shallow` tests by replacing the original module with the test module.
 
@@ -716,9 +716,9 @@ If you try to mock non-method property `MyClass.foo` will throw an error:
 shallow.mockStatic(MyClass, { foo: "MOCK FOO" }); // throws: InvalidStaticPropertyMockError
 ```
 
-## Querying
+# Querying
 
-#### `find`
+## `find`
 
 ```typescript
 find(CSSSelector | Type<Directive> | Type<Component>) => QueryMatch<DebugElement>
@@ -809,7 +809,7 @@ it('renders one item per person', async () => {
 
 ---
 
-#### `findDirective`
+### `findDirective`
 
 ```typescript
 findDirective(Type<Directive>) => QueryMatch<TDirective>
@@ -817,7 +817,7 @@ findDirective(Type<Directive>) => QueryMatch<TDirective>
 
 `findDirective` is similar to `findComponent` except it returns directive instances wrapped in a [`QueryMatch`](QueryMatch-Class) object.
 
-##### Example
+#### Example
 
 ```typescript
 @Directive({selector: 'size'})
@@ -844,24 +844,23 @@ it("is large", async () => {
 
 ---
 
-#### `findStructuralDirective`
+### `findStructuralDirective`
 
 See [Structural Directives](Structural-Directives#querying)
 
+# Structural Directives
 
-## Structural Directives
+Structural directive mocks are not rendered by default. You may configure this setting globally or per-test.
 
-Structural directive mocks are not rendered by default. You may configure this setting globally with:
+## Global Configuration
 
-### Rendering
-
-#### Enable ALL structural directives to be rendered globally
+### Enable ALL structural directives to be rendered globally
 
 ```typescript
 Shallow.alwaysRenderStructuralDirectives();
 ```
 
-#### Enable _certain_ structural directives to be rendered globally
+### Enable _certain_ structural directives to be rendered globally
 
 ```typescript
 Shallow.withStructuralDirective(FooDirective).withStructuralDirective(
@@ -869,7 +868,7 @@ Shallow.withStructuralDirective(FooDirective).withStructuralDirective(
 );
 ```
 
-#### Enable ALL structural directives except certain ones
+### Enable ALL structural directives except certain ones globally
 
 ```typescript
 Shallow.alwaysRenderStructuralDirectives().withStructuralDirective(
@@ -878,9 +877,11 @@ Shallow.alwaysRenderStructuralDirectives().withStructuralDirective(
 );
 ```
 
+## Per-test Configuration
+
 You may also address this per-test. There are two ways to handle structural directives in a test:
 
-#### During the shallow configuration (before the render)
+### During the shallow configuration (before the render)
 
 You may instruct shallow to always render a particular directive with `withStructuralDirective`.
 
@@ -894,7 +895,7 @@ it("can render structural directives", async () => {
 });
 ```
 
-#### After the render (fine grained control)
+### After the render (fine grained control)
 
 Here, we render all of the `FooDirective` instances:
 
@@ -932,7 +933,7 @@ it("can render structural directives", async () => {
 });
 ```
 
-### Querying
+## Querying Structural Directives
 
 Structural directives that are not rendered will NOT be available in the DOM. You can still query for them using shallow-render:
 
@@ -981,7 +982,7 @@ it("can find structural directives", async () => {
 
 > Note that this is a totally contrived example, in reality, the `WhenEvenDirective` is pure and we can likely just use the actual directive with `shallow.dontMock(WhenEvenDirective)`.
 
-## Custom Matchers
+# Custom Matchers
 
 To help with test readability, `Shallow` comes pre-packaged with some custom matchers for Jasmine and Jest.
 
@@ -1009,9 +1010,9 @@ expect(find("h1")).toHaveFoundMoreThan(0); // 1 or more
 expect(find("h1")).toHaveFoundLessThan(3); // 2 or fewer
 ```
 
-## Configuration
+# Configuration
 
-### Global Configuration
+## Global Configuration
 
 In your karma test init, you may setup mocks, providers, etc. globally. These settings will automatically apply to _all_ shallow-render tests. Any mocks you provide directly in your spec will override the global mocks so you still have total control over your mocks.
 
@@ -1021,13 +1022,13 @@ Shallow.alwaysMock(WeatherService, {
 }).alwaysReplaceModule(HttpClientModule, HttpClientTestingModule);
 ```
 
-### Per-spec Configuration
+## Per-spec Configuration
 
 Most of the time, you will configure shallow specs via your `beforeEach` block. These settings will only apply to the tests in your `describe` block. Any mocks you provide directly in your spec will override the mocks from your `beforeEach` setup so you still have total control.
 
-## `Shallow` class
+# `Shallow` class
 
-### Static Properties
+## Static Properties
 
 Shallow has some global configuration options. These can be applied in your top-level test setup (the same place where TestBed is initialized).
 
@@ -1039,7 +1040,7 @@ Shallow has some global configuration options. These can be applied in your top-
 | alwaysReplaceModule(ngModule, replacementModule) | Replaces a module in all tests         |
 | alwaysImport(ngModule)                           | Imports a module in all tests          |
 
-### Instance Properties
+## Instance Properties
 
 Setup mocks and other options for your test. Usually used in your `beforeEach` or directly in your test.
 
@@ -1055,7 +1056,7 @@ Setup mocks and other options for your test. Usually used in your `beforeEach` o
 | import(...ngModules)                       | Imports an additional module into your test module                       | self (chainable)                    |
 | declare(...components)                     | Adds components to the test module's declarations and entryComponents    | self (chainable)                    |
 
-## Frequently Asked Questions
+# Frequently Asked Questions
 
 The most complete list of issues/resolutions for popular frameworks will be in the [issues](https://github.com/getsaf/shallow-render/issues) list for the project, but this is a list of especially popular difficulties.
 
@@ -1159,10 +1160,10 @@ it("does something funky if the FunkService is funky", async () => {
 });
 ```
 
-## Examples
+# Examples
 
-Check out the [examples](https://github.com/getsaf/shallow-render/tree/master/lib/examples) folder for more specific use cases. 
- 
+Check out the [examples](https://github.com/getsaf/shallow-render/tree/master/lib/examples) folder for more specific use cases.
+
 Many of these examples live in the [StackBlitz project](https://stackblitz.com/edit/shallow-render?file=examples%2Findex.ts), so you can try it in real-time.
 
 - [Simple component](https://github.com/getsaf/shallow-render/tree/master/lib/examples/simple-component.spec.ts)
