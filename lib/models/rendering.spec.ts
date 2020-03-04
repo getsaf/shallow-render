@@ -1,4 +1,4 @@
-import { Component, DebugElement, Directive, EventEmitter, Input, Output, Type } from '@angular/core';
+import { Component, DebugElement, Directive, EventEmitter, Input, Output, Type, InjectionToken } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockComponent, MockDirective } from 'ng-mocks';
@@ -77,6 +77,7 @@ class WillBeMockedComponent {}
   template: '<span>other</span>'
 })
 class OtherComponent {}
+const MY_TOKEN = new InjectionToken<boolean>('My boolean token');
 
 describe('Rendering', () => {
   let testSetup: TestSetup<OuterComponent>;
@@ -95,6 +96,7 @@ describe('Rendering', () => {
     testSetup.mockCache.add(WillBeMockedDirective, MockedDirective);
     testSetup.mockCache.add(WillBeMockedComponent, MockedComponent);
     return TestBed.configureTestingModule({
+      providers: [{ provide: MY_TOKEN, useValue: true }],
       declarations: [
         TestHostComponent,
         OuterComponent,
@@ -374,9 +376,9 @@ describe('Rendering', () => {
 
   describe('get', () => {
     it('returns the result of TestBed.inject', () => {
+      spyOn(TestBed, 'inject').and.returnValue('foo');
       // tslint:disable-next-line: deprecation
       const { get } = new Rendering(fixture, element, instance, {}, testSetup);
-      spyOn(TestBed, 'inject').and.returnValue('foo');
 
       // tslint:disable-next-line: deprecation
       expect(get(class {})).toBe('foo');
@@ -385,10 +387,16 @@ describe('Rendering', () => {
 
   describe('inject', () => {
     it('returns the result of TestBed.inject', () => {
-      const { inject } = new Rendering(fixture, element, instance, {}, testSetup);
       spyOn(TestBed, 'inject').and.returnValue('foo');
+      const { inject } = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(inject(class {})).toBe('foo');
+    });
+
+    it('can inject InjectionTokens', () => {
+      const { inject } = new Rendering(fixture, element, instance, {}, testSetup);
+
+      expect(inject(MY_TOKEN)).toBe(true);
     });
   });
 
