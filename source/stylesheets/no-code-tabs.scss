@@ -1,0 +1,60 @@
+@import "variables";
+////////////////////////////////////////////////////////////////////////////////
+// Remove the Right Hand Panel
+////////////////////////////////////////////////////////////////////////////////
+// These are the style overides for when the user wants to place code samples
+// in-line with the contents of the document
+
+.dark-box {
+  display: none;
+}
+
+%left-col {
+  margin-right: 0;
+}
+
+#slateWrapper .tocify-wrapper .lang-selector {
+  display: block;
+}
+
+#slateWrapper .page-wrapper .lang-selector {
+  display: none;
+}
+
+#slateWrapper .content > h1,
+#slateWrapper .content > h2,
+#slateWrapper .content > h3,
+#slateWrapper .content > h4,
+#slateWrapper .content > h5,
+#slateWrapper .content > h6,
+#slateWrapper .content > p,
+#slateWrapper .content > table,
+#slateWrapper .content > ul,
+#slateWrapper .content > ol,
+#slateWrapper .content > aside,
+#slateWrapper .content > dl {
+  margin-right: auto;
+}
+
+#slateWrapper .content pre,
+#slateWrapper .content blockquote {
+  width: 100%;
+  float: none;
+  clear: right;
+  max-height: none;
+}
+
+body {
+  font-size: 16px;
+}
+
+%right-col {
+  margin-left: 30px;
+  margin-right: 30px;
+  width: auto;
+  float: none;
+}
+
+%right-col + %left-col {
+  margin-top: $main-padding;
+}
