@@ -1,4 +1,4 @@
-import { DebugElement, EventEmitter, Type } from '@angular/core';
+import { DebugElement, EventEmitter, Type, InjectionToken, AbstractType } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockedDirective } from 'ng-mocks';
@@ -75,10 +75,11 @@ export class Rendering<TComponent, TBindings> {
   /**
    * @deprecated Use inject instead
    */
-  readonly get = <TClass>(queryClass: Type<TClass>): TClass => TestBed.inject(queryClass);
+  readonly get = <TValue>(queryClass: Type<TValue> | InjectionToken<TValue> | AbstractType<TValue>): TValue =>
+    TestBed.inject(queryClass);
 
-  readonly inject: typeof TestBed['inject'] = (...args: Parameters<typeof TestBed['inject']>) =>
-    TestBed.inject(...args);
+  // tslint:disable-next-line: member-ordering
+  readonly inject = TestBed.inject.bind(TestBed);
 
   readonly findStructuralDirective = <TDirective>(
     directiveClass: Type<TDirective>,

@@ -7,7 +7,9 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  InjectionToken,
+  Injectable
 } from '@angular/core';
 import {
   InvalidBindOnEntryComponentError,
@@ -59,6 +61,7 @@ class TestModule {}
 describe('Renderer', () => {
   let renderer: Renderer<TestComponent>;
   let setup: TestSetup<TestComponent>;
+
   beforeEach(() => {
     setup = new TestSetup(TestComponent, TestModule);
     setup.dontMock.push(TestComponent);
@@ -348,6 +351,40 @@ describe('Renderer', () => {
       } catch (e) {
         expect(e instanceof InvalidBindOnEntryComponentError).toBe(true);
       }
+    });
+
+    it('provides mocked things even if they are not in the module', async () => {
+      @Component({
+        template: '<i>Booya</i>'
+      })
+      class BasicComponent {}
+
+      @Injectable({ providedIn: 'root' })
+      class BasicService {
+        basicFunction() {
+          return 'Basic';
+        }
+      }
+
+      const MY_TOKEN = new InjectionToken('Foo', { providedIn: 'root', factory: () => 'FOO' });
+
+      @NgModule({
+        declarations: [BasicComponent]
+      })
+      class BasicModule {}
+
+      const mySetup = new TestSetup(BasicComponent, BasicModule);
+      mySetup.mocks.set(MY_TOKEN, 'MOCKED VALUE');
+      mySetup.mocks.set(BasicService, { basicFunction: () => 'MOCKED BASIC' });
+
+      const rendering = await new Renderer(mySetup).render();
+
+      const injectedService = rendering.inject(BasicService);
+      const injectedToken = rendering.inject(MY_TOKEN);
+
+      expect(injectedToken).toBe('MOCKED VALUE');
+      expect(injectedService.basicFunction()).toBe('MOCKED BASIC');
+      expect(injectedService.basicFunction).toHaveBeenCalled();
     });
   });
 });
