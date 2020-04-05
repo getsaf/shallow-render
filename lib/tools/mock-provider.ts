@@ -22,14 +22,15 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
   }
 
   const provide = isTypeProvider(provider) ? provider : provider.provide;
+  const hasMocks = setup.mocks.has(provide);
   const userMocks = setup.mocks.get(provide);
 
-  if (provide instanceof InjectionToken) {
-    return userMocks ? { provide, useValue: userMocks } : provider;
+  if (hasMocks && provide instanceof InjectionToken) {
+    return { provide, useValue: userMocks };
   }
 
   // TODO: What if setup.dontMock.includes(provide.useClass)?
-  if (!userMocks && recursiveIncludes(setup.dontMock, provide)) {
+  if (!hasMocks && recursiveIncludes(setup.dontMock, provide)) {
     return provider;
   }
 
