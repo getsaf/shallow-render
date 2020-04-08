@@ -125,4 +125,43 @@ describe('mockPrivider', () => {
     expect(providers[0].useValue).toBe('FOO');
     expect(providers[1].useValue()).toBe('BAR');
   });
+
+  it('mocks falsy injection tokens', () => {
+    const STRING_TOKEN = new InjectionToken<string>('My string token');
+    const BOOLEAN_TOKEN = new InjectionToken<boolean>('My boolean token');
+    const NUMBER_TOKEN = new InjectionToken<number>('My number token');
+    testSetup.mocks.set(STRING_TOKEN, '');
+    testSetup.mocks.set(BOOLEAN_TOKEN, false);
+    testSetup.mocks.set(NUMBER_TOKEN, 0);
+    const providers = mockProvider(
+      [
+        { provide: STRING_TOKEN, useValue: 'FOO' },
+        { provide: BOOLEAN_TOKEN, useValue: true },
+        { provide: NUMBER_TOKEN, useValue: 42 }
+      ],
+      testSetup
+    ) as any[];
+
+    expect(providers[0].useValue).toBe('');
+    expect(providers[1].useValue).toBe(false);
+    expect(providers[2].useValue).toBe(0);
+  });
+
+  it('automocks injection tokens', () => {
+    const STRING_TOKEN = new InjectionToken<string>('My string token');
+    const BOOLEAN_TOKEN = new InjectionToken<boolean>('My boolean token');
+    const NUMBER_TOKEN = new InjectionToken<number>('My number token');
+    const providers = mockProvider(
+      [
+        { provide: STRING_TOKEN, useValue: 'FOO' },
+        { provide: BOOLEAN_TOKEN, useValue: true },
+        { provide: NUMBER_TOKEN, useValue: 42 }
+      ],
+      testSetup
+    ) as any[];
+
+    expect(providers[0].useValue instanceof MockOfProvider).toBe(true);
+    expect(providers[1].useValue instanceof MockOfProvider).toBe(true);
+    expect(providers[2].useValue instanceof MockOfProvider).toBe(true);
+  });
 });
