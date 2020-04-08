@@ -275,6 +275,38 @@
               </ul>
           </li>
           <li>
+            <a href="#rendering" class="toc-h1 toc-link" data-title="Rendering">Rendering</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#with-an-html-template" class="toc-h2 toc-link" data-title="With an HTML template">With an HTML template</a>
+                  </li>
+                  <li>
+                    <a href="#html-template-and-bindings" class="toc-h2 toc-link" data-title="HTML template and bindings">HTML template and bindings</a>
+                  </li>
+                  <li>
+                    <a href="#no-template-or-bindings" class="toc-h2 toc-link" data-title="No template or bindings">No template or bindings</a>
+                  </li>
+                  <li>
+                    <a href="#only-bindings-simplest" class="toc-h2 toc-link" data-title="Only Bindings (simplest)">Only Bindings (simplest)</a>
+                  </li>
+                  <li>
+                    <a href="#component-lifecycle-change-detection" class="toc-h2 toc-link" data-title="Component Lifecycle (change detection)">Component Lifecycle (change detection)</a>
+                  </li>
+                  <li>
+                    <a href="#rendering-class" class="toc-h2 toc-link" data-title="Rendering Class">Rendering Class</a>
+                  </li>
+                  <li>
+                    <a href="#find-findcomponent-finddirective" class="toc-h2 toc-link" data-title="find, findComponent, findDirective"><code>find</code>, <code>findComponent</code>, <code>findDirective</code></a>
+                  </li>
+                  <li>
+                    <a href="#get" class="toc-h2 toc-link" data-title="get"><code>get</code></a>
+                  </li>
+                  <li>
+                    <a href="#inject" class="toc-h2 toc-link" data-title="inject"><code>inject</code></a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#mocking" class="toc-h1 toc-link" data-title="Mocking">Mocking</a>
               <ul class="toc-list-h2">
                   <li>
@@ -460,7 +492,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 
   <span class="nx">it</span><span class="p">(</span><span class="s2">"emits color when clicked"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="p">{</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">outputs</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span>
-      <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">color</span><span class="p">:</span> <span class="s2">"Red"</span> <span class="p">}</span>
+      <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">color</span><span class="p">:</span> <span class="s2">"Red"</span> <span class="p">},</span>
     <span class="p">});</span>
     <span class="nx">element</span><span class="p">.</span><span class="nx">click</span><span class="p">();</span>
 
@@ -472,7 +504,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 
 <p>Here&#39;s a standard TestBed spec for a component that uses a few other components, a directive and a pipe and handles click events:</p>
 <pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"MyComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">((</span><span class="k">async</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestModule</span><span class="p">({</span>
       <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">SomeModuleWithDependencies</span><span class="p">],</span>
       <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span>
@@ -485,9 +517,9 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
         <span class="nx">ButtonComponent</span><span class="p">,</span>
         <span class="nx">LinkComponent</span><span class="p">,</span>
         <span class="nx">FooDirective</span><span class="p">,</span>
-        <span class="nx">BarPipe</span>
+        <span class="nx">BarPipe</span><span class="p">,</span>
       <span class="p">],</span>
-      <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">MyService</span><span class="p">]</span>
+      <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">MyService</span><span class="p">],</span>
     <span class="p">})</span>
       <span class="p">.</span><span class="nx">compileComponents</span><span class="p">()</span>
       <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -524,7 +556,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
       [linkText]="linkText"
       (click)="handleClick($event)"
     &gt;&lt;/my-component&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">TestHostComponent</span> <span class="p">{</span>
   <span class="na">linkLabel</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
@@ -618,7 +650,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="na">template</span><span class="p">:</span> <span class="s2">`
     &lt;hello [person]="person"&gt;&lt;/hello&gt;
     &lt;person-details [person]="person"&gt;&lt;/person-details&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">DashboardComponent</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
@@ -630,7 +662,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="na">template</span><span class="p">:</span> <span class="s2">`
     &lt;h1&gt;Hello {{ person.name }}&lt;/h1&gt;
     &lt;last-login [person]="person"&gt;&lt;/last-login&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">HelloComponent</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
@@ -641,7 +673,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="na">selector</span><span class="p">:</span> <span class="s2">"last-login"</span><span class="p">,</span>
   <span class="na">template</span><span class="p">:</span> <span class="s2">`
     &lt;div *ngIf="loaded"&gt;Your last login was {{ lastLogin | date }}&lt;/div&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">LastLoginComponent</span> <span class="k">extends</span> <span class="nx">NgOnInit</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
@@ -663,7 +695,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
         {{ detail.name }}: {{ detail.value }}
       &lt;/li&gt;
     &lt;/ul&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">PersonDetailsComponent</span> <span class="k">implements</span> <span class="nx">NgOnInit</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
@@ -678,7 +710,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="kd">let</span> <span class="na">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
   <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
-      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">DashboardModule</span><span class="p">]</span> <span class="c1">// Take the whole thing</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">DashboardModule</span><span class="p">],</span> <span class="c1">// Take the whole thing</span>
     <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
 
     <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
@@ -732,8 +764,8 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
       <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span>
         <span class="nx">DashboardComponent</span><span class="p">,</span>
         <span class="nx">MockHelloComponent</span><span class="p">,</span>
-        <span class="nx">MockPersonDetailsComponent</span>
-      <span class="p">]</span>
+        <span class="nx">MockPersonDetailsComponent</span><span class="p">,</span>
+      <span class="p">],</span>
     <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
 
     <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
@@ -750,7 +782,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
       <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">DashboardComponent</span><span class="p">],</span>
-      <span class="na">schemas</span><span class="p">:</span> <span class="p">[</span><span class="nx">NO_ERRORS_SCHEMA</span><span class="p">]</span>
+      <span class="na">schemas</span><span class="p">:</span> <span class="p">[</span><span class="nx">NO_ERRORS_SCHEMA</span><span class="p">],</span>
     <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
 
     <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
@@ -776,7 +808,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">PersonDetailsComponent</span><span class="p">,</span> <span class="nx">DashboardModule</span><span class="p">)</span>
     <span class="c1">// the mock below is type-checked so the result of getDetailsFor must match the signature of the PersonDetailsService</span>
     <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">PersonDetailsService</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">getDetailsFor</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">({</span> <span class="na">address</span><span class="p">:</span> <span class="s2">"123 Foo St"</span> <span class="p">})</span>
+      <span class="na">getDetailsFor</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">({</span> <span class="na">address</span><span class="p">:</span> <span class="s2">"123 Foo St"</span> <span class="p">}),</span>
     <span class="p">});</span>
 <span class="p">});</span>
 <span class="cm">/* tests... */</span>
@@ -800,7 +832,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </blockquote>
 <pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s2">"foo"</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;h1&gt;{{label}}&lt;/h1&gt;"</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;h1&gt;{{label}}&lt;/h1&gt;"</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="k">export</span> <span class="kr">class</span> <span class="nx">FooComponent</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">label</span> <span class="o">=</span> <span class="s2">"FOO!!"</span><span class="p">;</span>
@@ -811,7 +843,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </blockquote>
 <pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">NgModule</span><span class="p">({</span>
   <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">FooComponent</span><span class="p">],</span>
-  <span class="na">exports</span><span class="p">:</span> <span class="p">[</span><span class="nx">FooComponent</span><span class="p">]</span>
+  <span class="na">exports</span><span class="p">:</span> <span class="p">[</span><span class="nx">FooComponent</span><span class="p">],</span>
 <span class="p">})</span>
 <span class="k">export</span> <span class="kr">class</span> <span class="nx">FooModule</span> <span class="p">{}</span>
 </code></pre>
@@ -922,6 +954,144 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
     <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="s2">"2000"</span><span class="p">);</span>
   <span class="p">});</span>
 <span class="p">});</span>
+</code></pre><h1 id='rendering'>Rendering</h1>
+<p>Rendering in Shallow is pretty straight-forward.</p>
+<h2 id='with-an-html-template'>With an HTML template</h2>
+<p>The most basic way is with an HTML template:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="s1">'&lt;my-component label="foo" [my-flag]="true"&gt;&lt;/my-component&gt;'</span>
+<span class="p">);</span>
+</code></pre><h2 id='html-template-and-bindings'>HTML template and bindings</h2>
+<p>You may pass in bindings like so:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="s1">'&lt;my-component [myLabel]="label" [myFlag]="flag" (myOutput)="output"&gt;&lt;/my-component&gt;'</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="na">bind</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">label</span><span class="p">:</span> <span class="s2">"Foo"</span><span class="p">,</span>
+      <span class="na">flag</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">output</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"output fired"</span><span class="p">),</span>
+    <span class="p">},</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+</code></pre><h2 id='no-template-or-bindings'>No template or bindings</h2>
+<p>If you&#39;re not interested in using HTML templates, you may skip the template altogether:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</code></pre>
+<p>This will render your component with no properties set. You may set your own and call <code>rendering.fixture.detectChanges()</code> as you would in any other TestBed test.</p>
+<h2 id='only-bindings-simplest'>Only Bindings (simplest)</h2>
+<p>Finally, you may skip the template and bind <em>directly</em> to your component (the least wordy method):
+If you&#39;re not interested in using HTML templates, you may skip the template altogether:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">myLabel</span><span class="p">:</span> <span class="s2">"Foo"</span><span class="p">,</span> <span class="na">myFlag</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+</code></pre>
+<p>Two rules must follow here:</p>
+
+<ul>
+<li>The properties you send in <em>must</em> be marked with the <code>@Input</code> decorator.</li>
+<li>You don&#39;t need to pass in outputs, they are automatically mocked!</li>
+</ul>
+<h2 id='component-lifecycle-change-detection'>Component Lifecycle (change detection)</h2>
+<p>On every render, your component will go through the normal component lifecycle (eg: <code>ngOnInit</code>, <code>ngOnChange</code>, etc.) via a call to <code>fixture.detectChanges()</code>. You may disable automatic change-detection on render via a render option.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">detectChanges</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span> <span class="c1">// Skip automatic change-detection</span>
+<span class="c1">// Do some setup...</span>
+<span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span> <span class="c1">// Call it manually</span>
+</code></pre>
+<hr>
+
+<p>No matter which way you choose render, the result is a <code>Rendering</code> class instance (<a href="https://github.com/getsaf/shallow-render/blob/master/lib/models/rendering.ts"><em>source</em></a>).</p>
+<h2 id='rendering-class'>Rendering Class</h2>
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+<th>type or return type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>instance</code></td>
+<td>Instance of the rendered <code>TestComponent</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>element</code></td>
+<td>The <code>DebugElement</code> of the rendered <code>TestComponent</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>TestBed</code></td>
+<td>Easy access to <code>TestBed</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fixture</code></td>
+<td>The <code>TestBed</code> fixture from rendering the component</td>
+<td></td>
+</tr>
+<tr>
+<td><code>bindings</code></td>
+<td>The bindings object used in your render (if any)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="#find"><code>find(CSS/Directive/Component)</code></a></td>
+<td>Finds elements by CSS or Directive/Component</td>
+<td><a href="QueryMatch-Class"><code>QueryMatch&lt;DebugElement&gt;</code></a></td>
+</tr>
+<tr>
+<td><a href="#findcomponent"><code>findComponent(Component)</code></a></td>
+<td>Finds and returns all matches for a Component</td>
+<td><a href="QueryMatch-Class"><code>QueryMatch&lt;TComponent&gt;</code></a></td>
+</tr>
+<tr>
+<td><a href="#finddirective"><code>findDirective(Directive)</code></a></td>
+<td>Finds and returns all matches for a Directive</td>
+<td><a href="QueryMatch-Class"><code>QueryMatch&lt;TDirective&gt;</code></a></td>
+</tr>
+<tr>
+<td><a href="#inject"><code>inject(Token/Provider)</code></a></td>
+<td>Identical to <code>TestBed.inject</code></td>
+<td><code>TProvider</code></td>
+</tr>
+<tr>
+<td><a href="#get"><code>get(Token/Provider)</code></a></td>
+<td>Deprecated (use <code>inject</code> instead)</td>
+<td><code>TProvider</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+  Note that ALL of these methods and properties can be destructured from the rendering which allows for some syntactic flexibility when rendering.
+</aside>
+
+<p>For example:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">label</span> <span class="o">=</span> <span class="nx">rendering</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">"label"</span><span class="p">);</span>
+</code></pre><h2 id='find-findcomponent-finddirective'><code>find</code>, <code>findComponent</code>, <code>findDirective</code></h2>
+<p>See the section on <a href="#querying">Querying</a> for details.</p>
+<h2 id='get'><code>get</code></h2>
+<aside class="warning">
+This function has been deprecated and will be removed in the next release. Please use <a href="#inject">inject</a> instead.
+</aside>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">get</span><span class="p">(</span><span class="nx">ProvidedClass</span> <span class="o">|</span> <span class="nx">InjectionToken</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">QueryMatch</span><span class="o">&lt;</span><span class="nx">TProvider</span><span class="o">&gt;</span>
+</code></pre>
+<p>This is a type-safe version of <code>TestBed.get()</code>.</p>
+<h2 id='inject'><code>inject</code></h2><pre class="highlight typescript tab-typescript"><code><span class="nx">inject</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="nx">Type</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="o">|</span> <span class="nx">InjectionToken</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="o">|</span> <span class="nx">AbstractType</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">notFoundValue</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">flags</span><span class="p">?:</span> <span class="nx">InjectFlags</span><span class="p">):</span> <span class="nx">T</span> <span class="o">|</span> <span class="kc">null</span>
+</code></pre>
+<p>This is a short-hand for Angular&#39;s <a href="https://angular.io/api/core/testing/TestBed#inject"><code>TestBed.inject</code></a></p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">inject</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">get</span><span class="p">(</span><span class="nx">MyService</span><span class="p">);</span> <span class="c1">// Returns an instance of MyService (or the mock if it's mocked) from the injector</span>
+
+<span class="nx">expect</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">getFoo</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+</code></pre>
+<p>You may also use <code>inject</code> to pull service instances and add more mocks/spys on them <em>AFTER</em> rendering. (This is usually done <em>before</em> rendering by using <code>shallow.mock()</code> but sometimes you need to alter mocks after the initial rendering. I recommend a type-safe mocking library like <a href="https://www.npmjs.com/package/ts-mocks">ts-mocks</a> to do your mocking.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">inject</span><span class="p">,</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span>
+  <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">MyService</span><span class="p">,</span> <span class="p">{</span> <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"FIRST FOO"</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">inject</span><span class="p">(</span><span class="nx">MyService</span><span class="p">);</span>
+<span class="k">new</span> <span class="nx">Mock</span><span class="p">(</span><span class="nx">service</span><span class="p">).</span><span class="nx">extend</span><span class="p">({</span> <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"SECOND FOO"</span> <span class="p">});</span> <span class="c1">// &lt;-- Using ts-mocks here to re-mock a method</span>
+<span class="nx">find</span><span class="p">(</span><span class="s2">"button"</span><span class="p">).</span><span class="nx">triggerEventHandler</span><span class="p">(</span><span class="s2">"click"</span><span class="p">,</span> <span class="p">{});</span>
+<span class="kd">const</span> <span class="nx">responseLabel</span> <span class="o">=</span> <span class="nx">find</span><span class="p">(</span><span class="s2">"label"</span><span class="p">);</span>
+
+<span class="nx">expect</span><span class="p">(</span><span class="nx">responseLabel</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"SECOND FOO"</span><span class="p">);</span>
 </code></pre><h1 id='mocking'>Mocking</h1>
 <p>When writing a spec, you generally want to isolate the component as much as possible and stub/mock out everything else. This lets you really hone in on just the component and reduce the noise of things the component depends on. Mocking in Angular can be tricky, you want to mock things in the most type-safe manner possible.</p>
 
@@ -961,7 +1131,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 <pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span>
   <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="p">{</span>
     <span class="na">get</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">),</span>
-    <span class="na">post</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s2">"Fail!"</span><span class="p">)</span>
+    <span class="na">post</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s2">"Fail!"</span><span class="p">),</span>
   <span class="p">})</span>
   <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">BarService</span><span class="p">,</span> <span class="p">{</span> <span class="na">doBar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">});</span>
 </code></pre>
@@ -1033,7 +1203,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 <p><em>in global test setup</em></p>
 <pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysMock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo get"</span><span class="p">,</span>
-  <span class="na">postFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo post"</span>
+  <span class="na">postFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo post"</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre><h2 id='global-providers-with-alwaysprovide'>Global providers with <code>alwaysProvide</code></h2>
 <p>There are some use cases when an Angular app provides something (usually a configuration) at the top-level of the application. These instances should follow the <a href="https://angular.io/guide/singleton-services"><code>forRoot</code></a> pattern. For these cases, you may want specs to have a similar environment setup where the &#39;root&#39; providers are globally provided to all specs. This can be accomplished by using <code>Shallow.alwaysProvide</code>.</p>
@@ -1048,13 +1218,13 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </code></pre>
 <p>You may also provide a mocked version by chaining <code>alwaysProvide</code> with <code>alwaysMock</code>:</p>
 <pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysProvide</span><span class="p">(</span><span class="nx">MyGlobalService</span><span class="p">).</span><span class="nx">alwaysMock</span><span class="p">(</span><span class="nx">MyGlobalService</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">getSomeValue</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"Globally mocked value"</span>
+  <span class="na">getSomeValue</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"Globally mocked value"</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre>
 <p>Now, all specs will receive a <em>MOCKED</em> <code>MyGlobalService</code> when requested for injection.</p>
 <h2 id='mocking-pipes-with-mockpipe'>Mocking Pipes with <code>mockPipe</code></h2>
 <p>Angular pipes are a little special. They are used to transform data in your templates. By default, Shallow will mock all pipes to have no output. Your specs may want to provide mocks for these transforms to allow validation that a pipe received the correct input data.</p>
-<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">mockPipe</span><span class="p">(</span><span class="nx">MyPipe</span><span class="p">,</span> <span class="nx">input</span> <span class="o">=&gt;</span> <span class="s2">`MyPipe: </span><span class="p">${</span><span class="nx">input</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">mockPipe</span><span class="p">(</span><span class="nx">MyPipe</span><span class="p">,</span> <span class="p">(</span><span class="nx">input</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="s2">`MyPipe: </span><span class="p">${</span><span class="nx">input</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
 </code></pre>
 <p>Configures <code>Shallow</code> to have the <code>MyPipe</code> always perform the following action on input data. This lets you inspect your templates and controls for your Pipe&#39;s side-effects.</p>
 <h2 id='replace-a-module-with-a-test-module'>Replace a module with a test module</h2>
@@ -1074,7 +1244,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </code></pre>
 <p>Regular objects can be mocked in this manner too:</p>
 <pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">FOO</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">bar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"bar"</span>
+  <span class="na">bar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"bar"</span><span class="p">,</span>
 <span class="p">};</span>
 </code></pre>
 <p>Can be mocked with:</p>
@@ -1095,7 +1265,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="na">template</span><span class="p">:</span> <span class="s2">`
     &lt;h1 *ngIf="big" class="large"&gt;{{ label }}&lt;/h1&gt;
     &lt;label *ngIf="!big"&gt;{{ label }}&lt;/label&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">label</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
@@ -1122,7 +1292,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 
 <span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s2">"person"</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;li&gt;{{person.name}}&lt;/li&gt;"</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;li&gt;{{person.name}}&lt;/li&gt;"</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">PersonComponent</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
@@ -1132,7 +1302,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="na">selector</span><span class="p">:</span> <span class="s2">"people"</span><span class="p">,</span>
   <span class="na">template</span><span class="p">:</span> <span class="s2">`
     &lt;person *ngFor="let p of people" [person]="p"&gt;&lt;/person&gt;
-  `</span>
+  `</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">PeopleComponent</span> <span class="p">{</span>
   <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">people</span><span class="p">:</span> <span class="nx">Person</span><span class="p">[];</span>
@@ -1200,10 +1370,10 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 <p>test</p>
 </blockquote>
 <pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">matches</span> <span class="o">=</span> <span class="nx">find</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">);</span>
-<span class="nx">expect</span><span class="p">(</span><span class="nx">matches</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">match</span> <span class="o">=&gt;</span> <span class="nx">match</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">([</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">matches</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">match</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">match</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">([</span>
   <span class="s2">"One"</span><span class="p">,</span>
   <span class="s2">"Two"</span><span class="p">,</span>
-  <span class="s2">"Three"</span>
+  <span class="s2">"Three"</span><span class="p">,</span>
 <span class="p">]);</span>
 </code></pre>
 <aside class="warning">
@@ -1246,13 +1416,13 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="kd">const</span> <span class="p">{</span>
     <span class="nx">findStructuralDirective</span><span class="p">,</span>
     <span class="nx">renderStructuralDirective</span><span class="p">,</span>
-    <span class="nx">find</span>
+    <span class="nx">find</span><span class="p">,</span>
   <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
 
   <span class="c1">// Find one that has a particular input property assigned to 'first-foo'</span>
   <span class="kd">const</span> <span class="nx">firstFoo</span> <span class="o">=</span> <span class="nx">findStructuralDirective</span><span class="p">(</span>
     <span class="nx">FooDirective</span><span class="p">,</span>
-    <span class="nx">d</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">inputOnDirective</span> <span class="o">===</span> <span class="s2">"first-foo"</span>
+    <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">inputOnDirective</span> <span class="o">===</span> <span class="s2">"first-foo"</span>
   <span class="p">);</span>
   <span class="nx">renderStructuralDirective</span><span class="p">(</span><span class="nx">firstFoo</span><span class="p">);</span>
 
@@ -1287,11 +1457,11 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="kd">const</span> <span class="p">{</span>
     <span class="nx">find</span><span class="p">,</span>
     <span class="nx">findStructuralDirective</span><span class="p">,</span>
-    <span class="nx">renderStructuralDirective</span>
+    <span class="nx">renderStructuralDirective</span><span class="p">,</span>
   <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">age</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span> <span class="na">streetNumber</span><span class="p">:</span> <span class="mi">50</span> <span class="p">}</span> <span class="p">});</span>
   <span class="kd">const</span> <span class="nx">ageDirective</span> <span class="o">=</span> <span class="nx">findStructuralDirective</span><span class="p">(</span>
     <span class="nx">WhenEvenDirective</span><span class="p">,</span>
-    <span class="nx">d</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">whenEven</span> <span class="o">===</span> <span class="mi">37</span>
+    <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">whenEven</span> <span class="o">===</span> <span class="mi">37</span>
   <span class="p">);</span>
   <span class="nx">renderStructuralDirective</span><span class="p">(</span><span class="nx">ageDirective</span><span class="p">);</span>
 
@@ -1319,7 +1489,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </code></pre><h1 id='configuration'>Configuration</h1><h2 id='global-configuration-2'>Global Configuration</h2>
 <p>In your karma test init, you may setup mocks, providers, etc. globally. These settings will automatically apply to <em>all</em> shallow-render tests. Any mocks you provide directly in your spec will override the global mocks so you still have total control over your mocks.</p>
 <pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysMock</span><span class="p">(</span><span class="nx">WeatherService</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">willItRain</span><span class="p">:</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="kc">true</span>
+  <span class="na">willItRain</span><span class="p">:</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="kc">true</span><span class="p">,</span>
 <span class="p">}).</span><span class="nx">alwaysReplaceModule</span><span class="p">(</span><span class="nx">HttpClientModule</span><span class="p">,</span> <span class="nx">HttpClientTestingModule</span><span class="p">);</span>
 </code></pre><h2 id='per-spec-configuration'>Per-spec Configuration</h2>
 <p>Most of the time, you will configure shallow specs via your <code>beforeEach</code> block. These settings will only apply to the tests in your <code>describe</code> block. Any mocks you provide directly in your spec will override the mocks from your <code>beforeEach</code> setup so you still have total control.</p>
@@ -1417,7 +1587,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
   <span class="nx">RouterModule</span><span class="p">,</span>
   <span class="nx">RouterTestingModule</span><span class="p">.</span><span class="nx">withRoutes</span><span class="p">({</span>
     <span class="na">path</span><span class="p">:</span> <span class="s2">"**"</span><span class="p">,</span>
-    <span class="na">component</span><span class="p">:</span> <span class="kr">class</span> <span class="nx">DummyComponent</span> <span class="p">{}</span>
+    <span class="na">component</span><span class="p">:</span> <span class="kr">class</span> <span class="nx">DummyComponent</span> <span class="p">{},</span>
   <span class="p">})</span>
 <span class="p">);</span>
 </code></pre>
@@ -1439,7 +1609,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </code></pre><pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s2">"foo"</span><span class="p">,</span>
   <span class="na">template</span><span class="p">:</span>
-    <span class="s1">'&lt;ng-container *ngComponentOutlet="componentService.getDynamicComponent()" /&gt;'</span>
+    <span class="s1">'&lt;ng-container *ngComponentOutlet="componentService.getDynamicComponent()" /&gt;'</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
   <span class="kd">constructor</span><span class="p">(</span><span class="k">public</span> <span class="nx">componentService</span><span class="p">:</span> <span class="nx">ComponentService</span><span class="p">)</span> <span class="p">{}</span>
