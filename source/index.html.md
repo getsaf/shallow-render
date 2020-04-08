@@ -71,7 +71,7 @@ describe("ColorLinkComponent", () => {
 
   it("emits color when clicked", async () => {
     const { element, outputs } = await shallow.render({
-      bind: { color: "Red" }
+      bind: { color: "Red" },
     });
     element.click();
 
@@ -88,7 +88,7 @@ Here's a standard TestBed spec for a component that uses a few other components,
 
 ```typescript
 describe("MyComponent", () => {
-  beforeEach(async => {
+  beforeEach((async) => {
     return TestBed.configureTestModule({
       imports: [SomeModuleWithDependencies],
       declarations: [
@@ -101,9 +101,9 @@ describe("MyComponent", () => {
         ButtonComponent,
         LinkComponent,
         FooDirective,
-        BarPipe
+        BarPipe,
       ],
-      providers: [MyService]
+      providers: [MyService],
     })
       .compileComponents()
       .then(() => {
@@ -140,7 +140,7 @@ describe("MyComponent", () => {
       [linkText]="linkText"
       (click)="handleClick($event)"
     ></my-component>
-  `
+  `,
 })
 class TestHostComponent {
   linkLabel: string;
@@ -230,7 +230,7 @@ Say you have a component you want to test:
   template: `
     <hello [person]="person"></hello>
     <person-details [person]="person"></person-details>
-  `
+  `,
 })
 class DashboardComponent {
   @Input() person: Person;
@@ -245,7 +245,7 @@ And my child components look like this:
   template: `
     <h1>Hello {{ person.name }}</h1>
     <last-login [person]="person"></last-login>
-  `
+  `,
 })
 class HelloComponent {
   @Input() person: Person;
@@ -259,7 +259,7 @@ The last-login child component which uses a service...
   selector: "last-login",
   template: `
     <div *ngIf="loaded">Your last login was {{ lastLogin | date }}</div>
-  `
+  `,
 })
 class LastLoginComponent extends NgOnInit {
   @Input() person: Person;
@@ -284,7 +284,7 @@ The person-details component which also uses a service...
         {{ detail.name }}: {{ detail.value }}
       </li>
     </ul>
-  `
+  `,
 })
 class PersonDetailsComponent implements NgOnInit {
   @Input() person: Person;
@@ -306,7 +306,7 @@ describe("DashboardComponent", () => {
   let fixture: ComponentFixture<DashboardComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardModule] // Take the whole thing
+      imports: [DashboardModule], // Take the whole thing
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
@@ -370,8 +370,8 @@ describe("DashboardComponent", () => {
       declarations: [
         DashboardComponent,
         MockHelloComponent,
-        MockPersonDetailsComponent
-      ]
+        MockPersonDetailsComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
@@ -393,7 +393,7 @@ describe("DashboardComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DashboardComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
@@ -429,7 +429,7 @@ beforeEach(() => {
   shallow = new Shallow(PersonDetailsComponent, DashboardModule)
     // the mock below is type-checked so the result of getDetailsFor must match the signature of the PersonDetailsService
     .mock(PersonDetailsService, {
-      getDetailsFor: () => Promise.resolve({ address: "123 Foo St" })
+      getDetailsFor: () => Promise.resolve({ address: "123 Foo St" }),
     });
 });
 /* tests... */
@@ -458,7 +458,7 @@ For this example, we have `FooComponent` which lives in the `FooModule` like so:
 ```typescript
 @Component({
   selector: "foo",
-  template: "<h1>{{label}}</h1>"
+  template: "<h1>{{label}}</h1>",
 })
 export class FooComponent {
   @Input() label = "FOO!!";
@@ -470,7 +470,7 @@ export class FooComponent {
 ```typescript
 @NgModule({
   declarations: [FooComponent],
-  exports: [FooComponent]
+  exports: [FooComponent],
 })
 export class FooModule {}
 ```
@@ -623,6 +623,146 @@ describe("CarComponent", () => {
 });
 ```
 
+# Rendering
+
+Rendering in Shallow is pretty straight-forward.
+
+## With an HTML template
+
+The most basic way is with an HTML template:
+
+```typescript
+const rendering = await shallow.render(
+  '<my-component label="foo" [my-flag]="true"></my-component>'
+);
+```
+
+## HTML template and bindings
+
+You may pass in bindings like so:
+
+```typescript
+const rendering = await shallow.render(
+  '<my-component [myLabel]="label" [myFlag]="flag" (myOutput)="output"></my-component>',
+  {
+    bind: {
+      label: "Foo",
+      flag: true,
+      output: () => console.log("output fired"),
+    },
+  }
+);
+```
+
+## No template or bindings
+
+If you're not interested in using HTML templates, you may skip the template altogether:
+
+```typescript
+const rendering = await shallow.render();
+```
+
+This will render your component with no properties set. You may set your own and call `rendering.fixture.detectChanges()` as you would in any other TestBed test.
+
+## Only Bindings (simplest)
+
+Finally, you may skip the template and bind _directly_ to your component (the least wordy method):
+If you're not interested in using HTML templates, you may skip the template altogether:
+
+```typescript
+const rendering = await shallow.render({ myLabel: "Foo", myFlag: true });
+```
+
+Two rules must follow here:
+
+- The properties you send in _must_ be marked with the `@Input` decorator.
+- You don't need to pass in outputs, they are automatically mocked!
+
+## Component Lifecycle (change detection)
+
+On every render, your component will go through the normal component lifecycle (eg: `ngOnInit`, `ngOnChange`, etc.) via a call to `fixture.detectChanges()`. You may disable automatic change-detection on render via a render option.
+
+```typescript
+const { fixture } = await shallow.render({ detectChanges: false }); // Skip automatic change-detection
+// Do some setup...
+fixture.detectChanges(); // Call it manually
+```
+
+---
+
+No matter which way you choose render, the result is a `Rendering` class instance ([_source_](https://github.com/getsaf/shallow-render/blob/master/lib/models/rendering.ts)).
+
+## Rendering Class
+
+| Property                                     | Description                                        | type or return type                            |
+| -------------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
+| `instance`                                   | Instance of the rendered `TestComponent`           |                                                |
+| `element`                                    | The `DebugElement` of the rendered `TestComponent` |                                                |
+| `TestBed`                                    | Easy access to `TestBed`                           |                                                |
+| `fixture`                                    | The `TestBed` fixture from rendering the component |                                                |
+| `bindings`                                   | The bindings object used in your render (if any)   |                                                |
+| [`find(CSS/Directive/Component)`](#find)     | Finds elements by CSS or Directive/Component       | [`QueryMatch<DebugElement>`](QueryMatch-Class) |
+| [`findComponent(Component)`](#findcomponent) | Finds and returns all matches for a Component      | [`QueryMatch<TComponent>`](QueryMatch-Class)   |
+| [`findDirective(Directive)`](#finddirective) | Finds and returns all matches for a Directive      | [`QueryMatch<TDirective>`](QueryMatch-Class)   |
+| [`inject(Token/Provider)`](#inject)          | Identical to `TestBed.inject`                      | `TProvider`                                    |
+| [`get(Token/Provider)`](#get)                | Deprecated (use `inject` instead)                  | `TProvider`                                    |
+
+<aside class="notice">
+  Note that ALL of these methods and properties can be destructured from the rendering which allows for some syntactic flexibility when rendering.
+</aside>
+
+For example:
+
+```typescript
+const rendering = await shallow.render();
+const label = rendering.find("label");
+```
+
+## `find`, `findComponent`, `findDirective`
+
+See the section on [Querying](#querying) for details.
+
+## `get`
+
+<aside class="warning">
+This function has been deprecated and will be removed in the next release. Please use <a href="#inject">inject</a> instead.
+</aside>
+
+```typescript
+get(ProvidedClass | InjectionToken) => QueryMatch<TProvider>
+```
+
+This is a type-safe version of `TestBed.get()`.
+
+## `inject`
+
+```typescript
+inject<T>(token: Type<T> | InjectionToken<T> | AbstractType<T>, notFoundValue: null, flags?: InjectFlags): T | null
+```
+
+This is a short-hand for Angular's [`TestBed.inject`](https://angular.io/api/core/testing/TestBed#inject)
+
+```typescript
+const { inject } = await shallow.render();
+const service = get(MyService); // Returns an instance of MyService (or the mock if it's mocked) from the injector
+
+expect(service.getFoo).toHaveBeenCalled();
+```
+
+You may also use `inject` to pull service instances and add more mocks/spys on them _AFTER_ rendering. (This is usually done _before_ rendering by using `shallow.mock()` but sometimes you need to alter mocks after the initial rendering. I recommend a type-safe mocking library like [ts-mocks](https://www.npmjs.com/package/ts-mocks) to do your mocking.
+
+```typescript
+const { inject, find } = await shallow
+  .mock(MyService, { getFoo: () => "FIRST FOO" })
+  .render();
+const service = inject(MyService);
+new Mock(service).extend({ getFoo: () => "SECOND FOO" }); // <-- Using ts-mocks here to re-mock a method
+find("button").triggerEventHandler("click", {});
+const responseLabel = find("label");
+
+expect(responseLabel.nativeElement.innerText).toBe("SECOND FOO");
+```
+
 # Mocking
 
 When writing a spec, you generally want to isolate the component as much as possible and stub/mock out everything else. This lets you really hone in on just the component and reduce the noise of things the component depends on. Mocking in Angular can be tricky, you want to mock things in the most type-safe manner possible.
@@ -671,7 +811,7 @@ If there are multiple services, mocks are chain-able so you they can be stacked:
 shallow
   .mock(FooService, {
     get: () => Promise.resolve("foo"),
-    post: () => Promise.reject("Fail!")
+    post: () => Promise.reject("Fail!"),
   })
   .mock(BarService, { doBar: () => Promise.resolve(true) });
 ```
@@ -781,7 +921,7 @@ _in global test setup_
 ```javascript
 Shallow.alwaysMock(FooService, {
   getFoo: () => "foo get",
-  postFoo: () => "foo post"
+  postFoo: () => "foo post",
 });
 ```
 
@@ -807,7 +947,7 @@ You may also provide a mocked version by chaining `alwaysProvide` with `alwaysMo
 
 ```javascript
 Shallow.alwaysProvide(MyGlobalService).alwaysMock(MyGlobalService, {
-  getSomeValue: () => "Globally mocked value"
+  getSomeValue: () => "Globally mocked value",
 });
 ```
 
@@ -818,7 +958,7 @@ Now, all specs will receive a _MOCKED_ `MyGlobalService` when requested for inje
 Angular pipes are a little special. They are used to transform data in your templates. By default, Shallow will mock all pipes to have no output. Your specs may want to provide mocks for these transforms to allow validation that a pipe received the correct input data.
 
 ```typescript
-shallow.mockPipe(MyPipe, input => `MyPipe: ${input}`);
+shallow.mockPipe(MyPipe, (input) => `MyPipe: ${input}`);
 ```
 
 Configures `Shallow` to have the `MyPipe` always perform the following action on input data. This lets you inspect your templates and controls for your Pipe's side-effects.
@@ -857,7 +997,7 @@ Regular objects can be mocked in this manner too:
 
 ```typescript
 const FOO = {
-  bar: () => "bar"
+  bar: () => "bar",
 };
 ```
 
@@ -899,7 +1039,7 @@ Accepts a CSS selector, Component class or Directive class and returns all the r
   template: `
     <h1 *ngIf="big" class="large">{{ label }}</h1>
     <label *ngIf="!big">{{ label }}</label>
-  `
+  `,
 })
 class MyComponent {
   @Input() label: string;
@@ -942,7 +1082,7 @@ class Person {
 
 @Component({
   selector: "person",
-  template: "<li>{{person.name}}</li>"
+  template: "<li>{{person.name}}</li>",
 })
 class PersonComponent {
   @Input() person: Person;
@@ -952,7 +1092,7 @@ class PersonComponent {
   selector: "people",
   template: `
     <person *ngFor="let p of people" [person]="p"></person>
-  `
+  `,
 })
 class PeopleComponent {
   @Input() people: Person[];
@@ -1048,10 +1188,10 @@ If you expect multiple items, use `Array` methods on the matches:
 
 ```typescript
 const matches = find("foo");
-expect(matches.map(match => match.nativeElement.innerText)).toEqual([
+expect(matches.map((match) => match.nativeElement.innerText)).toEqual([
   "One",
   "Two",
-  "Three"
+  "Three",
 ]);
 ```
 
@@ -1126,13 +1266,13 @@ it("can render structural directives", async () => {
   const {
     findStructuralDirective,
     renderStructuralDirective,
-    find
+    find,
   } = await shallow.render();
 
   // Find one that has a particular input property assigned to 'first-foo'
   const firstFoo = findStructuralDirective(
     FooDirective,
-    d => d.inputOnDirective === "first-foo"
+    (d) => d.inputOnDirective === "first-foo"
   );
   renderStructuralDirective(firstFoo);
 
@@ -1178,11 +1318,11 @@ it("can find structural directives", async () => {
   const {
     find,
     findStructuralDirective,
-    renderStructuralDirective
+    renderStructuralDirective,
   } = await shallow.render({ bind: { age: 37, streetNumber: 50 } });
   const ageDirective = findStructuralDirective(
     WhenEvenDirective,
-    d => d.whenEven === 37
+    (d) => d.whenEven === 37
   );
   renderStructuralDirective(ageDirective);
 
@@ -1231,7 +1371,7 @@ In your karma test init, you may setup mocks, providers, etc. globally. These se
 
 ```typescript
 Shallow.alwaysMock(WeatherService, {
-  willItRain: async () => true
+  willItRain: async () => true,
 }).alwaysReplaceModule(HttpClientModule, HttpClientTestingModule);
 ```
 
@@ -1282,7 +1422,7 @@ Shallow.alwaysReplaceModule(
   RouterModule,
   RouterTestingModule.withRoutes({
     path: "**",
-    component: class DummyComponent {}
+    component: class DummyComponent {},
   })
 );
 ```
@@ -1312,7 +1452,7 @@ class ComponentService {
 @Component({
   selector: "foo",
   template:
-    '<ng-container *ngComponentOutlet="componentService.getDynamicComponent()" />'
+    '<ng-container *ngComponentOutlet="componentService.getDynamicComponent()" />',
 })
 class MyComponent {
   constructor(public componentService: ComponentService) {}
