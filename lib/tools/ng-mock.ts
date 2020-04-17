@@ -91,9 +91,12 @@ const extendMockWithStubs = (mock: Type<any>, stubs: object, className: string):
 const createExtendableNgMockClass = (from: Type<any>): Type<any> => {
   // For some reason I cannot directly extend classes from ng-mocks?
   // tslint:disable-next-line: only-arrow-functions
-  const OldMock = function() {};
-  OldMock.prototype = from.prototype;
-  return OldMock as any;
+  const ExtendableMock = function(...args: any) {
+    const thing = new (from as any)(...args);
+    return thing;
+  };
+  ExtendableMock.prototype = from.prototype;
+  return ExtendableMock as any;
 };
 
 const shouldRenderOnInit = (setup: TestSetup<any>, thing: any) =>

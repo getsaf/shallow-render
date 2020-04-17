@@ -1,4 +1,13 @@
-import { Component, Directive, ModuleWithProviders, NgModule, Pipe, PipeTransform } from '@angular/core';
+import {
+  Component,
+  Directive,
+  ModuleWithProviders,
+  NgModule,
+  Pipe,
+  PipeTransform,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import * as ngMocksLib from 'ng-mocks';
 import { TestSetup } from '../models/test-setup';
@@ -9,6 +18,7 @@ import { ngMock } from './ng-mock';
   template: '<label>foo</label>'
 })
 class FooComponent {
+  @Output() fooOutput = new EventEmitter<boolean>();
   doFoo() {
     return 'doFoo';
   }
@@ -79,6 +89,14 @@ describe('ng-mock', () => {
 
       foo.doFoo();
       expect(foo.doFoo).toHaveBeenCalled(); // doFoo should be a spy
+    });
+
+    it('keeps the existing outputs from the ng-mockd componeent when stubbing new fields', () => {
+      testSetup.mocks.set(FooComponent, { doFoo: () => 'mocked doFoo' });
+      const MockedFoo = ngMock(FooComponent, testSetup);
+      const foo = new MockedFoo();
+
+      expect(foo.fooOutput instanceof EventEmitter).toBe(true);
     });
 
     it('uses MockOf* in the mocked component class name', () => {

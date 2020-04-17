@@ -1,5 +1,6 @@
-import { Component, Input, NgModule } from '@angular/core';
+import { Component, Input, NgModule, Output, EventEmitter } from '@angular/core';
 import { Shallow } from '../shallow';
+import { ComponentFixtureAutoDetect } from '@angular/core/testing';
 
 ////// Module Setup //////
 @Component({
@@ -10,18 +11,20 @@ class ListContainerComponent {}
 
 @Component({
   selector: 'list-item',
-  template: '<li [class.bold]="bold"><ng-content></ng-content></li>'
+  template: '<li [class.bold]="bold" (click)="select.emit(true)"><ng-content></ng-content></li>'
 })
 class ListItemComponent {
   @Input() bold = false;
+  @Output() select = new EventEmitter<boolean>();
 }
 
 @Component({
   selector: 'awesome-list',
   template: `
+    <div id="chuck-report">Selected Chuck: {{ selected }}</div>
     <list-container>
       <list-item class="top-item" *ngIf="topItem !== undefined" [bold]="boldTopItem">{{ topItem }}</list-item>
-      <list-item [bold]="true">Chuck Norris</list-item>
+      <list-item id="chuck" [bold]="true" (select)="chuckSelected($event)">Chuck Norris</list-item>
       <list-item>Tom Hanks</list-item>
     </list-container>
   `
@@ -29,6 +32,10 @@ class ListItemComponent {
 class AwesomeListComponent {
   @Input() topItem!: string;
   @Input() boldTopItem = false;
+  selected = false;
+  chuckSelected(selected: boolean) {
+    this.selected = selected;
+  }
 }
 
 @NgModule({
@@ -49,6 +56,16 @@ describe('multiple components', () => {
 
     // Note we query by the component here
     expect(find(ListItemComponent).map(li => li.nativeElement.innerText.trim())).toEqual(['Chuck Norris', 'Tom Hanks']);
+  });
+
+  it('reports when Chuck is pressed', async () => {
+    const { find, findComponent, fixture } = await shallow
+      .mock(ListItemComponent, {})
+      .render('<awesome-list></awesome-list>');
+    findComponent(ListItemComponent, { query: '#chuck' }).select.emit(true);
+    fixture.detectChanges();
+
+    expect(find('#chuck-report').nativeElement.innerText).toBe('Selected Chuck: true');
   });
 
   it('renders a top-item when provided', async () => {
