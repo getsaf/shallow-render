@@ -325,6 +325,9 @@
                     <a href="#global-mocks-with-alwaysmock" class="toc-h2 toc-link" data-title="Global mocks with alwaysMock">Global mocks with <code>alwaysMock</code></a>
                   </li>
                   <li>
+                    <a href="#global-pipe-mocks-with-alwaysmockpipe" class="toc-h2 toc-link" data-title="Global pipe mocks with alwaysMockPipe">Global pipe mocks with <code>alwaysMockPipe</code></a>
+                  </li>
+                  <li>
                     <a href="#global-providers-with-alwaysprovide" class="toc-h2 toc-link" data-title="Global providers with alwaysProvide">Global providers with <code>alwaysProvide</code></a>
                   </li>
                   <li>
@@ -1205,6 +1208,15 @@ This function has been deprecated and will be removed in the next release. Pleas
   <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo get"</span><span class="p">,</span>
   <span class="na">postFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo post"</span><span class="p">,</span>
 <span class="p">});</span>
+</code></pre><h2 id='global-pipe-mocks-with-alwaysmockpipe'>Global pipe mocks with <code>alwaysMockPipe</code></h2>
+<aside class="notice">
+  added in v9.0.4
+</aside>
+
+<p>Same concept as <code>alwaysMock</code> but for pipes.</p>
+
+<p><em>in global test setup</em></p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysMockPipe</span><span class="p">(</span><span class="nx">FooPipe</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s1">'always foo!'</span><span class="p">)</span>
 </code></pre><h2 id='global-providers-with-alwaysprovide'>Global providers with <code>alwaysProvide</code></h2>
 <p>There are some use cases when an Angular app provides something (usually a configuration) at the top-level of the application. These instances should follow the <a href="https://angular.io/guide/singleton-services"><code>forRoot</code></a> pattern. For these cases, you may want specs to have a similar environment setup where the &#39;root&#39; providers are globally provided to all specs. This can be accomplished by using <code>Shallow.alwaysProvide</code>.</p>
 
