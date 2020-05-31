@@ -40,8 +40,9 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       }
       const stubs = setup.mocks.get(thing);
       if (stubs) {
-        mock = extendMockWithStubs(mock, stubs, `MockOf${thing.name}`);
+        mock = extendMockWithStubs(mock, stubs);
       }
+      Object.defineProperty(mock, 'name', { value: `MockOf${thing.name}` });
       // Provide our mock in place of any other usage of 'thing'.
       // This makes `ViewChild` and `ContentChildren` selectors work!
       TestBed[isComponent(mock) ? 'overrideComponent' : 'overrideDirective'](mock, {
@@ -72,8 +73,8 @@ class MockError extends CustomError {
   }
 }
 
-const extendMockWithStubs = (mock: Type<any>, stubs: object, className: string): Type<any> => {
-  class WithStubs extends createExtendableNgMockClass(mock) {
+const extendMockWithStubs = (mock: Type<any>, stubs: object): Type<any> => {
+  class MockWithStubs extends mock {
     constructor() {
       super();
       Object.assign(this, stubs);
@@ -84,19 +85,7 @@ const extendMockWithStubs = (mock: Type<any>, stubs: object, className: string):
       });
     }
   }
-  Object.defineProperty(WithStubs, 'name', { value: className });
-  return WithStubs;
-};
-
-const createExtendableNgMockClass = (from: Type<any>): Type<any> => {
-  // For some reason I cannot directly extend classes from ng-mocks?
-  // tslint:disable-next-line: only-arrow-functions
-  const ExtendableMock = function(...args: any) {
-    const thing = new (from as any)(...args);
-    return thing;
-  };
-  ExtendableMock.prototype = from.prototype;
-  return ExtendableMock as any;
+  return MockWithStubs;
 };
 
 const shouldRenderOnInit = (setup: TestSetup<any>, thing: any) =>

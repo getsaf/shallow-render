@@ -48,6 +48,16 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
+  private static readonly _alwaysMockPipes = new Map<
+    PipeTransform | Type<PipeTransform>,
+    // tslint:disable-next-line: ban-types
+    Function
+  >(); /* tslint:disable-line ban-types */
+  static alwaysMockPipe<TPipe extends PipeTransform>(pipe: Type<TPipe>, transform: TPipe['transform']) {
+    this._alwaysMockPipes.set(pipe, transform);
+    return this;
+  }
+
   // Always replace one module with another replacement module.
   private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
   static alwaysReplaceModule(
@@ -83,6 +93,7 @@ export class Shallow<TTestComponent> {
     this.setup.imports.push(...Shallow._alwaysImport);
     this.setup.alwaysRenderStructuralDirectives = Shallow._alwaysRenderStructuralDirectives;
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
+    Shallow._alwaysMockPipes.forEach((value, key) => this.setup.mockPipes.set(key, value));
     Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
     Shallow._alwaysWithStructuralDirectives.forEach((value, key) =>
       this.setup.withStructuralDirectives.set(key, value)
