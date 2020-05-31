@@ -221,7 +221,7 @@ describe('Rendering', () => {
     it('finds mocked components', () => {
       const { findComponent } = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(findComponent(WillBeMockedComponent) instanceof MockedComponent).toBe(true);
+      expect(findComponent(WillBeMockedComponent)).toHaveFound(1);
     });
 
     it('finds multiple components', () => {
@@ -257,7 +257,7 @@ describe('Rendering', () => {
     it('finds mocked directives', () => {
       const { findDirective } = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(findDirective(WillBeMockedDirective) instanceof MockDirective(WillBeMockedDirective)).toBe(true);
+      expect(findDirective(WillBeMockedDirective)).toHaveFound(1);
     });
 
     it('finds multiple directives', () => {

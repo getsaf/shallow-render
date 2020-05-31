@@ -102,9 +102,8 @@ describe('ng-mock', () => {
     it('uses MockOf* in the mocked component class name', () => {
       testSetup.mocks.set(FooComponent, {});
       const MockedFoo = ngMock(FooComponent, testSetup);
-      const foo = new MockedFoo();
 
-      expect(foo.constructor.name).toBe('MockOfFooComponent');
+      expect(MockedFoo.name).toBe('MockOfFooComponent');
     });
   });
 
@@ -120,7 +119,7 @@ describe('ng-mock', () => {
     class MockPipe implements PipeTransform {
       transform() {}
     }
-    spyOn(ngMocksLib, 'MockPipe').and.returnValue(MockPipe);
+    spyOn(ngMocksLib, 'MockPipe').and.returnValue(MockPipe as any);
     const mocked = ngMock(FooPipe, testSetup);
 
     expect(mocked).toBe(MockPipe);
@@ -163,7 +162,7 @@ describe('ng-mock', () => {
     }
     class MockModule {}
     spyOn(ngMocksLib, 'MockDeclaration').and.returnValue(MockDeclaration);
-    spyOn(ngMocksLib, 'MockPipe').and.returnValue(MockPipe);
+    spyOn(ngMocksLib, 'MockPipe').and.returnValue(MockPipe as any);
     spyOn(mockModuleLib, 'mockModule').and.returnValue(MockModule);
     const mocked = ngMock([FooComponent, FooDirective, FooPipe, FooModule], testSetup);
 
