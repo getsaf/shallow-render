@@ -1,6 +1,6 @@
 import { forwardRef, PipeTransform, Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { MockDeclaration, MockPipe, MockComponent, MockDirective } from 'ng-mocks';
+import { MockDeclaration, MockPipe } from 'ng-mocks';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { testFramework } from '../test-frameworks/test-framework';

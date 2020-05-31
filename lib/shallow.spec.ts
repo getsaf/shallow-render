@@ -116,7 +116,7 @@ describe('Shallow', () => {
       expect(shallow.setup.mocks.get(myToken)).toEqual(myMock);
     });
 
-    it('mocking on an alwaysMock does not mutate the alwaysMock', () => {
+    it('does not mutate the alwaysMock when re-mocked in a test', () => {
       class MyService {
         foo() {
           return 'foo';
@@ -138,6 +138,20 @@ describe('Shallow', () => {
       expect(alwaysMock.bar()).toBe('always mock bar');
       expect(secondMock.foo()).toBe('second foo');
       expect(secondMock.bar()).toBe('always mock bar');
+    });
+  });
+
+  describe('alwaysMockPipe', () => {
+    it('automatically adds items to setup.mock on construction', () => {
+      class MyPipe {
+        transform() {
+          return 'FOO';
+        }
+      }
+      Shallow.alwaysMockPipe(MyPipe, () => 'mock foo');
+      const shallow = new Shallow(TestComponent, TestModule);
+
+      expect(shallow.setup.mockPipes.get(MyPipe)?.()).toBe('mock foo');
     });
   });
 
