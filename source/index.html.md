@@ -925,6 +925,20 @@ Shallow.alwaysMock(FooService, {
 });
 ```
 
+## Global pipe mocks with `alwaysMockPipe`
+
+<aside class="notice">
+  added in v9.0.5
+</aside>
+
+Same concept as `alwaysMock` but for pipes.
+
+_in global test setup_
+
+```javascript
+Shallow.alwaysMockPipe(FooPipe, () => 'always foo!')
+```
+
 ## Global providers with `alwaysProvide`
 
 There are some use cases when an Angular app provides something (usually a configuration) at the top-level of the application. These instances should follow the [`forRoot`](https://angular.io/guide/singleton-services) pattern. For these cases, you may want specs to have a similar environment setup where the 'root' providers are globally provided to all specs. This can be accomplished by using `Shallow.alwaysProvide`.
