@@ -16,6 +16,7 @@ const NEVER_MOCKED_ANGULAR_STUFF = [
   ReactiveFormsModule,
   HAMMER_GESTURE_CONFIG,
 ];
+
 export class Shallow<TTestComponent> {
   // tslint:disable: member-ordering
   readonly setup: TestSetup<TTestComponent>;

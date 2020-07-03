@@ -54,10 +54,7 @@ describe('multiple components', () => {
     const { find } = await shallow.render('<awesome-list></awesome-list>');
 
     // Note we query by the component here
-    expect(find(ListItemComponent).map((li) => li.nativeElement.innerText.trim())).toEqual([
-      'Chuck Norris',
-      'Tom Hanks',
-    ]);
+    expect(find(ListItemComponent).map(li => li.nativeElement.innerText.trim())).toEqual(['Chuck Norris', 'Tom Hanks']);
   });
 
   it('reports when Chuck is pressed', async () => {

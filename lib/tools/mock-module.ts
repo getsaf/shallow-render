@@ -1,5 +1,4 @@
 import { NgModule, Type } from '@angular/core';
-import { MockOf } from 'ng-mocks';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
@@ -7,6 +6,7 @@ import { mockProvider } from './mock-provider';
 import { ngMock } from './ng-mock';
 import { isModuleWithProviders } from './type-checkers';
 import { CustomError } from '../models/custom-error';
+import { MockOf } from './mock-of.directive';
 
 export class InvalidModuleError extends CustomError {
   constructor(mod: any) {
@@ -62,8 +62,8 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     providers: providers.map(p => mockProvider(p, setup)),
     schemas,
   };
-  @NgModule(mockedModule)
   @MockOf(modClass)
+  @NgModule(mockedModule)
   class MockModule {}
 
   return setup.mockCache.add(mod, MockModule) as TModule;

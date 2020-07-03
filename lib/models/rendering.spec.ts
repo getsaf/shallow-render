@@ -1,9 +1,10 @@
 import { Component, DebugElement, Directive, EventEmitter, Input, Output, Type, InjectionToken } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { MockComponent, MockDirective } from 'ng-mocks';
 import { Rendering } from './rendering';
 import { TestSetup } from './test-setup';
+import { mockComponent } from '../tools/mock-component';
+import { mockDirective } from '../tools/mock-directive';
 
 @Component({
   template: '<outer></outer>',
@@ -89,9 +90,9 @@ describe('Rendering', () => {
   let MockedStructuralDirective: Type<WillBeMockedStructuralDirective>;
 
   beforeEach(async () => {
-    MockedDirective = MockDirective(WillBeMockedDirective);
-    MockedStructuralDirective = MockDirective(WillBeMockedStructuralDirective);
-    MockedComponent = MockComponent(WillBeMockedComponent);
+    MockedDirective = mockDirective(WillBeMockedDirective);
+    MockedStructuralDirective = mockDirective(WillBeMockedStructuralDirective);
+    MockedComponent = mockComponent(WillBeMockedComponent);
     testSetup = new TestSetup(OuterComponent, class {});
     testSetup.mockCache.add(WillBeMockedDirective, MockedDirective);
     testSetup.mockCache.add(WillBeMockedComponent, MockedComponent);

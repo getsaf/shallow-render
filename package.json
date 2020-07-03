@@ -56,9 +56,6 @@
     "@angular/forms": ">=9",
     "@angular/platform-browser": ">=9"
   },
-  "dependencies": {
-    "ng-mocks": ">=9"
-  },
   "devDependencies": {
     "@angular/common": "10.x",
     "@angular/compiler": "10.x",
