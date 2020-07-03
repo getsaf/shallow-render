@@ -6,9 +6,7 @@ import { Shallow } from '../shallow';
 
 @Component({
   selector: 'custom-form',
-  template: `
-    <input id="customInput" [(ngModel)]="text" />
-  `
+  template: '<input id="customInput" [(ngModel)]="text" />',
 })
 class CustomFormComponent {
   text = 'I am complete';
@@ -16,7 +14,7 @@ class CustomFormComponent {
 
 @NgModule({
   imports: [FormsModule],
-  declarations: [CustomFormComponent]
+  declarations: [CustomFormComponent],
 })
 class CustomInputModule {}
 //////////////////////////

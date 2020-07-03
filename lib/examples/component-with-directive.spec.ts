@@ -11,14 +11,14 @@ import { Shallow } from '../shallow';
     <ng-container *ngIf="!withTooltip">
       <h1><ng-content></ng-content></h1>
     </ng-container>
-  `
+  `,
 })
 class HeadingComponent {
   @Input() withTooltip = false;
 }
 
 @Directive({
-  selector: '[tooltip]'
+  selector: '[tooltip]',
 })
 class TooltipDirective {
   @Input() tooltip: string;
@@ -29,7 +29,7 @@ class TooltipDirective {
 }
 
 @NgModule({
-  declarations: [HeadingComponent, TooltipDirective]
+  declarations: [HeadingComponent, TooltipDirective],
 })
 class HeadingModule {}
 //////////////////////////

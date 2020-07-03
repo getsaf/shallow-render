@@ -23,9 +23,9 @@ describe('getProviderName', () => {
       provide: {
         toString() {
           return 'Foo';
-        }
+        },
       },
-      useValue: 'foo value'
+      useValue: 'foo value',
     };
     expect(getProviderName(provider)).toBe('Foo');
   });

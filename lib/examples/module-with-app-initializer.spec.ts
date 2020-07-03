@@ -8,13 +8,13 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'foo',
-  template: '<label>foo</label>'
+  template: '<label>foo</label>',
 })
 class FooComponent {}
 
 @NgModule({
   declarations: [FooComponent],
-  providers: [{ provide: APP_INITIALIZER, multi: true, useFactory: () => undefined }]
+  providers: [{ provide: APP_INITIALIZER, multi: true, useFactory: () => undefined }],
 })
 class FooLabelModule {}
 //////////////////////////

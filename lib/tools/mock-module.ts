@@ -45,7 +45,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     // If we have a moduleWithProviders, make sure we return the same
     return {
       ngModule: mockModule(mod.ngModule, setup), // Recursion
-      providers: mod.providers && mod.providers.map(p => mockProvider(p, setup))
+      providers: mod.providers && mod.providers.map(p => mockProvider(p, setup)),
     } as TModule;
   } else if (typeof (mod as any) !== 'function') {
     throw new InvalidModuleError(mod);
@@ -60,7 +60,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
     exports: collapseModuleWithProviders(ngMock(exports, setup)),
     entryComponents: ngMock(entryComponents, setup),
     providers: providers.map(p => mockProvider(p, setup)),
-    schemas
+    schemas,
   };
   @NgModule(mockedModule)
   @MockOf(modClass)

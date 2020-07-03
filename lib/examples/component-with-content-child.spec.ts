@@ -4,7 +4,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'list-item',
-  template: '<li [class.bold]="active"><ng-content></ng-content></li>'
+  template: '<li [class.bold]="active"><ng-content></ng-content></li>',
 })
 class ListItemComponent {
   protected active = false;
@@ -18,7 +18,7 @@ class ListItemComponent {
 
 @Component({
   selector: 'list-container',
-  template: '<ul><ng-content></ng-content></ul>'
+  template: '<ul><ng-content></ng-content></ul>',
 })
 class ListContainerComponent implements AfterContentInit {
   @ContentChild(ListItemComponent, { static: false }) listItem!: ListItemComponent;
@@ -30,7 +30,7 @@ class ListContainerComponent implements AfterContentInit {
 }
 
 @NgModule({
-  declarations: [ListContainerComponent, ListItemComponent]
+  declarations: [ListContainerComponent, ListItemComponent],
 })
 class ListModule {}
 //////////////////////////

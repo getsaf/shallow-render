@@ -6,29 +6,29 @@ import { Rendering } from './rendering';
 import { TestSetup } from './test-setup';
 
 @Component({
-  template: '<outer></outer>'
+  template: '<outer></outer>',
 })
 class TestHostComponent {}
 
 @Directive({
-  selector: '[directive-to-mock]'
+  selector: '[directive-to-mock]',
 })
 class WillBeMockedDirective {}
 
 @Directive({
-  selector: '[structuralDirectiveToMock]'
+  selector: '[structuralDirectiveToMock]',
 })
 class WillBeMockedStructuralDirective {
   @Input() structuralDirectiveToMock!: string;
 }
 
 @Directive({
-  selector: '[test-directive]'
+  selector: '[test-directive]',
 })
 class TestDirective {}
 
 @Directive({
-  selector: '[other-directive]'
+  selector: '[other-directive]',
 })
 class OtherDirective {
   @Input('other-directive') otherDirective!: string;
@@ -53,7 +53,7 @@ class OtherDirective {
         </div>
       </div>
     </div>
-  `
+  `,
 })
 class OuterComponent {
   @Output() markedAsOutput = new EventEmitter<string>();
@@ -62,19 +62,19 @@ class OuterComponent {
 
 @Component({
   selector: 'inner',
-  template: '<span test-directive>sub</span>'
+  template: '<span test-directive>sub</span>',
 })
 class InnerComponent {}
 
 @Component({
   selector: 'component-to-mock',
-  template: '<span>this will not render<span>'
+  template: '<span>this will not render<span>',
 })
 class WillBeMockedComponent {}
 
 @Component({
   selector: 'other',
-  template: '<span>other</span>'
+  template: '<span>other</span>',
 })
 class OtherComponent {}
 const MY_TOKEN = new InjectionToken<boolean>('My boolean token');
@@ -106,8 +106,8 @@ describe('Rendering', () => {
         OtherDirective,
         MockedComponent,
         MockedDirective,
-        MockedStructuralDirective
-      ]
+        MockedStructuralDirective,
+      ],
     })
       .compileComponents()
       .then(() => {
@@ -303,7 +303,7 @@ describe('Rendering', () => {
         testSetup
       );
       const found = findStructuralDirective(WillBeMockedStructuralDirective, {
-        query: d => d.structuralDirectiveToMock === 'second-one'
+        query: d => d.structuralDirectiveToMock === 'second-one',
       });
       renderStructuralDirective(found);
 
@@ -367,7 +367,7 @@ describe('Rendering', () => {
       const { findStructuralDirective } = new Rendering(fixture, element, instance, {}, testSetup);
 
       const found = findStructuralDirective(WillBeMockedStructuralDirective, {
-        query: d => d.structuralDirectiveToMock === 'second-one'
+        query: d => d.structuralDirectiveToMock === 'second-one',
       });
 
       expect(found.structuralDirectiveToMock).toBe('second-one');

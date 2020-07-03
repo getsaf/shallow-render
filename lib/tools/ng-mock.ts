@@ -46,7 +46,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       // Provide our mock in place of any other usage of 'thing'.
       // This makes `ViewChild` and `ContentChildren` selectors work!
       TestBed[isComponent(mock) ? 'overrideComponent' : 'overrideDirective'](mock, {
-        add: { providers: [{ provide: thing, useExisting: forwardRef(() => mock) }] }
+        add: { providers: [{ provide: thing, useExisting: forwardRef(() => mock) }] },
       });
     } else {
       throw new DoNotKnowHowToMockError(thing);
@@ -66,9 +66,11 @@ class DoNotKnowHowToMockError extends CustomError {
 class MockError extends CustomError {
   constructor(thing: any, error: any) {
     super(
-      `Shallow ran into some trouble mocking ${thing?.name ||
-        thing}. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${error?.stack ||
-        error}\n----------- END MOCK ERROR -----------`
+      `Shallow ran into some trouble mocking ${
+        thing?.name || thing
+      }. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${
+        error?.stack || error
+      }\n----------- END MOCK ERROR -----------`
     );
   }
 }
@@ -110,7 +112,7 @@ const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
 
 const renderTemplateOnInit = (mock: Type<any>) => {
   const originalInit = (mock.prototype.ngOnInit = mock.prototype.ngOnInit ?? (() => {}));
-  testFramework.spyOn(mock.prototype, 'ngOnInit', function() {
+  testFramework.spyOn(mock.prototype, 'ngOnInit', function () {
     try {
       // @ts-ignore
       originalInit.call(this);

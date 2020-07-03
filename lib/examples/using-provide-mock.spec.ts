@@ -11,7 +11,7 @@ class RedService {
 
 @Component({
   selector: 'color-label',
-  template: '<label>{{redService.color()}}</label>'
+  template: '<label>{{redService.color()}}</label>',
 })
 class ColorLabelComponent {
   constructor(public redService: RedService) {}
@@ -19,7 +19,7 @@ class ColorLabelComponent {
 
 @NgModule({
   declarations: [ColorLabelComponent],
-  providers: [RedService]
+  providers: [RedService],
 })
 class ColorModule {}
 //////////////////////////
@@ -36,7 +36,7 @@ describe('using dontMock', () => {
   beforeEach(() => {
     shallow = new Shallow(ColorLabelComponent, ColorModule).provideMock({
       provide: RedService,
-      useValue: new MockRedService()
+      useValue: new MockRedService(),
     });
   });
 

@@ -11,14 +11,14 @@ class RootService {
 
 @Component({
   selector: 'root-label',
-  template: '<label>{{rootService.getRootName()}}</label>'
+  template: '<label>{{rootService.getRootName()}}</label>',
 })
 class RootLabelComponent {
   constructor(public rootService: RootService) {}
 }
 
 @NgModule({
-  declarations: [RootLabelComponent]
+  declarations: [RootLabelComponent],
 })
 class RootLabelModule {}
 //////////////////////////
@@ -28,7 +28,7 @@ describe('component with service providedIn root', () => {
 
   beforeEach(() => {
     shallow = new Shallow(RootLabelComponent, RootLabelModule).mock(RootService, {
-      getRootName: () => 'MOCKED ROOT NAME'
+      getRootName: () => 'MOCKED ROOT NAME',
     });
   });
 

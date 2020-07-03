@@ -7,13 +7,13 @@ import * as _ngMock from './ng-mock';
 
 @Component({
   selector: 'foo-component',
-  template: '<div>FOO</div>'
+  template: '<div>FOO</div>',
 })
 class FooComponent {}
 
 @Component({
   selector: 'bar-component',
-  template: '<div>BAR</div>'
+  template: '<div>BAR</div>',
 })
 class BarComponent {}
 
@@ -39,7 +39,7 @@ describe('mockModule', () => {
     return {
       ngModule,
       mockedModule,
-      annotations: getNgModuleAnnotations(mockedModule) as TParams
+      annotations: getNgModuleAnnotations(mockedModule) as TParams,
     };
   };
 
@@ -126,7 +126,7 @@ describe('mockModule', () => {
     class BarService {}
     spyOn(_mockProvider, 'mockProvider').and.callFake(dummyMocker);
     const { annotations } = makeMock({
-      providers: [FooService, BarService]
+      providers: [FooService, BarService],
     });
 
     expect(isMockOf(annotations.providers[0], FooService)).toBe(true);
@@ -135,7 +135,7 @@ describe('mockModule', () => {
 
   it('applies schemas', () => {
     const { annotations } = makeMock({
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     });
 
     expect(annotations.schemas[0]).toBe(CUSTOM_ELEMENTS_SCHEMA);
@@ -152,7 +152,7 @@ describe('mockModule', () => {
     const replacementModuleWithProviders = { ngModule: actualReplacementModule, providers: [] };
     setup.moduleReplacements.set(originalModule, replacementModuleWithProviders);
     const { annotations } = makeMock({
-      exports: [originalModule]
+      exports: [originalModule],
     });
 
     expect(annotations.exports[0]).toBe(actualReplacementModule as any);

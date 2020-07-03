@@ -74,9 +74,9 @@ describe('MyComponent', () => {
         ButtonComponent,
         LinkComponent,
         FooDirective,
-        BarPipe
+        BarPipe,
       ],
-      providers: [MyService]
+      providers: [MyService],
     })
       .compileComponents()
       .then(() => {
@@ -106,9 +106,7 @@ describe('MyComponent', () => {
 });
 
 @Component({
-  template: `
-    <my-component [linkText]="linkText" (click)="handleClick($event)"></my-component>
-  `
+  template: '<my-component [linkText]="linkText" (click)="handleClick($event)"></my-component>',
 })
 class TestHostComponent {
   linkLabel: string;

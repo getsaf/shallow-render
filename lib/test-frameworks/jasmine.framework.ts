@@ -24,5 +24,5 @@ export const jasmineFramework: TestFramework = {
 
   resetSpy(spy: any): void {
     spy.calls.reset();
-  }
+  },
 };

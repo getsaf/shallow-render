@@ -46,7 +46,7 @@ export const outputProxy = <TComponent>(component: TComponent): PickByType<TComp
         }
 
         return component[key];
-      }
+      },
     }
   ) as any;
 };

@@ -4,29 +4,25 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'foo',
-  template: `
-    <label>foo</label>
-  `
+  template: '<label>foo</label>',
 })
 class FooComponent {}
 
 @NgModule({
   declarations: [FooComponent],
-  exports: [FooComponent]
+  exports: [FooComponent],
 })
 class FooModule {}
 
 @Component({
   selector: 'bar',
-  template: `
-    <label>bar</label>
-  `
+  template: '<label>bar</label>',
 })
 class BarComponent {}
 
 @NgModule({
   declarations: [BarComponent],
-  exports: [BarComponent]
+  exports: [BarComponent],
 })
 class BarModule {}
 
@@ -35,7 +31,7 @@ class BarModule {}
   template: `
     <foo *ngIf="showFoo"></foo>
     <bar *ngIf="showBar"></bar>
-  `
+  `,
 })
 class FooBarComponent {
   @Input() showFoo = true;
@@ -44,7 +40,7 @@ class FooBarComponent {
 
 @NgModule({
   imports: [FooModule, BarModule],
-  declarations: [FooBarComponent]
+  declarations: [FooBarComponent],
 })
 class FooBarModule {}
 

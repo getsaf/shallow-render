@@ -11,21 +11,21 @@ class RedService {
 
 @Component({
   selector: 'color-label',
-  template: '<label>{{redService.color()}}</label>'
+  template: '<label>{{redService.color()}}</label>',
 })
 class ColorLabelComponent {
   constructor(public redService: RedService) {}
 }
 
 @NgModule({
-  declarations: [ColorLabelComponent]
+  declarations: [ColorLabelComponent],
 })
 class ColorModule {
   // tslint:disable-line no-unnecessary-class
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: ColorModule,
-      providers: [RedService]
+      providers: [RedService],
     };
   }
 }

@@ -30,9 +30,7 @@ class AppConfiguration {
 
 @Component({
   selector: 'app-title',
-  template: `
-    <h1>{{ config.title }}</h1>
-  `
+  template: '<h1>{{config.title}}</h1>',
 })
 class AppTitleComponent {
   constructor(public config: AppConfiguration) {}
@@ -40,7 +38,7 @@ class AppTitleComponent {
 
 @NgModule({
   declarations: [AppTitleComponent],
-  exports: [AppTitleComponent]
+  exports: [AppTitleComponent],
 })
 class TitleModule {}
 

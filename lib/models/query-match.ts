@@ -69,6 +69,6 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
     getPrototypeOf: (_target: any) => {
       throwErrorIfNotOneMatch('prototype', matches);
       return Object.getPrototypeOf(match);
-    }
+    },
   });
 }

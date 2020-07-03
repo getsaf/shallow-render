@@ -11,7 +11,7 @@ class Foo {
 
 @Component({
   selector: 'foo',
-  template: '<div>{{fooified}}</div>'
+  template: '<div>{{fooified}}</div>',
 })
 class FooComponent {
   @Input() name!: string;
@@ -21,7 +21,7 @@ class FooComponent {
 }
 
 @NgModule({
-  declarations: [FooComponent]
+  declarations: [FooComponent],
 })
 class FooModule {}
 //////////////////////////

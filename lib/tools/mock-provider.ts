@@ -38,7 +38,7 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
 
   const prov = {
     provide,
-    multi: 'multi' in provider && provider.multi
+    multi: 'multi' in provider && provider.multi,
   };
 
   if (isClassProvider(provider)) {

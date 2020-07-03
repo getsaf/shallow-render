@@ -11,9 +11,7 @@ class TitleService {
 
 @Component({
   selector: 'app-title',
-  template: `
-    <h1>{{ titleService.getTitle() }}</h1>
-  `
+  template: '<h1>{{titleService.getTitle()}}</h1>',
 })
 class AppTitleComponent {
   constructor(public titleService: TitleService) {}
@@ -22,7 +20,7 @@ class AppTitleComponent {
 @NgModule({
   declarations: [AppTitleComponent],
   exports: [AppTitleComponent],
-  providers: [TitleService]
+  providers: [TitleService],
 })
 class TitleModule {}
 

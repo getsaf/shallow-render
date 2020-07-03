@@ -17,7 +17,7 @@ const FUNCTION_TOKEN = new InjectionToken<() => string>('My function token');
     <label [class]="stylesToken.defaultLabelClass">
       <ng-content></ng-content>
     </label>
-  `
+  `,
 })
 class LabelTextComponent {
   constructor(
@@ -32,8 +32,8 @@ class LabelTextComponent {
   providers: [
     { provide: STYLE_TOKEN, useValue: { defaultLabelClass: 'uppercase font-size-small' } },
     { provide: STRING_TOKEN, useValue: 'FOO' },
-    { provide: FUNCTION_TOKEN, useValue: () => 'BAR' }
-  ]
+    { provide: FUNCTION_TOKEN, useValue: () => 'BAR' },
+  ],
 })
 class LabelTextModule {}
 //////////////////////////

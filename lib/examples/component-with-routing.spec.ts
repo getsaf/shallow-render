@@ -12,7 +12,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'go-home-link',
-  template: '<a (click)="goHome()">Go somewhere</a>'
+  template: '<a (click)="goHome()">Go somewhere</a>',
 })
 class GoHomeLinkComponent {
   constructor(public router: Router) {}
@@ -26,7 +26,7 @@ const routes: Routes = [{ path: 'home', component: class DummyComponent {} }];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
-  declarations: [GoHomeLinkComponent]
+  declarations: [GoHomeLinkComponent],
 })
 class GoHomeModule {}
 //////////////////////////

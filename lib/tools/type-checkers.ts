@@ -7,7 +7,7 @@ import {
   Provider,
   TypeProvider,
   ValueProvider,
-  Type
+  Type,
 } from '@angular/core';
 import { pipeResolver } from './reflect';
 
