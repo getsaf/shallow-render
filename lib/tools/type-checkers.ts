@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { pipeResolver } from './reflect';
 
-export function isModuleWithProviders(thing: any): thing is ModuleWithProviders {
-  const key: keyof ModuleWithProviders = 'ngModule';
+export function isModuleWithProviders(thing: any): thing is ModuleWithProviders<any> {
+  const key: keyof ModuleWithProviders<any> = 'ngModule';
   return typeof thing === 'object' && key in thing;
 }
 

@@ -22,7 +22,7 @@ class ColorLabelComponent {
 })
 class ColorModule {
   // tslint:disable-line no-unnecessary-class
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<ColorModule> {
     return {
       ngModule: ColorModule,
       providers: [RedService],

@@ -18,7 +18,8 @@
     "experimentalDecorators": true,
     "types": ["node", "jasmine"],
     "strict": true,
-    "alwaysStrict": true
+    "alwaysStrict": true,
+    "skipLibCheck": true
   },
   "include": ["index.ts", "lib/**/*"]
 }

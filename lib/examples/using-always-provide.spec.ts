@@ -13,7 +13,7 @@ import { Shallow } from '../shallow';
 //   imports: [FooModule]
 // })
 // class AppModule {
-//   static forRoot(config: AppConfiguration): ModuleWithProviders {
+//   static forRoot(config: AppConfiguration): ModuleWithProviders<AppModule> {
 //     return {
 //       ngModule: AppModule,
 //       providers: [

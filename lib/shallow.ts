@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { InjectionToken, ModuleWithProviders, PipeTransform, Provider, Type } from '@angular/core';
+import { InjectionToken, PipeTransform, Provider, Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { RecursivePartial } from './models/recursive-partial';
@@ -7,13 +7,14 @@ import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
 import './test-frameworks/shallow-matchers';
+import { AngularModule } from './models/angular-module';
 
 const NEVER_MOCKED_ANGULAR_STUFF = [
   CommonModule,
   BrowserModule,
   FormsModule,
   ReactiveFormsModule,
-  HAMMER_GESTURE_CONFIG
+  HAMMER_GESTURE_CONFIG,
 ];
 export class Shallow<TTestComponent> {
   // tslint:disable: member-ordering
@@ -59,17 +60,14 @@ export class Shallow<TTestComponent> {
   }
 
   // Always replace one module with another replacement module.
-  private static readonly _alwaysReplaceModule = new Map<Type<any>, Type<any> | ModuleWithProviders>();
-  static alwaysReplaceModule(
-    originalModule: Type<any>,
-    replacementModule: Type<any> | ModuleWithProviders
-  ): typeof Shallow {
+  private static readonly _alwaysReplaceModule = new Map<AngularModule, AngularModule>();
+  static alwaysReplaceModule(originalModule: AngularModule, replacementModule: AngularModule): typeof Shallow {
     this._alwaysReplaceModule.set(originalModule, replacementModule);
     return Shallow;
   }
 
-  private static readonly _alwaysImport: (Type<any> | ModuleWithProviders)[] = [];
-  static alwaysImport(...imports: (Type<any> | ModuleWithProviders)[]) {
+  private static readonly _alwaysImport: AngularModule[] = [];
+  static alwaysImport(...imports: AngularModule[]) {
     this._alwaysImport.push(...imports);
     return Shallow;
   }
@@ -86,7 +84,7 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
-  constructor(testComponent: Type<TTestComponent>, testModule: Type<any> | ModuleWithProviders) {
+  constructor(testComponent: Type<TTestComponent>, testModule: AngularModule) {
     this.setup = new TestSetup(testComponent, testModule);
     this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
@@ -148,15 +146,12 @@ export class Shallow<TTestComponent> {
     return this;
   }
 
-  replaceModule(
-    originalModule: Type<any> | ModuleWithProviders,
-    replacementModule: Type<any> | ModuleWithProviders
-  ): this {
+  replaceModule(originalModule: AngularModule, replacementModule: AngularModule): this {
     this.setup.moduleReplacements.set(originalModule, replacementModule);
     return this;
   }
 
-  import(...imports: (Type<any> | ModuleWithProviders)[]) {
+  import(...imports: AngularModule[]) {
     this.setup.imports.push(...imports);
     return this;
   }
