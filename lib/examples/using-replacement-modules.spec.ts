@@ -7,7 +7,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'service-response-label',
-  template: '<label>{{labelText}}</label>'
+  template: '<label>{{labelText}}</label>',
 })
 class FooLabelComponent {
   labelText?: string;
@@ -25,7 +25,7 @@ class FooLabelComponent {
 
 @NgModule({
   imports: [HttpClientModule],
-  declarations: [FooLabelComponent]
+  declarations: [FooLabelComponent],
 })
 class FooLabelModule {}
 //////////////////////////

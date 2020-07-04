@@ -117,7 +117,7 @@ describe('mockPrivider', () => {
     const providers = mockProvider(
       [
         { provide: STRING_TOKEN, useValue: 'ORIGINAL-STRING' },
-        { provide: FUNCTION_TOKEN, useValue: () => 'ORIGINAL-FUNCTION' }
+        { provide: FUNCTION_TOKEN, useValue: () => 'ORIGINAL-FUNCTION' },
       ],
       testSetup
     ) as any[];
@@ -137,7 +137,7 @@ describe('mockPrivider', () => {
       [
         { provide: STRING_TOKEN, useValue: 'FOO' },
         { provide: BOOLEAN_TOKEN, useValue: true },
-        { provide: NUMBER_TOKEN, useValue: 42 }
+        { provide: NUMBER_TOKEN, useValue: 42 },
       ],
       testSetup
     ) as any[];
@@ -155,7 +155,7 @@ describe('mockPrivider', () => {
       [
         { provide: STRING_TOKEN, useValue: 'FOO' },
         { provide: BOOLEAN_TOKEN, useValue: true },
-        { provide: NUMBER_TOKEN, useValue: 42 }
+        { provide: NUMBER_TOKEN, useValue: 42 },
       ],
       testSetup
     ) as any[];

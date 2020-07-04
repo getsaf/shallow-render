@@ -18,7 +18,7 @@ class TestService {
 }
 @Component({
   selector: 'test',
-  template: '<hr/>'
+  template: '<hr/>',
 })
 class TestComponent {}
 
@@ -30,7 +30,7 @@ class TestPipe implements PipeTransform {
 }
 
 @NgModule({
-  declarations: [TestComponent, TestPipe]
+  declarations: [TestComponent, TestPipe],
 })
 class TestModule {}
 
@@ -127,7 +127,7 @@ describe('Shallow', () => {
       }
       const alwaysMock = {
         foo: () => 'always mock foo',
-        bar: () => 'always mock bar'
+        bar: () => 'always mock bar',
       };
       Shallow.alwaysMock(MyService, alwaysMock);
       const shallow = new Shallow(TestComponent, TestModule);
@@ -242,7 +242,7 @@ describe('Shallow', () => {
   describe('mockStatic', () => {
     it('throws an error when a non-method property is mocked', async () => {
       const staticObject = {
-        staticNumber: 999
+        staticNumber: 999,
       };
 
       expect(() => new Shallow(TestComponent, TestModule).mockStatic(staticObject, { staticNumber: 999 })).toThrow(

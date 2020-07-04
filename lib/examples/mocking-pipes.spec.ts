@@ -4,14 +4,14 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'title-text',
-  template: '<h4>{{label | underline}}</h4>'
+  template: '<h4>{{label | underline}}</h4>',
 })
 class TitleTextComponent {
   @Input() label!: string;
 }
 
 @Pipe({
-  name: 'underline'
+  name: 'underline',
 })
 class UnderlinePipe implements PipeTransform {
   transform(input: string) {
@@ -20,7 +20,7 @@ class UnderlinePipe implements PipeTransform {
 }
 
 @NgModule({
-  declarations: [TitleTextComponent, UnderlinePipe]
+  declarations: [TitleTextComponent, UnderlinePipe],
 })
 class TitleTextModule {}
 //////////////////////////

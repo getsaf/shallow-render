@@ -12,14 +12,14 @@ class RedService {
 @Component({
   selector: 'color-label',
   template: '<label>{{redService.color()}}</label>',
-  providers: [RedService] // Component has it's own provider
+  providers: [RedService], // Component has it's own provider
 })
 class ColorLabelComponent {
   constructor(public redService: RedService) {}
 }
 
 @NgModule({
-  declarations: [ColorLabelComponent]
+  declarations: [ColorLabelComponent],
   // The provider is not here, it's on the component
 })
 class ColorModule {}

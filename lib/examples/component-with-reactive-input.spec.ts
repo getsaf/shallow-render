@@ -7,9 +7,7 @@ import { Shallow } from '../shallow';
 
 @Component({
   selector: 'custom-form',
-  template: `
-    <input id="customInput" [formControl]="myControl" />
-  `
+  template: '<input id="customInput" [formControl]="myControl" />',
 })
 class CustomFormComponent implements OnInit, OnDestroy {
   myControl = new FormControl('I am complete');
@@ -31,7 +29,7 @@ class CustomFormComponent implements OnInit, OnDestroy {
 
 @NgModule({
   imports: [ReactiveFormsModule],
-  declarations: [CustomFormComponent]
+  declarations: [CustomFormComponent],
 })
 class CustomInputModule {}
 //////////////////////////

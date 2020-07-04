@@ -4,12 +4,12 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'big-text',
-  template: '<h1><ng-content></ng-content></h1>'
+  template: '<h1><ng-content></ng-content></h1>',
 })
 class BigTextComponent {}
 
 @NgModule({
-  declarations: [BigTextComponent]
+  declarations: [BigTextComponent],
 })
 class BigTextModule {}
 //////////////////////////

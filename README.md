@@ -23,6 +23,7 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 | Angular | shallow-render |
 | ------- | -------------- |
+| 10x     | 10x            |
 | 9x      | 9x             |
 | 6x-8x   | 8x             |
 | 5x      | <= 7.2.0       |
@@ -74,9 +75,9 @@ describe('MyComponent', () => {
         ButtonComponent,
         LinkComponent,
         FooDirective,
-        BarPipe
+        BarPipe,
       ],
-      providers: [MyService]
+      providers: [MyService],
     })
       .compileComponents()
       .then(() => {
@@ -106,9 +107,7 @@ describe('MyComponent', () => {
 });
 
 @Component({
-  template: `
-    <my-component [linkText]="linkText" (click)="handleClick($event)"></my-component>
-  `
+  template: '<my-component [linkText]="linkText" (click)="handleClick($event)"></my-component>',
 })
 class TestHostComponent {
   linkLabel: string;
@@ -158,7 +157,7 @@ describe('MyComponent', () => {
 Here's the difference:
 
 - Reuses (and verifies) `MyModule` contains your component and all its dependencies.
-- All components inside `MyModule` are mocked using the awesome [ng-mocks](https://github.com/ike18t/ng-mocks) library. This is what makes the rendering "shallow".
+- All components inside `MyModule` are mocked. This is what makes the rendering "shallow".
 - The tests have much less boilerplate which makes the specs easier to follow.
 - The HTML used to render the component is IN THE SPEC and easy to find.
   - This means specs now double examples of how to use your component.

@@ -1,10 +1,10 @@
 import { DebugElement, EventEmitter, Type, InjectionToken, AbstractType } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { MockedDirective } from 'ng-mocks';
 import { outputProxy, PickByType } from '../tools/output-proxy';
 import { createQueryMatch, QueryMatch } from './query-match';
 import { TestSetup } from './test-setup';
+import { MockDirective } from '../tools/mock-directive';
 
 export interface RenderOptions<TBindings> {
   detectChanges: boolean;
@@ -103,9 +103,9 @@ export class Rendering<TComponent, TBindings> {
     directiveClassOrObject: Type<any> | QueryMatch<any> | object,
     renderContents = true
   ) => {
-    const directives: Array<MockedDirective<{}>> =
+    const directives: Array<MockDirective> =
       typeof directiveClassOrObject === 'function'
-        ? this.findStructuralDirective<MockedDirective<{}>>(directiveClassOrObject)
+        ? this.findStructuralDirective<MockDirective>(directiveClassOrObject)
         : directiveClassOrObject.length
         ? directiveClassOrObject
         : [directiveClassOrObject];
@@ -115,16 +115,16 @@ export class Rendering<TComponent, TBindings> {
     }
 
     directives.forEach(foundDirective => {
-      if (!foundDirective.__viewContainer) {
+      if (!('renderContents' in foundDirective)) {
         const directiveName = Object.getPrototypeOf(foundDirective).constructor.name;
         throw new Error(
           `You may only manually render mocked directives with "renderStructuralDirective". Tried to render a structural directive (${directiveName}) but the directive is not mocked.`
         );
       }
       if (renderContents) {
-        foundDirective.__render();
+        foundDirective.renderContents();
       } else {
-        foundDirective.__viewContainer.clear();
+        foundDirective.clearContents();
       }
     });
   };

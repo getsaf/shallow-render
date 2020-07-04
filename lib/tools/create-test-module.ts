@@ -33,7 +33,7 @@ export function createTestModule<TComponent>(setup: TestSetup<TComponent>, testC
     entryComponents,
     providers: [...ngModule.providers, ...additionalProviders, ...setup.providers].map(p => mockProvider(p, setup)),
     exports: [...declarations, ...entryComponents],
-    schemas: ngModule.schemas || []
+    schemas: ngModule.schemas || [],
   })
   class ShallowTestModule {}
 

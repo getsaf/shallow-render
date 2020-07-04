@@ -4,7 +4,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   template: '<h1>Step</h1>',
-  selector: 'step'
+  selector: 'step',
 })
 class StepComponent {}
 
@@ -21,7 +21,7 @@ class StepService {
     <div *ngFor="let step of stepService.getSteps()">
       <ng-template *ngComponentOutlet="step"></ng-template>
     </div>
-  `
+  `,
 })
 class StepDisplayComponent {
   constructor(public stepService: StepService) {}
@@ -30,7 +30,7 @@ class StepDisplayComponent {
 @NgModule({
   declarations: [StepDisplayComponent, StepComponent],
   providers: [StepService],
-  entryComponents: [StepComponent]
+  entryComponents: [StepComponent],
 })
 class StepModule {}
 //////////////////////////

@@ -4,7 +4,7 @@ import { outputProxy, PropertyNotAnEventEmitterError, PropertyNotMarkedAsOutputE
 describe('outputProxy', () => {
   @Component({
     selector: 'Foo',
-    template: '<h1/>'
+    template: '<h1/>',
   })
   class FooComponent {
     @Output() normalOutput = new EventEmitter<string>();

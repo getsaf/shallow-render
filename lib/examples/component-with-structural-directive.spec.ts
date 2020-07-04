@@ -7,19 +7,19 @@ import { Shallow } from '../shallow';
   template: `
     <h1 *myStructuralDirective="'first'">Hi there!</h1>
     <h1 *myStructuralDirective="'second'">Hi there!</h1>
-  `
+  `,
 })
 class HeadingComponent {}
 
 @Directive({
-  selector: '[myStructuralDirective]'
+  selector: '[myStructuralDirective]',
 })
 class MyStructuralDirective {
   @Input() myStructuralDirective!: string;
 }
 
 @NgModule({
-  declarations: [HeadingComponent, MyStructuralDirective]
+  declarations: [HeadingComponent, MyStructuralDirective],
 })
 class HeadingModule {}
 //////////////////////////

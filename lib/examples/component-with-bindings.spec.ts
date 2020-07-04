@@ -15,7 +15,7 @@ interface Person {
       {{ person.firstName }} {{ person.lastName }} was born in {{ person.birthDate.getFullYear() }}
     </label>
     <label id="ngOnChangesCount">{{ ngOnChangesCount }}</label>
-  `
+  `,
 })
 class BornInComponent implements OnChanges {
   @Input() person!: Person;
@@ -29,7 +29,7 @@ class BornInComponent implements OnChanges {
 }
 
 @NgModule({
-  declarations: [BornInComponent]
+  declarations: [BornInComponent],
 })
 class PersonModule {}
 //////////////////////////
@@ -44,7 +44,7 @@ describe('component with bindings', () => {
   const person: Person = {
     firstName: 'Brandon',
     lastName: 'Domingue',
-    birthDate: new Date('1982-05-11')
+    birthDate: new Date('1982-05-11'),
   };
 
   it('displays the name and year the person was born', async () => {

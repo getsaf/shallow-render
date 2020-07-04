@@ -7,12 +7,12 @@ import {
   Provider,
   TypeProvider,
   ValueProvider,
-  Type
+  Type,
 } from '@angular/core';
-import { pipeResolver } from './reflect';
+import { pipeResolver, jitReflector } from './reflect';
 
-export function isModuleWithProviders(thing: any): thing is ModuleWithProviders {
-  const key: keyof ModuleWithProviders = 'ngModule';
+export function isModuleWithProviders(thing: any): thing is ModuleWithProviders<any> {
+  const key: keyof ModuleWithProviders<any> = 'ngModule';
   return typeof thing === 'object' && key in thing;
 }
 
@@ -47,3 +47,8 @@ export function isPipeTransform(thing: any): thing is PipeTransform & Type<any> 
 export const isClass = (thing: any): thing is Type<any> => {
   return typeof thing === 'function';
 };
+
+export const declarationType = (declaration: Type<any>): 'Pipe' | 'Component' | 'Directive' =>
+  jitReflector
+    .annotations(declaration)
+    .find(annotation => ['Pipe', 'Component', 'Directive'].includes(annotation.ngMetadataName))?.ngMetadataName;

@@ -98,7 +98,7 @@ export class Renderer<TComponent> {
       detectChanges: true,
       whenStable: true,
       bind: {} as TBindings,
-      ...options
+      ...options,
     };
 
     // Go ahead and mock static things
@@ -123,8 +123,8 @@ export class Renderer<TComponent> {
     if (resolvedTestComponent.providers && resolvedTestComponent.providers.length) {
       TestBed.overrideComponent(this._setup.testComponent, {
         set: {
-          providers: resolvedTestComponent.providers.map(p => mockProvider(p, this._setup))
-        }
+          providers: resolvedTestComponent.providers.map(p => mockProvider(p, this._setup)),
+        },
       });
     }
 
@@ -138,14 +138,14 @@ export class Renderer<TComponent> {
           TestBed.overrideProvider(thingToMock, {
             useValue: provider.useValue,
             useFactory: provider.useFactory,
-            deps: provider.deps
+            deps: provider.deps,
           });
         }
       }
     });
 
     await TestBed.configureTestingModule({
-      imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])]
+      imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);

@@ -17,7 +17,7 @@ class ServiceModule {}
 ////// Module Setup //////
 @Component({
   selector: 'color-label',
-  template: '<label>{{redService.color()}}</label>'
+  template: '<label>{{redService.color()}}</label>',
 })
 class ColorLabelComponent {
   constructor(public redService: RedService) {}

@@ -12,7 +12,7 @@ describe('getNgModuleAnnotations', () => {
       declarations: [],
       exports: [],
       entryComponents: [],
-      schemas: []
+      schemas: [],
     });
   });
 
@@ -23,7 +23,7 @@ describe('getNgModuleAnnotations', () => {
       declarations: [class {}],
       exports: [class {}],
       entryComponents: [class {}],
-      schemas: [class {}]
+      schemas: [class {}],
     };
     @NgModule(annotations)
     class DummyModule {}

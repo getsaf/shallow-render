@@ -6,17 +6,18 @@ import {
   Pipe,
   PipeTransform,
   Output,
-  EventEmitter
+  EventEmitter,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import * as ngMocksLib from 'ng-mocks';
 import { TestSetup } from '../models/test-setup';
 import * as mockModuleLib from './mock-module';
 import { ngMock } from './ng-mock';
+import * as declarationTypeModule from './type-checkers';
+import * as mockPipeModule from './mock-pipe';
+import * as mockComponentModule from './mock-component';
+import * as mockDirectiveModule from './mock-directive';
 
-@Component({
-  template: '<label>foo</label>'
-})
+@Component({ template: '<label>foo</label>' })
 class FooComponent {
   @Output() fooOutput = new EventEmitter<boolean>();
   doFoo() {
@@ -24,9 +25,7 @@ class FooComponent {
   }
 }
 
-@Directive({
-  selector: '[foo]'
-})
+@Directive({ selector: '[foo]' })
 class FooDirective {}
 
 @Pipe({ name: 'foo' })
@@ -37,7 +36,7 @@ class FooPipe implements PipeTransform {
 }
 
 @NgModule({
-  declarations: [FooComponent, FooDirective, FooPipe]
+  declarations: [FooComponent, FooDirective, FooPipe],
 })
 class FooModule {}
 
@@ -49,28 +48,28 @@ describe('ng-mock', () => {
   });
 
   it('uses cached mocks instead of re-mocking components', () => {
-    class MockOne extends FooComponent {}
+    class MockOne {}
     class MockTwo {}
-    spyOn(ngMocksLib, 'MockDeclaration').and.returnValues(MockOne, MockTwo);
+    spyOn(mockComponentModule, 'mockComponent').and.returnValues(MockOne, MockTwo);
     ngMock(FooComponent, testSetup);
-    const mockedSecond = ngMock(FooComponent, testSetup);
+    const FinalMock = ngMock(FooComponent, testSetup);
 
-    expect(mockedSecond).toBe(MockOne);
+    expect(FinalMock).toBe(MockOne as any);
   });
 
   it('throws a friendly message when mocking fails', () => {
     class BadComponent {}
-    spyOn(ngMocksLib, 'MockDeclaration').and.throwError('BOOM');
+    spyOn(declarationTypeModule, 'declarationType').and.throwError('BOOM');
 
     expect(() => ngMock(BadComponent, testSetup)).toThrowError(/Shallow.*BadComponent[\s\S]*BOOM/g);
   });
 
   it('mocks a component', () => {
-    class MockDeclaration extends FooComponent {}
-    spyOn(ngMocksLib, 'MockDeclaration').and.returnValue(MockDeclaration);
+    class MockComponent {}
+    spyOn(mockComponentModule, 'mockComponent').and.returnValue(MockComponent);
     const mocked = ngMock(FooComponent, testSetup);
 
-    expect(mocked).toBe(MockDeclaration);
+    expect(mocked).toBe(MockComponent as any);
   });
 
   describe('components with mocks', () => {
@@ -108,18 +107,18 @@ describe('ng-mock', () => {
   });
 
   it('mocks a directive', () => {
-    class MockDeclaration {}
-    spyOn(ngMocksLib, 'MockDeclaration').and.returnValue(MockDeclaration);
+    class MockDirective {}
+    spyOn(mockDirectiveModule, 'mockDirective').and.returnValue(MockDirective);
     const mocked = ngMock(FooDirective, testSetup);
 
-    expect(mocked).toBe(MockDeclaration);
+    expect(mocked).toBe(MockDirective);
   });
 
   it('mocks a pipe', () => {
     class MockPipe implements PipeTransform {
       transform() {}
     }
-    spyOn(ngMocksLib, 'MockPipe').and.returnValue(MockPipe as any);
+    spyOn(mockPipeModule, 'mockPipe').and.returnValue(MockPipe as any);
     const mocked = ngMock(FooPipe, testSetup);
 
     expect(mocked).toBe(MockPipe);
@@ -145,9 +144,9 @@ describe('ng-mock', () => {
     spyOn(mockModuleLib, 'mockModule').and.returnValue(MockModule);
     class FooService {}
 
-    const moduleWithProviders: ModuleWithProviders = {
+    const moduleWithProviders: ModuleWithProviders<FooModule> = {
       ngModule: FooModule,
-      providers: [FooService]
+      providers: [FooService],
     };
 
     const mocked = ngMock(moduleWithProviders, testSetup) as any;
@@ -156,27 +155,27 @@ describe('ng-mock', () => {
   });
 
   it('mocks arrays of things', () => {
-    class MockDeclaration {}
+    class MockComponent {}
+    class MockDirective {}
     class MockPipe implements PipeTransform {
-      transform() {}
+      transform = () => undefined;
     }
     class MockModule {}
-    spyOn(ngMocksLib, 'MockDeclaration').and.returnValue(MockDeclaration);
-    spyOn(ngMocksLib, 'MockPipe').and.returnValue(MockPipe as any);
+    spyOn(mockComponentModule, 'mockComponent').and.returnValue(MockComponent);
+    spyOn(mockDirectiveModule, 'mockDirective').and.returnValue(MockDirective);
+    spyOn(mockPipeModule, 'mockPipe').and.returnValue(MockPipe);
     spyOn(mockModuleLib, 'mockModule').and.returnValue(MockModule);
     const mocked = ngMock([FooComponent, FooDirective, FooPipe, FooModule], testSetup);
 
-    expect(mocked).toEqual([MockDeclaration, MockDeclaration, MockPipe, MockModule]);
+    expect(mocked).toEqual([MockComponent, MockDirective, MockPipe, MockModule]);
   });
 
   it('works in TestBed when mocking a component without a selector', async () => {
     @Component({ template: '' })
     class NoSelectorComponent {}
-
     const mocked = ngMock(NoSelectorComponent, testSetup);
-    await TestBed.configureTestingModule({
-      declarations: [mocked]
-    }).compileComponents();
+    await TestBed.configureTestingModule({ declarations: [mocked] }).compileComponents();
+
     expect(true).toBe(true);
   });
 
@@ -189,11 +188,11 @@ describe('ng-mock', () => {
   });
 
   it('does not mock modules when used in an ModuleWithProviders', () => {
-    const DontMockThisModule = class {};
-    const DontMockThisProvider = class {};
-    const moduleWithProviders: ModuleWithProviders = {
+    class DontMockThisModule {}
+    class DontMockThisProvider {}
+    const moduleWithProviders: ModuleWithProviders<DontMockThisModule> = {
       ngModule: DontMockThisModule,
-      providers: [DontMockThisProvider]
+      providers: [DontMockThisProvider],
     };
 
     testSetup.dontMock.push(DontMockThisModule);
@@ -205,22 +204,22 @@ describe('ng-mock', () => {
   it('renders on ngOnInit for all directives when alwaysRenderStructuralDirectives is true', () => {
     testSetup.alwaysRenderStructuralDirectives = true;
     const mocked = ngMock(FooDirective, testSetup);
-    const instance = new mocked() as ngMocksLib.MockedDirective<{}>;
-    spyOn(instance, '__render');
+    const instance = new mocked() as mockDirectiveModule.MockDirective;
+    spyOn(instance, 'renderContents');
     (instance as any).ngOnInit();
 
-    expect(instance.__render).toHaveBeenCalled();
+    expect(instance.renderContents).toHaveBeenCalled();
   });
 
   it('renders on ngOnInit for directives specified in withStructuralDirective', () => {
     testSetup.alwaysRenderStructuralDirectives = false;
     testSetup.withStructuralDirectives.set(FooDirective, true);
     const mocked = ngMock(FooDirective, testSetup);
-    const instance = new mocked() as ngMocksLib.MockedDirective<{}>;
-    spyOn(instance, '__render');
+    const instance = new mocked() as mockDirectiveModule.MockDirective;
+    spyOn(instance, 'renderContents');
     (instance as any).ngOnInit();
 
-    expect(instance.__render).toHaveBeenCalled();
+    expect(instance.renderContents).toHaveBeenCalled();
   });
 
   it('does not render on ngOnInit for directives not specified in withStructuralDirective', () => {
@@ -228,8 +227,10 @@ describe('ng-mock', () => {
     testSetup.alwaysRenderStructuralDirectives = false;
     testSetup.withStructuralDirectives.set(BarDirective, false);
     const mocked = ngMock(BarDirective, testSetup);
-    const instance = new mocked() as ngMocksLib.MockedDirective<{}>;
+    const instance = new mocked() as mockDirectiveModule.MockDirective;
+    spyOn(instance, 'renderContents');
+    (instance as any).ngOnInit?.();
 
-    expect((instance as any).ngOnInit).not.toBeDefined();
+    expect(instance.renderContents).not.toHaveBeenCalled();
   });
 });

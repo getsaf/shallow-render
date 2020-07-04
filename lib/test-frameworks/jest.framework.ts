@@ -21,5 +21,5 @@ export const jestFramework: TestFramework = {
 
   resetSpy(spy: any): void {
     spy.mockReset();
-  }
+  },
 };

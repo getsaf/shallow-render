@@ -15,7 +15,7 @@ export class ShowIfFooDirective {
 }
 
 @NgModule({
-  declarations: [ShowIfFooDirective]
+  declarations: [ShowIfFooDirective],
 })
 class MyModule {}
 //////////////////////////

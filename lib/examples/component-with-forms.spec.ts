@@ -7,7 +7,7 @@ import { Shallow } from '../shallow';
   template: `
     <input id="name" type="text" [(ngModel)]="name" />
     <input id="nickname" type="text" [formControl]="nicknameControl" />
-  `
+  `,
 })
 class FooComponent {
   name = 'Brandon';
@@ -16,7 +16,7 @@ class FooComponent {
 
 @NgModule({
   declarations: [FooComponent],
-  imports: [FormsModule, ReactiveFormsModule]
+  imports: [FormsModule, ReactiveFormsModule],
 })
 class FooModule {}
 

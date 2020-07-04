@@ -4,9 +4,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Component({
   selector: 'name',
-  template: `
-    <label (click)="selected.emit(name)">{{ name }}</label>
-  `
+  template: '<label (click)="selected.emit(name)">{{name}}</label>',
 })
 class NameComponent {
   @Input() name = 'DEFAULT NAME';
@@ -14,7 +12,7 @@ class NameComponent {
 }
 
 @NgModule({
-  declarations: [NameComponent]
+  declarations: [NameComponent],
 })
 class NameModule {}
 //////////////////////////
@@ -28,7 +26,7 @@ describe('No-Template Rendering', () => {
 
   it('displays and tracks the name', async () => {
     const { find, outputs } = await shallow.render({
-      bind: { name: 'Chuck Norris' }
+      bind: { name: 'Chuck Norris' },
     });
     const label = find('label');
     label.nativeElement.click();

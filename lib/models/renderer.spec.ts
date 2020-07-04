@@ -9,13 +9,13 @@ import {
   TemplateRef,
   ViewContainerRef,
   InjectionToken,
-  Injectable
+  Injectable,
 } from '@angular/core';
 import {
   InvalidBindOnEntryComponentError,
   InvalidInputBindError,
   InvalidStaticPropertyMockError,
-  Renderer
+  Renderer,
 } from './renderer';
 import { TestSetup } from './test-setup';
 
@@ -29,7 +29,7 @@ class TestUtility {
 
 const staticObject = {
   staticNumber: 123,
-  staticMethod: () => 'foo'
+  staticMethod: () => 'foo',
 };
 
 @Component({
@@ -37,7 +37,7 @@ const staticObject = {
   template: `
     <div>{{ myInput }}</div>
     <span>{{ promiseResult }}</span>
-  `
+  `,
 })
 class TestComponent implements OnInit {
   // tslint:disable-next-line: no-input-rename
@@ -54,7 +54,7 @@ class TestComponent implements OnInit {
 }
 
 @NgModule({
-  declarations: [TestComponent]
+  declarations: [TestComponent],
 })
 class TestModule {}
 
@@ -148,7 +148,7 @@ describe('Renderer', () => {
 
     it('binds through the wrapper to the component', async () => {
       const { instance } = await renderer.render({
-        bind: { myInput: 'FOO' }
+        bind: { myInput: 'FOO' },
       });
 
       expect(instance.myInput).toBe('FOO');
@@ -156,7 +156,7 @@ describe('Renderer', () => {
 
     it('works on renamed @Input properties', async () => {
       await renderer.render({
-        bind: { fooInput: 'FOO' }
+        bind: { fooInput: 'FOO' },
       });
       expect(true).toBe(true);
     });
@@ -164,7 +164,7 @@ describe('Renderer', () => {
     it('throws an error when binding to a property that is not marked as an @Input', async done => {
       try {
         await renderer.render({
-          bind: { myProperty: 'FOO' }
+          bind: { myProperty: 'FOO' },
         });
         fail('Render should have thrown an error because the myProperty is not an @Input');
       } catch (e) {
@@ -208,7 +208,7 @@ describe('Renderer', () => {
   describe('detectChanges', () => {
     it('is detected by default', async () => {
       const { find } = await renderer.render({
-        bind: { myInput: 'FOO' }
+        bind: { myInput: 'FOO' },
       });
 
       expect(find('div').nativeElement.textContent).toBe('FOO');
@@ -217,7 +217,7 @@ describe('Renderer', () => {
     it('is not detected when disabled in options', async () => {
       const { find } = await renderer.render({
         detectChanges: false,
-        bind: { myInput: 'FOO' }
+        bind: { myInput: 'FOO' },
       });
 
       expect(find('div').nativeElement.textContent).toBe('');
@@ -270,13 +270,13 @@ describe('Renderer', () => {
   describe('entry components', () => {
     it('allows rendering entryComponents with some module magic', async () => {
       @Component({
-        template: '<i class="my-entry">My Entry</i>'
+        template: '<i class="my-entry">My Entry</i>',
       })
       class EntryComponent {}
 
       @Component({
         selector: 'my-normal-component',
-        template: '<i *ngComponentOutlet="entryComponentClass"></i>'
+        template: '<i *ngComponentOutlet="entryComponentClass"></i>',
       })
       class NormalComponent {
         entryComponentClass = EntryComponent;
@@ -284,7 +284,7 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [NormalComponent, EntryComponent],
-        entryComponents: [EntryComponent]
+        entryComponents: [EntryComponent],
       })
       class EntryTestModule {}
 
@@ -298,18 +298,18 @@ describe('Renderer', () => {
     it('allows rendering entryComponents with dependencies', async () => {
       @Component({
         selector: 'child-component',
-        template: '<i class="my-child">My Dependency</i>'
+        template: '<i class="my-child">My Dependency</i>',
       })
       class ChildComponent {}
 
       @Component({
-        template: '<i class="my-entry"><child-component></child-component></i>'
+        template: '<i class="my-entry"><child-component></child-component></i>',
       })
       class EntryComponent {}
 
       @Component({
         selector: 'normal-component',
-        template: '<i *ngComponentOutlet="entryComponentClass"></i>'
+        template: '<i *ngComponentOutlet="entryComponentClass"></i>',
       })
       class NormalComponent {
         entryComponentClass = EntryComponent;
@@ -317,7 +317,7 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [NormalComponent, EntryComponent, ChildComponent],
-        entryComponents: [EntryComponent]
+        entryComponents: [EntryComponent],
       })
       class EntryTestModule {}
 
@@ -330,7 +330,7 @@ describe('Renderer', () => {
 
     it('does not allow bindings to be set for entry components', async () => {
       @Component({
-        template: '<i class="my-entry">My Entry</i>'
+        template: '<i class="my-entry">My Entry</i>',
       })
       class EntryComponent {
         @Input() devMadeAMistakeAndCreatedAnInputOnAnEntryComponent!: string;
@@ -338,14 +338,14 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [EntryComponent],
-        entryComponents: [EntryComponent]
+        entryComponents: [EntryComponent],
       })
       class EntryTestModule {}
 
       const mySetup = new TestSetup(EntryComponent, EntryTestModule);
       try {
         await new Renderer(mySetup).render({
-          bind: { devMadeAMistakeAndCreatedAnInputOnAnEntryComponent: 'Whoops!' }
+          bind: { devMadeAMistakeAndCreatedAnInputOnAnEntryComponent: 'Whoops!' },
         });
         fail('Should not have rendered the entry component');
       } catch (e) {
@@ -355,7 +355,7 @@ describe('Renderer', () => {
 
     it('provides mocked things even if they are not in the module', async () => {
       @Component({
-        template: '<i>Booya</i>'
+        template: '<i>Booya</i>',
       })
       class BasicComponent {}
 
@@ -369,7 +369,7 @@ describe('Renderer', () => {
       const MY_TOKEN = new InjectionToken('Foo', { providedIn: 'root', factory: () => 'FOO' });
 
       @NgModule({
-        declarations: [BasicComponent]
+        declarations: [BasicComponent],
       })
       class BasicModule {}
 

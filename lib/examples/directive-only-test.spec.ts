@@ -3,7 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Directive({
-  selector: '[red]'
+  selector: '[red]',
 })
 class RedDirective {
   @Input() tooltip!: string;
@@ -13,7 +13,7 @@ class RedDirective {
 }
 
 @NgModule({
-  declarations: [RedDirective]
+  declarations: [RedDirective],
 })
 class RedModule {}
 //////////////////////////
