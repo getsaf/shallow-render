@@ -997,10 +997,38 @@ If you&#39;re not interested in using HTML templates, you may skip the template 
 <li>You don&#39;t need to pass in outputs, they are automatically mocked!</li>
 </ul>
 <h2 id='component-lifecycle-change-detection'>Component Lifecycle (change detection)</h2>
-<p>On every render, your component will go through the normal component lifecycle (eg: <code>ngOnInit</code>, <code>ngOnChange</code>, etc.) via a call to <code>fixture.detectChanges()</code>. You may disable automatic change-detection on render via a render option.</p>
-<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">detectChanges</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span> <span class="c1">// Skip automatic change-detection</span>
+<p>On every render, your component will go through the normal component lifecycle (eg: <code>ngOnInit</code>, <code>ngOnChange</code>, etc.) via a call to <code>fixture.detectChanges()</code> and <code>await fixture.whenStable()</code> in shallow. You may control whether or not these are called in shallow-render via a render option.</p>
+
+<p>The normal flow is:</p>
+
+<ul>
+<li>TestBed.createComponent // render</li>
+<li>fixture.detectChanges // fires ngOnInit, etc.</li>
+<li>await fixture.whenStable // waits for async activity to settle</li>
+<li>fixture.detectChanges // makes sure the results of settled async activity is rendered to the DOM</li>
+</ul>
+<h4 id='detectchanges'><code>detectChanges</code></h4>
+<p>You may disable the change detections by setting this flag to <code>false</code>.</p>
+
+<p>The flow will become:</p>
+
+<ul>
+<li>TestBed.createComponent // render</li>
+<li>await fixture.whenStable // waits for async activity to settle</li>
+</ul>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">detectChanges</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span> <span class="c1">// Skip fixture.detectChanges()</span>
 <span class="c1">// Do some setup...</span>
 <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span> <span class="c1">// Call it manually</span>
+</code></pre><h4 id='whenstable'><code>whenStable</code></h4>
+<p>You may disable the whenStable check by setting this flag to <code>false</code>.</p>
+
+<p>The flow will become:</p>
+
+<ul>
+<li>TestBed.createComponent // render</li>
+<li>fixture.detectChanges // fires ngOnInit, etc.</li>
+</ul>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">whenStable</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span> <span class="c1">// Skips fixture.whenStable()</span>
 </code></pre>
 <hr>
 
