@@ -681,12 +681,41 @@ Two rules must follow here:
 
 ## Component Lifecycle (change detection)
 
-On every render, your component will go through the normal component lifecycle (eg: `ngOnInit`, `ngOnChange`, etc.) via a call to `fixture.detectChanges()`. You may disable automatic change-detection on render via a render option.
+On every render, your component will go through the normal component lifecycle (eg: `ngOnInit`, `ngOnChange`, etc.) via a call to `fixture.detectChanges()` and `await fixture.whenStable()` in shallow. You may control whether or not these are called in shallow-render via a render option.
+
+The normal flow is:
+
+- TestBed.createComponent // render
+- fixture.detectChanges // fires ngOnInit, etc.
+- await fixture.whenStable // waits for async activity to settle
+- fixture.detectChanges // makes sure the results of settled async activity is rendered to the DOM
+
+#### `detectChanges`
+
+You may disable the change detections by setting this flag to `false`.
+
+The flow will become:
+
+- TestBed.createComponent // render
+- await fixture.whenStable // waits for async activity to settle
 
 ```typescript
-const { fixture } = await shallow.render({ detectChanges: false }); // Skip automatic change-detection
+const { fixture } = await shallow.render({ detectChanges: false }); // Skip fixture.detectChanges()
 // Do some setup...
 fixture.detectChanges(); // Call it manually
+```
+
+#### `whenStable`
+
+You may disable the whenStable check by setting this flag to `false`.
+
+The flow will become:
+
+- TestBed.createComponent // render
+- fixture.detectChanges // fires ngOnInit, etc.
+
+```typescript
+const { fixture } = await shallow.render({ whenStable: false }); // Skips fixture.whenStable()
 ```
 
 ---
