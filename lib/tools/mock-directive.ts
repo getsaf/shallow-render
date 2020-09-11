@@ -2,7 +2,7 @@ import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, O
 import { directiveResolver } from './reflect';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
-import { mockWithInputsOutputsAndStubs } from './mock-base';
+import { mockWithInputsOutputsAndStubs } from './mock-with-inputs-and-outputs-and-stubs';
 
 export type MockDirective = {
   renderContents: () => void;

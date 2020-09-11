@@ -2,7 +2,7 @@ import { directiveResolver } from './reflect';
 import { Component, forwardRef, Type, Provider } from '@angular/core';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
-import { mockWithInputsOutputsAndStubs } from './mock-base';
+import { mockWithInputsOutputsAndStubs } from './mock-with-inputs-and-outputs-and-stubs';
 
 export const mockComponent = <TComponent extends Type<any>>(
   component: TComponent,
