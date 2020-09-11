@@ -2,6 +2,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { mockComponent } from './mock-component';
+import { directiveResolver } from './reflect';
 
 describe('mockComponent', () => {
   it('mocks the correct selector', () => {
@@ -57,6 +58,21 @@ describe('mockComponent', () => {
 
     expect(fixture.componentInstance.handleEvent).toHaveBeenCalledWith('foo');
     expect(fixture.componentInstance.handleEvent).toHaveBeenCalledWith('bar');
+  });
+
+  it('transforms providers', () => {
+    class FooProvider {}
+    @Component({ selector: 'my-component', providers: [FooProvider] })
+    class MyComponent {}
+
+    class BarProvider {}
+    class BazProvider {}
+    const mockedComponent = mockComponent(MyComponent, { providerTransform: () => [BarProvider, BazProvider] });
+    const mockedProviders = directiveResolver.resolve(mockedComponent).providers;
+
+    expect(mockedProviders).not.toContain(FooProvider);
+    expect(mockedProviders).toContain(BarProvider);
+    expect(mockedProviders).toContain(BazProvider);
   });
 
   it('renders ng-content', () => {

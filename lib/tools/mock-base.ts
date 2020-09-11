@@ -1,11 +1,16 @@
 import { Input, Output, EventEmitter, Type } from '@angular/core';
 import { directiveResolver } from './reflect';
 import { MockWithStubs } from '../models/mock-with-stubs';
+import { ControlValueAccessor } from '@angular/forms';
 
 export const mockWithInputsOutputsAndStubs = (componentOrDirective: Type<any>, stubs?: object): Type<any> => {
   const { inputs, outputs } = directiveResolver.resolve(componentOrDirective);
 
-  class Mock extends MockWithStubs {
+  class Mock extends MockWithStubs implements ControlValueAccessor {
+    writeValue(_obj: any): void {}
+    registerOnChange(_fn: any): void {}
+    registerOnTouched(_fn: any): void {}
+
     constructor() {
       super(stubs);
       outputs?.map(output => output.split(': ')).forEach(([key]) => Object.assign(this, { [key]: new EventEmitter() }));
