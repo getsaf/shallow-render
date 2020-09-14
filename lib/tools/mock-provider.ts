@@ -3,12 +3,18 @@ import { mockProviderClass } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { isClassProvider, isExistingProvider, isFactoryProvider, isTypeProvider } from './type-checkers';
 
-const recursiveIncludes = (array: any[], item: any): boolean =>
-  !!array.find(i => i === item || (i && i.provide === item) || (Array.isArray(i) && recursiveIncludes(i, item)));
+const recursiveFindProvider = (haystack: Provider[], needle: Provider): Provider | undefined =>
+  haystack.find(
+    i =>
+      i === needle ||
+      (typeof i === 'object' && 'provide' in i && i.provide === needle) ||
+      (Array.isArray(i) && recursiveFindProvider(i, needle))
+  );
 
-export function mockProvider(provider: TypeProvider, setup: TestSetup<any>): ValueProvider | TypeProvider;
-export function mockProvider<TProvider extends Provider>(provider: TProvider, setup: TestSetup<any>): TProvider;
-export function mockProvider(provider: Provider, setup: TestSetup<any>): Provider {
+export function mockProvider(providerToMock: TypeProvider, setup: TestSetup<any>): ValueProvider | TypeProvider;
+export function mockProvider<TProvider extends Provider>(providerToMock: TProvider, setup: TestSetup<any>): TProvider;
+export function mockProvider(providerToMock: Provider, setup: TestSetup<any>): Provider {
+  const provider = recursiveFindProvider(setup.providers, providerToMock) || providerToMock;
   if (Array.isArray(provider)) {
     return provider.map(p => mockProvider(p, setup)); // Recursion
   } else if (isExistingProvider(provider)) {
@@ -25,16 +31,17 @@ export function mockProvider(provider: Provider, setup: TestSetup<any>): Provide
   const hasMocks = setup.mocks.has(provide);
   const userMocks = setup.mocks.get(provide);
 
-  if (hasMocks && provide instanceof InjectionToken) {
-    return { provide, useValue: userMocks };
-  }
-
   // TODO: What if setup.dontMock.includes(provide.useClass)?
-  if (!hasMocks && recursiveIncludes(setup.dontMock, provide)) {
+  if (!hasMocks && recursiveFindProvider(setup.dontMock, provide)) {
     return provider;
   }
 
-  const MockProvider = mockProviderClass(provide, userMocks);
+  // Value-based Injection Tokens pass straight through
+  if (hasMocks && provide instanceof InjectionToken && 'useValue' in provider) {
+    return { provide, useValue: userMocks };
+  }
+
+  const MockProvider = mockProviderClass(isClassProvider(provider) ? provider.useClass : provide, userMocks);
 
   const prov = {
     provide,

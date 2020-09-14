@@ -1,20 +1,21 @@
 import { directiveResolver } from './reflect';
-import { Component, forwardRef, Type } from '@angular/core';
+import { Component, forwardRef, Type, Provider } from '@angular/core';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
-import { mockWithInputsOutputsAndStubs } from './mock-base';
+import { mockWithInputsOutputsAndStubs } from './mock-with-inputs-and-outputs-and-stubs';
 
 export const mockComponent = <TComponent extends Type<any>>(
   component: TComponent,
-  config?: { stubs?: object }
+  config?: { stubs?: object; providerTransform?: (providers: Provider[]) => Provider[] }
 ): TComponent => {
-  const { exportAs, selector } = directiveResolver.resolve(component);
+  const { exportAs, selector, providers = [] } = directiveResolver.resolve(component);
+  const providerTransform = (config && config.providerTransform) || (() => []);
 
   @MockOf(component)
   @Component({
     selector,
     template: '<ng-content></ng-content>',
-    providers: [{ provide: component, useExisting: forwardRef(() => Mock) }],
+    providers: [{ provide: component, useExisting: forwardRef(() => Mock) }, ...providerTransform(providers)],
     exportAs,
   })
   class Mock extends mockWithInputsOutputsAndStubs(component, config?.stubs) {}

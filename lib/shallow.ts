@@ -9,21 +9,13 @@ import { TestSetup } from './models/test-setup';
 import './test-frameworks/shallow-matchers';
 import { AngularModule } from './models/angular-module';
 
-const NEVER_MOCKED_ANGULAR_STUFF = [
-  CommonModule,
-  BrowserModule,
-  FormsModule,
-  ReactiveFormsModule,
-  HAMMER_GESTURE_CONFIG,
-];
-
 export class Shallow<TTestComponent> {
   // tslint:disable: member-ordering
   readonly setup: TestSetup<TTestComponent>;
 
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
-  private static readonly _neverMock: any[] = [...NEVER_MOCKED_ANGULAR_STUFF];
+  private static readonly _neverMock: any[] = [];
   static neverMock(...things: any[]) {
     this._neverMock.push(...things);
     return Shallow;
@@ -185,3 +177,5 @@ export class Shallow<TTestComponent> {
     }
   }
 }
+
+Shallow.neverMock(CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, HAMMER_GESTURE_CONFIG);

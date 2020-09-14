@@ -9,6 +9,8 @@ import { mockPipe } from './mock-pipe';
 import { mockDirective } from './mock-directive';
 import { mockComponent } from './mock-component';
 import { TestBed } from '@angular/core/testing';
+import { Provider } from '@angular/compiler/src/core';
+import { mockProvider } from './mock-provider';
 
 export type NgMockable = AngularModule | Type<any> | Type<PipeTransform> | any[];
 
@@ -35,11 +37,13 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = mockPipe(thing, setup.mockPipes.get(thing));
     } else if (isClass(thing)) {
       const stubs = setup.mocks.get(thing);
+      const providerTransform = (providers: Provider[]) => providers.map(p => mockProvider(p, setup));
       mock =
         declarationType(thing) === 'Component'
-          ? mockComponent(thing, { stubs })
+          ? mockComponent(thing, { stubs, providerTransform })
           : mockDirective(thing, {
               stubs,
+              providerTransform,
               renderContentsOnInit:
                 setup.withStructuralDirectives.get(thing) ||
                 (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing) !== false),

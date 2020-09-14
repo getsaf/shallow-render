@@ -147,7 +147,7 @@ describe('mockPrivider', () => {
     expect(providers[2].useValue).toBe(0);
   });
 
-  it('automocks injection tokens', () => {
+  it('passes through mocks for injection tokens when they are value-providers', () => {
     const STRING_TOKEN = new InjectionToken<string>('My string token');
     const BOOLEAN_TOKEN = new InjectionToken<boolean>('My boolean token');
     const NUMBER_TOKEN = new InjectionToken<number>('My number token');
@@ -163,5 +163,13 @@ describe('mockPrivider', () => {
     expect(providers[0].useValue instanceof MockOfProvider).toBe(true);
     expect(providers[1].useValue instanceof MockOfProvider).toBe(true);
     expect(providers[2].useValue instanceof MockOfProvider).toBe(true);
+  });
+
+  it('automocks injection tokens when they are class-providers', () => {
+    class Foo {}
+    const provider = mockProvider({ provide: new InjectionToken<Foo>('Foo Token'), useClass: Foo }, testSetup);
+
+    expect(new provider.useClass() instanceof MockOfProvider).toBe(true);
+    expect(provider.useClass.name).toBe('MockOfFoo');
   });
 });
