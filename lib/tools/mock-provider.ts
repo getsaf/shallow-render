@@ -1,15 +1,35 @@
 import { APP_INITIALIZER, Provider, InjectionToken, TypeProvider, ValueProvider } from '@angular/core';
 import { mockProviderClass } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
-import { isClassProvider, isExistingProvider, isFactoryProvider, isTypeProvider } from './type-checkers';
+import {
+  isClassProvider,
+  isExistingProvider,
+  isFactoryProvider,
+  isTypeProvider,
+  isValueProvider,
+} from './type-checkers';
 
-const recursiveFindProvider = (haystack: Provider[], needle: Provider): Provider | undefined =>
-  haystack.find(
-    i =>
-      i === needle ||
-      (typeof i === 'object' && 'provide' in i && i.provide === needle) ||
-      (Array.isArray(i) && recursiveFindProvider(i, needle))
-  );
+const getProvide = (provider: Provider) => {
+  if (Array.isArray(provider)) {
+    return undefined;
+  } else if (isTypeProvider(provider) || provider instanceof InjectionToken) {
+    return provider;
+  } else {
+    return provider.provide;
+  }
+};
+
+const recursiveFindProvider = (haystack: Provider[], needle: Provider): Provider | undefined => {
+  for (const i of haystack) {
+    if (Array.isArray(i)) {
+      const found = recursiveFindProvider(i, needle); // Recursion
+      if (found) return found;
+    } else if (i === needle || (getProvide(i) && getProvide(i) === getProvide(needle))) {
+      return i;
+    }
+  }
+  return undefined;
+};
 
 export function mockProvider(providerToMock: TypeProvider, setup: TestSetup<any>): ValueProvider | TypeProvider;
 export function mockProvider<TProvider extends Provider>(providerToMock: TProvider, setup: TestSetup<any>): TProvider;
@@ -20,25 +40,24 @@ export function mockProvider(providerToMock: Provider, setup: TestSetup<any>): P
   } else if (isExistingProvider(provider)) {
     return provider;
   }
-
-  // APP_INITIALIZERS break TestBed!
-  // Do this until https://github.com/angular/angular/issues/24218 is fixed
-  if (!isTypeProvider(provider) && provider.provide === APP_INITIALIZER) {
-    return [];
-  }
-
   const provide = isTypeProvider(provider) ? provider : provider.provide;
   const hasMocks = setup.mocks.has(provide);
   const userMocks = setup.mocks.get(provide);
 
+  // APP_INITIALIZERS break TestBed!
+  // Do this until https://github.com/angular/angular/issues/24218 is fixed
+  if (provide === APP_INITIALIZER) {
+    return [];
+  }
+
   // TODO: What if setup.dontMock.includes(provide.useClass)?
-  if (!hasMocks && recursiveFindProvider(setup.dontMock, provide)) {
+  if (!hasMocks && recursiveFindProvider(setup.dontMock, provider)) {
     return provider;
   }
 
   // Value-based Injection Tokens pass straight through
-  if (hasMocks && provide instanceof InjectionToken && 'useValue' in provider) {
-    return { provide, useValue: userMocks };
+  if (provide instanceof InjectionToken && isValueProvider(provider)) {
+    return { provide, useValue: hasMocks ? userMocks : provider.useValue };
   }
 
   const MockProvider = mockProviderClass(isClassProvider(provider) ? provider.useClass : provide, userMocks);

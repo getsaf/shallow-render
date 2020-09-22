@@ -43,6 +43,7 @@ describe('component with forms', () => {
     shallow = new Shallow(FooComponent, FooModule).provideMock({
       provide: NG_VALUE_ACCESSOR,
       useClass: DefaultValueAccessor,
+      multi: true,
     });
   });
 
