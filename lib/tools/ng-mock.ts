@@ -37,7 +37,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = mockPipe(thing, setup.mockPipes.get(thing));
     } else if (isClass(thing)) {
       const stubs = setup.mocks.get(thing);
-      const providerTransform = (providers: Provider[]) => providers.map(p => mockProvider(p, setup));
+      const providerTransform = (providers: Provider[]) => mockProvider(providers, setup);
       mock =
         declarationType(thing) === 'Component'
           ? mockComponent(thing, { stubs, providerTransform })

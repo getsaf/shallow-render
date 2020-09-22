@@ -92,21 +92,28 @@ describe('mockPrivider', () => {
     expect(providers[1].useValue instanceof MockOfProvider).toBe(true);
   });
 
-  it('does not mock services when they are part of a provider array in dontMock', () => {
-    // Angular allows a provider to be defined as an array of providers
-    // so in this instance, adding an array that contains FooService *should*
-    // be the same as adding just FooService.
-    testSetup.dontMock.push([FooService]);
-    const providers = mockProvider([FooService], testSetup) as any[];
+  it('does not mock various provider types found in the module or in the dontMock array', () => {
+    class Foo {}
+    class Bar {}
+    class Baz {}
+    const TEST_TOKEN_ONE = new InjectionToken<string>('Test Token');
+    const TEST_TOKEN_TWO = new InjectionToken<string>('Test Token Two');
 
-    expect(providers[0]).toBe(FooService);
-  });
+    testSetup.dontMock.push(Foo);
+    testSetup.dontMock.push([[Bar]]); // Unlimited nexting arrays allowed by Angular
+    testSetup.dontMock.push({ provide: Baz, useValue: 'THIS VALUE DOES NOT MATTER' });
+    testSetup.dontMock.push({ provide: TEST_TOKEN_ONE, useValue: 'THIS VALUE DOES NOT MATTER' });
+    testSetup.dontMock.push(TEST_TOKEN_TWO);
+    const originalProvidersToMock = [
+      { provide: Foo, useValue: 'ACTUAL FOO VALUE' },
+      { provide: Bar, useValue: 'ACTUAL BAR VALUE' },
+      [[Baz]],
+      { provide: TEST_TOKEN_ONE, useValue: 'ORIGINAL TOKEN ONE VALUE' },
+      { provide: TEST_TOKEN_TWO, useValue: 'ORIGINAL TOKEN TWO VALUE' },
+    ];
+    const providers = mockProvider(originalProvidersToMock, testSetup);
 
-  it('does not mock services when they are part of a Type/Value/Factory provider in dontMock', () => {
-    testSetup.dontMock.push({ provide: FooService, useValue: 'TEST VALUE' });
-    const providers = mockProvider([FooService], testSetup) as any[];
-
-    expect(providers[0]).toBe(FooService);
+    expect(providers).toEqual(originalProvidersToMock);
   });
 
   it('mocks non-object injection tokens', () => {
@@ -160,9 +167,9 @@ describe('mockPrivider', () => {
       testSetup
     ) as any[];
 
-    expect(providers[0].useValue instanceof MockOfProvider).toBe(true);
-    expect(providers[1].useValue instanceof MockOfProvider).toBe(true);
-    expect(providers[2].useValue instanceof MockOfProvider).toBe(true);
+    expect(providers[0].useValue).toBe('FOO');
+    expect(providers[1].useValue).toBe(true);
+    expect(providers[2].useValue).toBe(42);
   });
 
   it('automocks injection tokens when they are class-providers', () => {
@@ -171,5 +178,69 @@ describe('mockPrivider', () => {
 
     expect(new provider.useClass() instanceof MockOfProvider).toBe(true);
     expect(provider.useClass.name).toBe('MockOfFoo');
+  });
+
+  it('subs injection tokens from test setup', () => {
+    const BAR_TOKEN = new InjectionToken<string>('Bar Token');
+    testSetup.providers.push({ provide: BAR_TOKEN, useValue: 'MOCK BAR' });
+    const mockedProvider = mockProvider({ provide: BAR_TOKEN, useValue: 'BAR' }, testSetup);
+
+    expect(mockedProvider.useValue).toEqual('MOCK BAR');
+  });
+
+  it('subs class providers from test setup', () => {
+    class Foo {}
+    testSetup.providers.push({ provide: Foo, useValue: 'MOCK FOO' });
+    testSetup.dontMock.push(Foo);
+    const mockedProvider: any = mockProvider(Foo, testSetup);
+
+    expect(mockedProvider.useValue).toEqual('MOCK FOO');
+  });
+
+  it('subs factory providers from test setup', () => {
+    class Foo {}
+    testSetup.providers.push({ provide: Foo, useFactory: () => 'MOCK FOO' });
+    testSetup.dontMock.push(Foo);
+    const mockedProvider: any = mockProvider(Foo, testSetup);
+
+    expect(mockedProvider.useFactory()).toEqual('MOCK FOO');
+  });
+
+  it('subs user provided services/tokens of varios provider types', () => {
+    class Foo {}
+    class Bar {}
+    class Baz {}
+    const TEST_TOKEN = new InjectionToken<string>('Test Token');
+
+    // Use various ways to define providers...
+    [
+      Foo,
+      [[Bar]],
+      { provide: Baz, useValue: 'USER PROVIDED BAZ VALUE' },
+      { provide: TEST_TOKEN, useValue: 'USER PROVIDED TOKEN VALUE' },
+    ].forEach(provider => {
+      testSetup.providers.push(provider);
+      testSetup.dontMock.push(provider);
+    });
+
+    // Use different ways to define the module's providers
+    const providers: any = mockProvider(
+      [
+        { provide: Foo, useValue: 'MODULE PROVIDED VALUE' },
+        { provide: Bar, useValue: 'MODULE PROVIDED VALUE' },
+        [[Baz]],
+        { provide: TEST_TOKEN, useValue: 'MODULE PROVIDED VALUE' },
+      ],
+      testSetup
+    );
+
+    // The result is that the structure matches the module's structure, but user
+    // provided services are substituted in-place
+    expect(providers).toEqual([
+      Foo,
+      Bar,
+      [[{ provide: Baz, useValue: 'USER PROVIDED BAZ VALUE' }]],
+      { provide: TEST_TOKEN, useValue: 'USER PROVIDED TOKEN VALUE' },
+    ]);
   });
 });
