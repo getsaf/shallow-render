@@ -3,6 +3,8 @@ import { AnyFunction, TestFramework } from './types';
 declare var jest: any;
 
 export const jestFramework: TestFramework = {
+  createSpy: () => jest.fn(),
+
   isSpy: (mockFunction: any): boolean => jest.isMockFunction(mockFunction),
 
   spyOn<T>(object: T, method: keyof T, mockImplementation?: AnyFunction) {

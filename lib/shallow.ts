@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { InjectionToken, PipeTransform, Provider, Type } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { RecursivePartial } from './models/recursive-partial';
 import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
@@ -178,4 +178,11 @@ export class Shallow<TTestComponent> {
   }
 }
 
-Shallow.neverMock(CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, HAMMER_GESTURE_CONFIG);
+Shallow.neverMock(
+  CommonModule,
+  BrowserModule,
+  FormsModule,
+  ReactiveFormsModule,
+  NG_VALUE_ACCESSOR,
+  HAMMER_GESTURE_CONFIG
+);

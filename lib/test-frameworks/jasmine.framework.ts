@@ -4,6 +4,8 @@ declare var jasmine: any;
 declare var spyOn: any;
 
 export const jasmineFramework: TestFramework = {
+  createSpy: () => jasmine.createSpy(),
+
   isSpy: (mockFunction: AnyFunction): boolean => jasmine.isSpy(mockFunction),
 
   spyOn<T>(object: T, method: keyof T, mockImplementation?: AnyFunction) {
