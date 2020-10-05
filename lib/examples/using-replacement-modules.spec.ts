@@ -39,7 +39,7 @@ describe('using replaceModule', () => {
 
   it('displays the response from the foo service', fakeAsync(async () => {
     const { element, inject, fixture } = await shallow.render();
-    const client = inject(HttpTestingController as Type<HttpTestingController>);
+    const client = inject(HttpTestingController);
     client.expectOne('/foo/as/a/service').flush('foo response');
     tick();
     fixture.detectChanges();
@@ -49,7 +49,7 @@ describe('using replaceModule', () => {
 
   it('displays ERROR when a service error occurs', fakeAsync(async () => {
     const { element, inject, fixture } = await shallow.render();
-    const client = inject(HttpTestingController as Type<HttpTestingController>);
+    const client = inject(HttpTestingController);
     client.expectOne('/foo/as/a/service').error(new ErrorEvent('BOOM'));
     tick();
     fixture.detectChanges();

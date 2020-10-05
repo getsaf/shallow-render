@@ -3,15 +3,17 @@ import { InjectionToken, PipeTransform, Provider, Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { RecursivePartial } from './models/recursive-partial';
-import { InvalidStaticPropertyMockError, Renderer } from './models/renderer';
+import { Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
 import { TestSetup } from './models/test-setup';
 import './test-frameworks/shallow-matchers';
 import { AngularModule } from './models/angular-module';
+import { InvalidStaticPropertyMockError } from './tools/mock-statics';
+import { createService } from './tools/create-service';
 
-export class Shallow<TTestComponent> {
+export class Shallow<TTestTarget> {
   // tslint:disable: member-ordering
-  readonly setup: TestSetup<TTestComponent>;
+  readonly setup: TestSetup<TTestTarget>;
 
   // Never mock the Angular Common Module, it includes things like *ngIf and basic
   // template directives.
@@ -77,9 +79,9 @@ export class Shallow<TTestComponent> {
     return Shallow;
   }
 
-  constructor(testComponent: Type<TTestComponent>, testModule: AngularModule) {
-    this.setup = new TestSetup(testComponent, testModule);
-    this.setup.dontMock.push(testComponent, ...Shallow._neverMock);
+  constructor(testComponentOrService: Type<TTestTarget>, testModule: AngularModule) {
+    this.setup = new TestSetup(testComponentOrService, testModule);
+    this.setup.dontMock.push(testComponentOrService, ...Shallow._neverMock);
     this.setup.providers.push(...Shallow._alwaysProvide);
     this.setup.imports.push(...Shallow._alwaysImport);
     this.setup.alwaysRenderStructuralDirectives = Shallow._alwaysRenderStructuralDirectives;
@@ -150,18 +152,18 @@ export class Shallow<TTestComponent> {
   }
 
   // Render no options, just the component and no bindings
-  render(): Promise<Rendering<TTestComponent, never>>;
+  render(): Promise<Rendering<TTestTarget, never>>;
 
   render<TBindings>(
     html: string,
     renderOptions?: Partial<RenderOptions<TBindings>>
-  ): Promise<Rendering<TTestComponent, TBindings>>;
+  ): Promise<Rendering<TTestTarget, TBindings>>;
 
   // Render with just renderOptions, means you must provide bindings that match
   // the TestComponent
-  render<TBindings extends RecursivePartial<TTestComponent>>(
+  render<TBindings extends RecursivePartial<TTestTarget>>(
     renderOptions?: Partial<RenderOptions<TBindings>>
-  ): Promise<Rendering<TTestComponent, TBindings>>;
+  ): Promise<Rendering<TTestTarget, TBindings>>;
 
   async render<TBindings>(
     htmlOrRenderOptions?: string | Partial<RenderOptions<TBindings>>,
@@ -175,6 +177,10 @@ export class Shallow<TTestComponent> {
     } else {
       return renderer.render();
     }
+  }
+
+  createService() {
+    return createService(this.setup);
   }
 }
 

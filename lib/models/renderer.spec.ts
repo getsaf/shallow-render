@@ -11,13 +11,9 @@ import {
   InjectionToken,
   Injectable,
 } from '@angular/core';
-import {
-  InvalidBindOnEntryComponentError,
-  InvalidInputBindError,
-  InvalidStaticPropertyMockError,
-  Renderer,
-} from './renderer';
+import { InvalidBindOnEntryComponentError, InvalidInputBindError, Renderer } from './renderer';
 import { TestSetup } from './test-setup';
+import { InvalidStaticPropertyMockError } from '../tools/mock-statics';
 
 class TestUtility {
   // tslint:disable-line no-unnecessary-class
@@ -89,7 +85,7 @@ describe('Renderer', () => {
       await renderer.render();
       fail('render should have thrown an error');
     } catch (e) {
-      expect(e instanceof InvalidStaticPropertyMockError).toBe(true);
+      expect(e).toBeInstanceOf(InvalidStaticPropertyMockError);
     }
   });
 
@@ -100,7 +96,7 @@ describe('Renderer', () => {
       await renderer.render();
       fail('render should have thrown an error');
     } catch (e) {
-      expect(e instanceof InvalidStaticPropertyMockError).toBe(true);
+      expect(e).toBeInstanceOf(InvalidStaticPropertyMockError);
     }
   });
 
@@ -127,7 +123,7 @@ describe('Renderer', () => {
     it('wraps the rendering in a container', async () => {
       const { fixture } = await renderer.render('<thing></thing>');
 
-      expect(fixture.debugElement.children[0].componentInstance instanceof TestComponent).toBe(true);
+      expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
     });
   });
 
@@ -135,7 +131,7 @@ describe('Renderer', () => {
     it('wraps the rendering in a container', async () => {
       const { fixture } = await renderer.render();
 
-      expect(fixture.debugElement.children[0].componentInstance instanceof TestComponent).toBe(true);
+      expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
     });
   });
 
@@ -143,7 +139,7 @@ describe('Renderer', () => {
     it('wraps the rendering in a container', async () => {
       const { fixture } = await renderer.render({});
 
-      expect(fixture.debugElement.children[0].componentInstance instanceof TestComponent).toBe(true);
+      expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
     });
 
     it('binds through the wrapper to the component', async () => {
@@ -168,7 +164,7 @@ describe('Renderer', () => {
         });
         fail('Render should have thrown an error because the myProperty is not an @Input');
       } catch (e) {
-        expect(e instanceof InvalidInputBindError).toBe(true);
+        expect(e).toBeInstanceOf(InvalidInputBindError);
         done();
       }
     });
@@ -263,7 +259,7 @@ describe('Renderer', () => {
       const myRenderer = new Renderer(new TestSetup(IfOddDirective, OddModule));
       const { instance } = await myRenderer.render('<b *ifOdd="2"></b>');
 
-      expect(instance instanceof IfOddDirective).toBe(true);
+      expect(instance).toBeInstanceOf(IfOddDirective);
     });
   });
 
@@ -349,7 +345,7 @@ describe('Renderer', () => {
         });
         fail('Should not have rendered the entry component');
       } catch (e) {
-        expect(e instanceof InvalidBindOnEntryComponentError).toBe(true);
+        expect(e).toBeInstanceOf(InvalidBindOnEntryComponentError);
       }
     });
 

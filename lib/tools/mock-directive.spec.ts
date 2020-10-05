@@ -16,7 +16,7 @@ describe('mockDirective', () => {
     }).createComponent(TestHost);
     const instance = fixture.debugElement.query(By.css('div')).injector.get(MyDirective);
 
-    expect(instance instanceof MyMock).toBe(true);
+    expect(instance).toBeInstanceOf(MyMock);
   });
 
   it('mocks inputs', () => {

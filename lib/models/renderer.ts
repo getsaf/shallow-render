@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Type, InjectionToken } from '@angular/core';
+import { Directive, EventEmitter, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { testFramework } from '../test-frameworks/test-framework';
@@ -10,6 +10,8 @@ import { CustomError } from './custom-error';
 import { RecursivePartial } from './recursive-partial';
 import { Rendering, RenderOptions } from './rendering';
 import { TestSetup } from './test-setup';
+import { mockStatics } from '../tools/mock-statics';
+import { injectRootProviders } from '../tools/inject-root-providers';
 
 export class InvalidInputBindError extends CustomError {
   constructor(availableInputs: string[], key: string | symbol) {
@@ -35,38 +37,8 @@ export class MissingTestComponentError extends CustomError {
   }
 }
 
-export class InvalidStaticPropertyMockError extends CustomError {
-  static checkMockForStaticProperties(stubs: object) {
-    Object.keys(stubs).forEach(key => {
-      if (typeof (stubs as any)[key] !== 'function') {
-        throw new InvalidStaticPropertyMockError(key);
-      }
-    });
-  }
-
-  constructor(key: string | symbol) {
-    super(`Tried to mock the '${String(key)}' property but only functions are supported for static mocks.`);
-  }
-}
-
 export class Renderer<TComponent> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}
-
-  private _mockStatics() {
-    this._setup.staticMocks.forEach((stubs, obj) => {
-      InvalidStaticPropertyMockError.checkMockForStaticProperties(stubs);
-      Object.keys(stubs).forEach(key => {
-        const stub = stubs[key];
-        if (!testFramework.isSpy(obj[key])) {
-          testFramework.spyOn(obj, key, stub);
-        } else {
-          const spy = obj[key];
-          testFramework.resetSpy(spy);
-          testFramework.mockImplementation(spy, stub);
-        }
-      });
-    });
-  }
 
   private _createTemplateString(directive: Directive, bindings: any) {
     const componentInputs = (directive.inputs || [])
@@ -101,10 +73,10 @@ export class Renderer<TComponent> {
       ...options,
     };
 
-    // Go ahead and mock static things
-    this._mockStatics();
+    mockStatics(this._setup);
+    injectRootProviders(this._setup);
 
-    const resolvedTestComponent = directiveResolver.resolve(this._setup.testComponent);
+    const resolvedTestComponent = directiveResolver.resolve(this._setup.testComponentOrService);
     if (!template) {
       // If no template is used, the bindings should be verified to match the
       // component @Input properties
@@ -116,36 +88,20 @@ export class Renderer<TComponent> {
           template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
           finalOptions.bind
         )
-      : this._setup.testComponent;
+      : this._setup.testComponentOrService;
 
     // Components may have their own providers, If the test component does,
     // we will mock them out here..
     if (resolvedTestComponent.providers && resolvedTestComponent.providers.length) {
-      TestBed.overrideComponent(this._setup.testComponent, {
+      TestBed.overrideComponent(this._setup.testComponentOrService, {
         set: {
           providers: resolvedTestComponent.providers.map(p => mockProvider(p, this._setup)),
         },
       });
     }
 
-    // This takes care of providedIn 'root'
-    this._setup.mocks.forEach((mock, thingToMock) => {
-      if (!directiveResolver.isDirective(thingToMock)) {
-        if (thingToMock instanceof InjectionToken) {
-          TestBed.overrideProvider(thingToMock, { useValue: mock });
-        } else {
-          const provider = mockProvider(thingToMock, this._setup);
-          TestBed.overrideProvider(thingToMock, {
-            useValue: provider.useValue,
-            useFactory: provider.useFactory,
-            deps: provider.deps,
-          });
-        }
-      }
-    });
-
     await TestBed.configureTestingModule({
-      imports: [createTestModule(this._setup, [this._setup.testComponent, ComponentClass])],
+      imports: [createTestModule(this._setup, [this._setup.testComponentOrService, ComponentClass])],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);
@@ -172,7 +128,7 @@ export class Renderer<TComponent> {
 
   private _verifyComponentBindings(directive: Directive, bindings: Partial<TComponent>) {
     if (!directive.selector && Object.keys(bindings).length) {
-      throw new InvalidBindOnEntryComponentError(this._setup.testComponent);
+      throw new InvalidBindOnEntryComponentError(this._setup.testComponentOrService);
     }
 
     const inputPropertyNames = (directive.inputs || []).map(k => k.split(':')[0]);
@@ -197,25 +153,26 @@ export class Renderer<TComponent> {
   }
 
   private _getElement(fixture: ComponentFixture<any>) {
-    return fixture.componentInstance instanceof this._setup.testComponent
+    return fixture.componentInstance instanceof this._setup.testComponentOrService
       ? fixture.debugElement
-      : fixture.debugElement.query(By.directive(this._setup.testComponent)) || fixture.debugElement.children[0];
+      : fixture.debugElement.query(By.directive(this._setup.testComponentOrService)) ||
+          fixture.debugElement.children[0];
   }
 
   private _getInstance(fixture: ComponentFixture<any>) {
     const element = this._getElement(fixture);
     const instance = element
-      ? element.injector.get<TComponent>(this._setup.testComponent)
+      ? element.injector.get<TComponent>(this._setup.testComponentOrService)
       : this._getStructuralDirectiveInstance(fixture);
 
     return instance;
   }
 
   private _getStructuralDirectiveInstance(fixture: ComponentFixture<any>) {
-    const [debugNode] = fixture.debugElement.queryAllNodes(By.directive(this._setup.testComponent));
+    const [debugNode] = fixture.debugElement.queryAllNodes(By.directive(this._setup.testComponentOrService));
     if (debugNode) {
-      return debugNode.injector.get<TComponent>(this._setup.testComponent);
+      return debugNode.injector.get<TComponent>(this._setup.testComponentOrService);
     }
-    throw new MissingTestComponentError(this._setup.testComponent);
+    throw new MissingTestComponentError(this._setup.testComponentOrService);
   }
 }

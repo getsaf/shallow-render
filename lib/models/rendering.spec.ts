@@ -216,7 +216,7 @@ describe('Rendering', () => {
     it('finds components', () => {
       const { findComponent } = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(findComponent(InnerComponent) instanceof InnerComponent).toBe(true);
+      expect(findComponent(InnerComponent)).toBeInstanceOf(InnerComponent);
     });
 
     it('finds mocked components', () => {
@@ -230,7 +230,7 @@ describe('Rendering', () => {
 
       const found = findComponent(OtherComponent);
       expect(found).toHaveFound(2);
-      found.forEach(i => expect(i instanceof OtherComponent).toBe(true));
+      found.forEach(i => expect(i).toBeInstanceOf(OtherComponent));
     });
 
     it('finds components that match a css query', () => {
@@ -252,7 +252,7 @@ describe('Rendering', () => {
     it('finds directives', () => {
       const { findDirective } = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(findDirective(TestDirective) instanceof TestDirective).toBe(true);
+      expect(findDirective(TestDirective)).toBeInstanceOf(TestDirective);
     });
 
     it('finds mocked directives', () => {
@@ -266,7 +266,7 @@ describe('Rendering', () => {
 
       const found = findDirective(OtherDirective);
       expect(found).toHaveFound(2);
-      found.forEach(i => expect(i instanceof OtherDirective).toBe(true));
+      found.forEach(i => expect(i).toBeInstanceOf(OtherDirective));
     });
 
     it('finds directives that match a css query', () => {
@@ -422,7 +422,7 @@ describe('Rendering', () => {
     it('returns properties that are eventEmitters', () => {
       const rendering = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(rendering.outputs.markedAsOutput instanceof EventEmitter).toBe(true);
+      expect(rendering.outputs.markedAsOutput).toBeInstanceOf(EventEmitter);
     });
 
     it('raises an error when accessing an output that is not decorated properly', () => {
