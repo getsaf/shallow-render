@@ -55,17 +55,17 @@ export function mockProvider(providerToMock: Provider, setup: TestSetup<any>): P
     return provider;
   }
 
-  // Value-based Injection Tokens pass straight through
-  if (provide instanceof InjectionToken && isValueProvider(provider)) {
-    return { provide, useValue: hasMocks ? userMocks : provider.useValue };
-  }
-
-  const MockProvider = mockProviderClass(isClassProvider(provider) ? provider.useClass : provide, userMocks);
-
   const prov = {
     provide,
     multi: 'multi' in provider && provider.multi,
   };
+
+  // Value-based Injection Tokens pass straight through
+  if (provide instanceof InjectionToken && isValueProvider(provider)) {
+    return { ...prov, useValue: hasMocks ? userMocks : provider.useValue };
+  }
+
+  const MockProvider = mockProviderClass(isClassProvider(provider) ? provider.useClass : provide, userMocks);
 
   if (isClassProvider(provider)) {
     return { ...prov, useClass: MockProvider };

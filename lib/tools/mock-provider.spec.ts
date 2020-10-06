@@ -108,7 +108,7 @@ describe('mockPrivider', () => {
       { provide: Foo, useValue: 'ACTUAL FOO VALUE' },
       { provide: Bar, useValue: 'ACTUAL BAR VALUE' },
       [[Baz]],
-      { provide: TEST_TOKEN_ONE, useValue: 'ORIGINAL TOKEN ONE VALUE' },
+      { provide: TEST_TOKEN_ONE, useValue: 'ORIGINAL TOKEN ONE VALUE', multi: true },
       { provide: TEST_TOKEN_TWO, useValue: 'ORIGINAL TOKEN TWO VALUE' },
     ];
     const providers = mockProvider(originalProvidersToMock, testSetup);
@@ -123,14 +123,16 @@ describe('mockPrivider', () => {
     testSetup.mocks.set(FUNCTION_TOKEN, () => 'BAR');
     const providers = mockProvider(
       [
-        { provide: STRING_TOKEN, useValue: 'ORIGINAL-STRING' },
-        { provide: FUNCTION_TOKEN, useValue: () => 'ORIGINAL-FUNCTION' },
+        { provide: STRING_TOKEN, useValue: 'ORIGINAL-STRING', multi: true },
+        { provide: FUNCTION_TOKEN, useValue: () => 'ORIGINAL-FUNCTION', multi: true },
       ],
       testSetup
     ) as any[];
 
     expect(providers[0].useValue).toBe('FOO');
+    expect(providers[0].multi).toBe(true);
     expect(providers[1].useValue()).toBe('BAR');
+    expect(providers[1].multi).toBe(true);
   });
 
   it('mocks falsy injection tokens', () => {
