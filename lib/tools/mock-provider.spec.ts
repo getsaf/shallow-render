@@ -1,10 +1,17 @@
-import { ExistingProvider, ValueProvider, InjectionToken } from '@angular/core';
+import { ExistingProvider, ValueProvider, InjectionToken, Pipe, PipeTransform } from '@angular/core';
 import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { mockProvider } from './mock-provider';
 
 class FooService {
   foo = 'foo';
+}
+
+@Pipe({ name: 'foo' })
+class FooPipe implements PipeTransform {
+  transform() {
+    return 'FOO';
+  }
 }
 
 describe('mockPrivider', () => {
@@ -18,6 +25,12 @@ describe('mockPrivider', () => {
     const provider = mockProvider(FooService, testSetup) as ValueProvider;
 
     expect(provider.useValue.constructor.name).toBe('MockOfFooService');
+  });
+
+  it('auto-mocks Pipes', () => {
+    const pipe = mockProvider(FooPipe, testSetup) as ValueProvider;
+
+    expect(pipe.useValue.transform()).toBe('');
   });
 
   it('auto-mocks TypeProviders', () => {
@@ -244,5 +257,19 @@ describe('mockPrivider', () => {
       [[{ provide: Baz, useValue: 'USER PROVIDED BAZ VALUE' }]],
       { provide: TEST_TOKEN, useValue: 'USER PROVIDED TOKEN VALUE' },
     ]);
+  });
+
+  it('mocks pipes from setup mockPipes', () => {
+    testSetup.mockPipes.set(FooPipe, () => 'MOCKED FOO');
+    const pipe = mockProvider(FooPipe, testSetup) as ValueProvider;
+
+    expect(pipe.useValue.transform()).toBe('MOCKED FOO');
+  });
+
+  it('mocks pipes from setup provider mocks', () => {
+    testSetup.mocks.set(FooPipe, { transform: () => 'MOCKED FOO' });
+    const pipe = mockProvider(FooPipe, testSetup) as ValueProvider;
+
+    expect(pipe.useValue.transform()).toBe('MOCKED FOO');
   });
 });
