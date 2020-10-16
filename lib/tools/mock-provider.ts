@@ -7,6 +7,7 @@ import {
   isFactoryProvider,
   isTypeProvider,
   isValueProvider,
+  isPipeTransform,
 } from './type-checkers';
 
 const getProvide = (provider: Provider) => {
@@ -41,8 +42,14 @@ export function mockProvider(providerToMock: Provider, setup: TestSetup<any>): P
     return provider;
   }
   const provide = isTypeProvider(provider) ? provider : provider.provide;
-  const hasMocks = setup.mocks.has(provide);
-  const userMocks = setup.mocks.get(provide);
+  const isPipe = isPipeTransform(provide);
+  const hasMocks = setup.mocks.has(provide) || setup.mockPipes.has(provide);
+  const userMocks = isPipe
+    ? {
+        transform: setup.mockPipes.get(provide) || (() => ''),
+        ...setup.mocks.get(provide),
+      }
+    : setup.mocks.get(provide);
 
   // APP_INITIALIZERS break TestBed!
   // Do this until https://github.com/angular/angular/issues/24218 is fixed
