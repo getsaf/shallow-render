@@ -1,8 +1,9 @@
 import { Component, InjectionToken, NgModule, Pipe, PipeTransform } from '@angular/core';
-import { InvalidStaticPropertyMockError } from './models/renderer';
 import { Shallow } from './shallow';
+import { InvalidStaticPropertyMockError } from './tools/mock-statics';
+import { CustomError } from './models/custom-error';
 
-class TestService {
+class MyTestService {
   static staticFoo() {
     return 'static foo';
   }
@@ -17,34 +18,35 @@ class TestService {
   }
 }
 @Component({
-  selector: 'test',
+  selector: 'my-test-component',
   template: '<hr/>',
 })
-class TestComponent {}
+class MyTestComponent {}
 
-@Pipe({ name: 'test' })
-class TestPipe implements PipeTransform {
+@Pipe({ name: 'myTestPipe' })
+class MyTestPipe implements PipeTransform {
   transform() {
     return { test: 'pipe' };
   }
 }
 
 @NgModule({
-  declarations: [TestComponent, TestPipe],
+  declarations: [MyTestComponent, MyTestPipe],
+  providers: [MyTestService],
 })
-class TestModule {}
+class MyTestModule {}
 
 describe('Shallow', () => {
-  it('includes the testComponent in setup.dontMock', () => {
-    const shallow = new Shallow(TestComponent, TestModule);
+  it('includes the test component in setup.dontMock', () => {
+    const shallow = new Shallow(MyTestComponent, MyTestModule);
 
-    expect(shallow.setup.dontMock).toContain(TestComponent);
+    expect(shallow.setup.dontMock).toContain(MyTestComponent);
   });
 
   describe('neverMock', () => {
     it('items are automatically added to setup.dontMock on construction', () => {
       Shallow.neverMock('NEVER_MOCKED');
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
       expect(shallow.setup.dontMock).toContain('NEVER_MOCKED');
     });
@@ -54,7 +56,7 @@ describe('Shallow', () => {
     it('automatically adds items to setup.provide on construction', () => {
       class MyService {}
       Shallow.alwaysProvide(MyService);
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
       expect(shallow.setup.providers).toContain(MyService);
     });
@@ -63,18 +65,18 @@ describe('Shallow', () => {
   describe('alwaysReplaceModule', () => {
     it('automatically adds modules to setup.replacementModules on construction', () => {
       class ReplacementModule {}
-      Shallow.alwaysReplaceModule(TestModule, ReplacementModule);
-      const shallow = new Shallow(TestComponent, TestModule);
+      Shallow.alwaysReplaceModule(MyTestModule, ReplacementModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
-      expect(shallow.setup.moduleReplacements.get(TestModule)).toBe(ReplacementModule);
+      expect(shallow.setup.moduleReplacements.get(MyTestModule)).toBe(ReplacementModule);
     });
 
     it('works with ModuleWithProviders', () => {
       const replacementModule = { ngModule: class {}, providers: [] };
-      Shallow.alwaysReplaceModule(TestModule, replacementModule);
-      const shallow = new Shallow(TestComponent, TestModule);
+      Shallow.alwaysReplaceModule(MyTestModule, replacementModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
-      expect(shallow.setup.moduleReplacements.get(TestModule)).toBe(replacementModule);
+      expect(shallow.setup.moduleReplacements.get(MyTestModule)).toBe(replacementModule);
     });
   });
 
@@ -83,7 +85,7 @@ describe('Shallow', () => {
       @NgModule({})
       class MyModule {}
       Shallow.alwaysImport(MyModule);
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyModule);
 
       expect(shallow.setup.imports).toContain(MyModule);
     });
@@ -97,7 +99,7 @@ describe('Shallow', () => {
         }
       }
       Shallow.alwaysMock(MyService, { foo: () => 'mock foo' });
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
       expect(shallow.setup.mocks.get(MyService).foo()).toBe('mock foo');
     });
@@ -111,7 +113,7 @@ describe('Shallow', () => {
       const myToken = new InjectionToken<MyService>('My Service token');
       const myMock = { myNumericMethod: () => 5 };
       Shallow.alwaysMock(myToken, myMock);
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
       expect(shallow.setup.mocks.get(myToken)).toEqual(myMock);
     });
@@ -130,7 +132,7 @@ describe('Shallow', () => {
         bar: () => 'always mock bar',
       };
       Shallow.alwaysMock(MyService, alwaysMock);
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
       shallow.mock(MyService, { foo: () => 'second foo' });
       const secondMock = shallow.setup.mocks.get(MyService);
 
@@ -149,7 +151,7 @@ describe('Shallow', () => {
         }
       }
       Shallow.alwaysMockPipe(MyPipe, () => 'mock foo');
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
       expect(shallow.setup.mockPipes.get(MyPipe)?.()).toBe('mock foo');
     });
@@ -161,7 +163,7 @@ describe('Shallow', () => {
       class DummyFalseDirective {}
       Shallow.alwaysWithStructuralDirective(DummyDirective, true);
       Shallow.alwaysWithStructuralDirective(DummyFalseDirective, false);
-      const shallow = new Shallow(TestComponent, TestModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule);
 
       expect(shallow.setup.withStructuralDirectives.get(DummyDirective)).toBe(true);
       expect(shallow.setup.withStructuralDirectives.get(DummyFalseDirective)).toBe(false);
@@ -170,7 +172,7 @@ describe('Shallow', () => {
 
   describe('dontMock', () => {
     it('adds things to setup.dontMock', () => {
-      const shallow = new Shallow(TestComponent, TestModule).dontMock('foo');
+      const shallow = new Shallow(MyTestComponent, MyTestModule).dontMock('foo');
 
       expect(shallow.setup.dontMock).toContain('foo');
     });
@@ -179,7 +181,7 @@ describe('Shallow', () => {
   describe('provide', () => {
     it('adds to the setup.providers array', () => {
       class MyService {}
-      const shallow = new Shallow(TestComponent, TestModule).provide(MyService);
+      const shallow = new Shallow(MyTestComponent, MyTestModule).provide(MyService);
 
       expect(shallow.setup.providers).toContain(MyService);
     });
@@ -188,7 +190,7 @@ describe('Shallow', () => {
   describe('provideMock', () => {
     it('adds to the setup.providers and setup.dontMock', () => {
       class MyService {}
-      const shallow = new Shallow(TestComponent, TestModule).provideMock(MyService);
+      const shallow = new Shallow(MyTestComponent, MyTestModule).provideMock(MyService);
 
       expect(shallow.setup.providers).toContain(MyService);
       expect(shallow.setup.dontMock).toContain(MyService);
@@ -198,7 +200,7 @@ describe('Shallow', () => {
   describe('declare', () => {
     it('adds to the setup.declarations array', () => {
       class MyComponent {}
-      const shallow = new Shallow(TestComponent, TestModule).declare(MyComponent);
+      const shallow = new Shallow(MyComponent, MyTestModule).declare(MyComponent);
 
       expect(shallow.setup.declarations).toContain(MyComponent);
     });
@@ -208,7 +210,7 @@ describe('Shallow', () => {
     it('adds to the setup.imports array', () => {
       @NgModule({})
       class MyModule {}
-      const shallow = new Shallow(TestComponent, TestModule).import(MyModule);
+      const shallow = new Shallow(MyTestComponent, MyModule).import(MyModule);
 
       expect(shallow.setup.imports).toContain(MyModule);
     });
@@ -216,26 +218,26 @@ describe('Shallow', () => {
 
   describe('mock', () => {
     it('adds a mock to the mocks', () => {
-      const shallow = new Shallow(TestComponent, TestModule).mock(TestService, { foo: () => 'mocked foo' });
+      const shallow = new Shallow(MyTestComponent, MyTestModule).mock(MyTestService, { foo: () => 'mocked foo' });
 
-      expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo');
+      expect(shallow.setup.mocks.get(MyTestService).foo()).toBe('mocked foo');
     });
 
     it('adds mocks on mocks', () => {
-      const shallow = new Shallow(TestComponent, TestModule)
-        .mock(TestService, { foo: () => 'mocked foo' })
-        .mock(TestService, { foo: () => 'mocked foo two' });
+      const shallow = new Shallow(MyTestComponent, MyTestModule)
+        .mock(MyTestService, { foo: () => 'mocked foo' })
+        .mock(MyTestService, { foo: () => 'mocked foo two' });
 
-      expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo two');
+      expect(shallow.setup.mocks.get(MyTestService).foo()).toBe('mocked foo two');
     });
 
     it('adds mocks to mocks', () => {
-      const shallow = new Shallow(TestComponent, TestModule)
-        .mock(TestService, { foo: () => 'mocked foo' })
-        .mock(TestService, { bar: () => 'mocked bar' });
+      const shallow = new Shallow(MyTestComponent, MyTestModule)
+        .mock(MyTestService, { foo: () => 'mocked foo' })
+        .mock(MyTestService, { bar: () => 'mocked bar' });
 
-      expect(shallow.setup.mocks.get(TestService).foo()).toBe('mocked foo');
-      expect(shallow.setup.mocks.get(TestService).bar()).toBe('mocked bar');
+      expect(shallow.setup.mocks.get(MyTestService).foo()).toBe('mocked foo');
+      expect(shallow.setup.mocks.get(MyTestService).bar()).toBe('mocked bar');
     });
   });
 
@@ -245,40 +247,42 @@ describe('Shallow', () => {
         staticNumber: 999,
       };
 
-      expect(() => new Shallow(TestComponent, TestModule).mockStatic(staticObject, { staticNumber: 999 })).toThrow(
+      expect(() => new Shallow(MyTestComponent, MyTestModule).mockStatic(staticObject, { staticNumber: 999 })).toThrow(
         new InvalidStaticPropertyMockError('staticNumber')
       );
     });
 
     it('adds a static mock to the staticMocks', () => {
-      const shallow = new Shallow(TestComponent, TestModule).mockStatic(TestService, { staticFoo: () => 'mocked foo' });
+      const shallow = new Shallow(MyTestComponent, MyTestModule).mockStatic(MyTestService, {
+        staticFoo: () => 'mocked foo',
+      });
 
-      expect(shallow.setup.staticMocks.get(TestService).staticFoo()).toBe('mocked foo');
+      expect(shallow.setup.staticMocks.get(MyTestService).staticFoo()).toBe('mocked foo');
     });
 
     it('adds mocks on mocks', () => {
-      const shallow = new Shallow(TestComponent, TestModule)
-        .mockStatic(TestService, { staticFoo: () => 'mocked foo' })
-        .mockStatic(TestService, { staticFoo: () => 'mocked foo two' });
+      const shallow = new Shallow(MyTestComponent, MyTestModule)
+        .mockStatic(MyTestService, { staticFoo: () => 'mocked foo' })
+        .mockStatic(MyTestService, { staticFoo: () => 'mocked foo two' });
 
-      expect(shallow.setup.staticMocks.get(TestService).staticFoo()).toBe('mocked foo two');
+      expect(shallow.setup.staticMocks.get(MyTestService).staticFoo()).toBe('mocked foo two');
     });
 
     it('adds mocks to mocks', () => {
-      const shallow = new Shallow(TestComponent, TestModule)
-        .mockStatic(TestService, { staticFoo: () => 'mocked foo' })
-        .mockStatic(TestService, { staticBar: () => 'mocked bar' });
+      const shallow = new Shallow(MyTestComponent, MyTestModule)
+        .mockStatic(MyTestService, { staticFoo: () => 'mocked foo' })
+        .mockStatic(MyTestService, { staticBar: () => 'mocked bar' });
 
-      expect(shallow.setup.staticMocks.get(TestService).staticFoo()).toBe('mocked foo');
-      expect(shallow.setup.staticMocks.get(TestService).staticBar()).toBe('mocked bar');
+      expect(shallow.setup.staticMocks.get(MyTestService).staticFoo()).toBe('mocked foo');
+      expect(shallow.setup.staticMocks.get(MyTestService).staticBar()).toBe('mocked bar');
     });
   });
 
   describe('mockPipe', () => {
     it('adds pipe mocks with specific transforms', () => {
-      const shallow = new Shallow(TestComponent, TestModule).mockPipe(TestPipe, () => ({ test: 'mocked pipe' }));
+      const shallow = new Shallow(MyTestComponent, MyTestModule).mockPipe(MyTestPipe, () => ({ test: 'mocked pipe' }));
 
-      const transform = shallow.setup.mockPipes.get(TestPipe);
+      const transform = shallow.setup.mockPipes.get(MyTestPipe);
       expect(transform && transform()).toEqual({ test: 'mocked pipe' });
     });
   });
@@ -286,9 +290,9 @@ describe('Shallow', () => {
   describe('replaceModule', () => {
     it('adds replacementModule', () => {
       class ReplacementModule {}
-      const shallow = new Shallow(TestComponent, TestModule).replaceModule(TestModule, ReplacementModule);
+      const shallow = new Shallow(MyTestComponent, MyTestModule).replaceModule(MyTestModule, ReplacementModule);
 
-      expect(shallow.setup.moduleReplacements.get(TestModule)).toBe(ReplacementModule);
+      expect(shallow.setup.moduleReplacements.get(MyTestModule)).toBe(ReplacementModule);
     });
   });
 
@@ -296,7 +300,7 @@ describe('Shallow', () => {
     it('adds the directive to the test setup', () => {
       class DummyDirective {}
       class DummyFalseDirective {}
-      const shallow = new Shallow(TestComponent, TestModule)
+      const shallow = new Shallow(MyTestComponent, MyTestModule)
         .withStructuralDirective(DummyDirective, true)
         .withStructuralDirective(DummyFalseDirective, false);
 
@@ -307,21 +311,32 @@ describe('Shallow', () => {
 
   describe('render', () => {
     it('can render with only HTML', async () => {
-      const { instance } = await new Shallow(TestComponent, TestModule).render('<test></test>');
+      const { instance } = await new Shallow(MyTestComponent, MyTestModule).render(
+        '<my-test-component></my-test-component>'
+      );
 
-      expect(instance instanceof TestComponent).toBe(true);
+      expect(instance).toBeInstanceOf(MyTestComponent);
     });
 
     it('can render with no parameters', async () => {
-      const { instance } = await new Shallow(TestComponent, TestModule).render();
+      const { instance } = await new Shallow(MyTestComponent, MyTestModule).render();
 
-      expect(instance instanceof TestComponent).toBe(true);
+      expect(instance).toBeInstanceOf(MyTestComponent);
     });
 
     it('can render with only renderOptions', async () => {
-      const { instance } = await new Shallow(TestComponent, TestModule).render({ detectChanges: false });
+      const { instance } = await new Shallow(MyTestComponent, MyTestModule).render({ detectChanges: false });
 
-      expect(instance instanceof TestComponent).toBe(true);
+      expect(instance).toBeInstanceOf(MyTestComponent);
+    });
+  });
+
+  describe('createService', () => {
+    it('creates an instance of a service', () => {
+      const shallow = new Shallow(MyTestService, MyTestModule);
+      const { instance } = shallow.createService();
+
+      expect(instance).toBeInstanceOf(MyTestService);
     });
   });
 });

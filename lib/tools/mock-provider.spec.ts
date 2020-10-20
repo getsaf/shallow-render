@@ -36,7 +36,7 @@ describe('mockPrivider', () => {
   it('auto-mocks TypeProviders', () => {
     const provider = mockProvider(FooService, testSetup) as ValueProvider;
 
-    expect(provider.useValue instanceof MockOfProvider).toBe(true);
+    expect(provider.useValue).toBeInstanceOf(MockOfProvider);
   });
 
   it('auto-mocks ClassProviders', () => {
@@ -44,14 +44,14 @@ describe('mockPrivider', () => {
 
     expect(provider.provide).toBe(FooService);
     const instance = new provider.useClass();
-    expect(instance instanceof MockOfProvider).toBe(true);
+    expect(instance).toBeInstanceOf(MockOfProvider);
   });
 
   it('auto-mocks ValueProviders', () => {
     const provider = mockProvider({ provide: FooService, useValue: {} }, testSetup);
 
     expect(provider.provide).toBe(FooService);
-    expect(provider.useValue instanceof MockOfProvider).toBe(true);
+    expect(provider.useValue).toBeInstanceOf(MockOfProvider);
   });
 
   it('auto-mocks FactoryProviders', () => {
@@ -59,7 +59,7 @@ describe('mockPrivider', () => {
 
     expect(provider.provide).toBe(FooService);
     const instance = provider.useFactory();
-    expect(instance instanceof MockOfProvider).toBe(true);
+    expect(instance).toBeInstanceOf(MockOfProvider);
   });
 
   it('passes through ExistingProviders', () => {
@@ -102,7 +102,7 @@ describe('mockPrivider', () => {
     expect(providers[0]).toBe(FooService);
     // BarService was mocked
     expect(providers[1].provide).toBe(BarService);
-    expect(providers[1].useValue instanceof MockOfProvider).toBe(true);
+    expect(providers[1].useValue).toBeInstanceOf(MockOfProvider);
   });
 
   it('does not mock various provider types found in the module or in the dontMock array', () => {
@@ -191,7 +191,7 @@ describe('mockPrivider', () => {
     class Foo {}
     const provider = mockProvider({ provide: new InjectionToken<Foo>('Foo Token'), useClass: Foo }, testSetup);
 
-    expect(new provider.useClass() instanceof MockOfProvider).toBe(true);
+    expect(new provider.useClass()).toBeInstanceOf(MockOfProvider);
     expect(provider.useClass.name).toBe('MockOfFoo');
   });
 

@@ -7,7 +7,10 @@ import { mockProvider } from './mock-provider';
 import { ngMock } from './ng-mock';
 import { isModuleWithProviders } from './type-checkers';
 
-export function createTestModule<TComponent>(setup: TestSetup<TComponent>, testComponents: any[]): AngularModule {
+export function createTestModule<TComponent>(
+  setup: TestSetup<TComponent>,
+  testComponents: Type<any>[] = []
+): AngularModule {
   let mod: Type<any>;
   let additionalProviders: Provider[] = [];
   if (isModuleWithProviders(setup.testModule)) {
@@ -18,13 +21,13 @@ export function createTestModule<TComponent>(setup: TestSetup<TComponent>, testC
   }
   const ngModule = getNgModuleAnnotations(mod);
 
+  const declarations = ngMock(
+    [...ngModule.declarations, ...setup.declarations].filter(d => d !== setup.testComponentOrService),
+    setup
+  );
   // Test Modules cannot directly define entryComponents. To work around this,
   // we create a new module which declares/exports all entryComponents and import
   // the module into the TestModule.
-  const declarations = ngMock(
-    [...ngModule.declarations, ...setup.declarations].filter(d => d !== setup.testComponent),
-    setup
-  );
   const entryComponents = [...ngMock([...ngModule.entryComponents], setup), ...setup.declarations];
 
   @NgModule({

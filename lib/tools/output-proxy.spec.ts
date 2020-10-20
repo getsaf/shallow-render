@@ -29,7 +29,7 @@ describe('outputProxy', () => {
       String((outputs as any).notAnEventEmitter);
       fail('should have thrown an error');
     } catch (e) {
-      expect(e instanceof PropertyNotAnEventEmitterError).toBe(true);
+      expect(e).toBeInstanceOf(PropertyNotAnEventEmitterError);
     }
   });
 
@@ -38,7 +38,7 @@ describe('outputProxy', () => {
       String(outputs.notMarkedAsOutput);
       fail('should have thrown an error');
     } catch (e) {
-      expect(e instanceof PropertyNotMarkedAsOutputError).toBe(true);
+      expect(e).toBeInstanceOf(PropertyNotMarkedAsOutputError);
     }
   });
 });

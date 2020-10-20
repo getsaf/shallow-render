@@ -16,7 +16,7 @@ describe('mockComponent', () => {
     }).createComponent(TestHost);
     const instance = fixture.debugElement.query(By.css('my-component')).componentInstance;
 
-    expect(instance instanceof MyMock).toBe(true);
+    expect(instance).toBeInstanceOf(MyMock);
   });
 
   it('mocks inputs', () => {

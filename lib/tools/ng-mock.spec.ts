@@ -95,7 +95,7 @@ describe('ng-mock', () => {
       const MockedFoo = ngMock(FooComponent, testSetup);
       const foo = new MockedFoo();
 
-      expect(foo.fooOutput instanceof EventEmitter).toBe(true);
+      expect(foo.fooOutput).toBeInstanceOf(EventEmitter);
     });
 
     it('uses MockOf* in the mocked component class name', () => {

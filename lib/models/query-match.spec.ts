@@ -12,7 +12,7 @@ describe('QueryMatch', () => {
       func();
       fail(`Should have thrown an ${errorClass.name} error`);
     } catch (e) {
-      expect(e instanceof errorClass).toBe(true);
+      expect(e).toBeInstanceOf(errorClass);
     }
   };
   describe('single match', () => {
@@ -40,7 +40,7 @@ describe('QueryMatch', () => {
     });
 
     it('passes the instanceof check for the first object', () => {
-      expect(match instanceof Foo).toBe(true);
+      expect(match).toBeInstanceOf(Foo);
     });
 
     it('allows checking individual object keys', () => {
