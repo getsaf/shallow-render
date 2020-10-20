@@ -45,13 +45,9 @@ class OtherDirective {
       <div id="two-container">
         <other other-directive="two" id="two">two</other>
       </div>
-      <div *structuralDirectiveToMock="'first-one'" class="first">
-        first foo
-      </div>
+      <div *structuralDirectiveToMock="'first-one'" class="first">first foo</div>
       <div class="second-directive-container">
-        <div *structuralDirectiveToMock="'second-one'" class="second">
-          second foo
-        </div>
+        <div *structuralDirectiveToMock="'second-one'" class="second">second foo</div>
       </div>
     </div>
   `,

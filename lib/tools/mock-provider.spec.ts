@@ -169,7 +169,7 @@ describe('mockPrivider', () => {
     expect(providers[2].useValue).toBe(0);
   });
 
-  it('passes through mocks for injection tokens when they are value-providers', () => {
+  it('automocks injection tokens when they are value-providers', () => {
     const STRING_TOKEN = new InjectionToken<string>('My string token');
     const BOOLEAN_TOKEN = new InjectionToken<boolean>('My boolean token');
     const NUMBER_TOKEN = new InjectionToken<number>('My number token');
@@ -182,9 +182,9 @@ describe('mockPrivider', () => {
       testSetup
     ) as any[];
 
-    expect(providers[0].useValue).toBe('FOO');
-    expect(providers[1].useValue).toBe(true);
-    expect(providers[2].useValue).toBe(42);
+    expect(providers[0].useValue).toContain('MOCKED_INJECTION_TOKEN_VALUE');
+    expect(providers[1].useValue).toContain('MOCKED_INJECTION_TOKEN_VALUE');
+    expect(providers[2].useValue).toContain('MOCKED_INJECTION_TOKEN_VALUE');
   });
 
   it('automocks injection tokens when they are class-providers', () => {
@@ -200,7 +200,7 @@ describe('mockPrivider', () => {
     testSetup.providers.push({ provide: BAR_TOKEN, useValue: 'MOCK BAR' });
     const mockedProvider = mockProvider({ provide: BAR_TOKEN, useValue: 'BAR' }, testSetup);
 
-    expect(mockedProvider.useValue).toEqual('MOCK BAR');
+    expect(mockedProvider.useValue).toContain('MOCKED_INJECTION_TOKEN_VALUE');
   });
 
   it('subs class providers from test setup', () => {
