@@ -1,8 +1,9 @@
-import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, OnInit, Provider } from '@angular/core';
+import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, OnInit } from '@angular/core';
 import { directiveResolver } from './reflect';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
 import { mockWithInputsOutputsAndStubs } from './mock-with-inputs-and-outputs-and-stubs';
+import { NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/forms';
 
 export type MockDirective = {
   renderContents: () => void;
@@ -11,15 +12,17 @@ export type MockDirective = {
 
 export function mockDirective<TDirective extends Type<any>>(
   directive: TDirective,
-  config?: { stubs?: object; renderContentsOnInit?: boolean; providerTransform?: (providers: Provider[]) => Provider[] }
+  config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
-  const { selector, exportAs, providers = [] } = directiveResolver.resolve(directive);
-  const providerTransform = (config && config.providerTransform) || (() => []);
+  const { selector, exportAs } = directiveResolver.resolve(directive);
 
   @MockOf(directive)
   @Directive({
     selector: selector || `__${directive.name}-selector`,
-    providers: [{ provide: directive, useExisting: forwardRef(() => Mock) }, ...providerTransform(providers)],
+    providers: [
+      { provide: directive, useExisting: forwardRef(() => Mock) },
+      { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
+    ],
     exportAs,
   })
   class Mock extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {

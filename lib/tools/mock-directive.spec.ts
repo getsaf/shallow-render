@@ -60,21 +60,6 @@ describe('mockDirective', () => {
     expect(fixture.componentInstance.handleEvent).toHaveBeenCalledWith('bar');
   });
 
-  it('transforms providers', () => {
-    class FooProvider {}
-    @Directive({ selector: '[myDirective]', providers: [FooProvider] })
-    class MyDirective {}
-
-    class BarProvider {}
-    class BazProvider {}
-    const mockedDirective = mockDirective(MyDirective, { providerTransform: () => [BarProvider, BazProvider] });
-    const mockedProviders = directiveResolver.resolve(mockedDirective).providers;
-
-    expect(mockedProviders).not.toContain(FooProvider);
-    expect(mockedProviders).toContain(BarProvider);
-    expect(mockedProviders).toContain(BazProvider);
-  });
-
   it('does not render structural content by default', () => {
     @Directive({ selector: '[myDirective]' })
     class MyDirective {}

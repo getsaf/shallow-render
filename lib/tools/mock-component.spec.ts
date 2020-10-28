@@ -60,21 +60,6 @@ describe('mockComponent', () => {
     expect(fixture.componentInstance.handleEvent).toHaveBeenCalledWith('bar');
   });
 
-  it('transforms providers', () => {
-    class FooProvider {}
-    @Component({ selector: 'my-component', providers: [FooProvider] })
-    class MyComponent {}
-
-    class BarProvider {}
-    class BazProvider {}
-    const mockedComponent = mockComponent(MyComponent, { providerTransform: () => [BarProvider, BazProvider] });
-    const mockedProviders = directiveResolver.resolve(mockedComponent).providers;
-
-    expect(mockedProviders).not.toContain(FooProvider);
-    expect(mockedProviders).toContain(BarProvider);
-    expect(mockedProviders).toContain(BazProvider);
-  });
-
   it('renders ng-content', () => {
     @Component({ selector: 'my-component' })
     class MyComponent {}
