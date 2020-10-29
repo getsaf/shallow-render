@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Mon Dec 25 2017 20:41:30 GMT-0800 (PST)
 
-module.exports = (config: any) => {
+export default (config: any) => {
   config.set({
     autoWatch: false,
     browsers: ['ChromeHeadless'],

@@ -12,10 +12,10 @@ import { TestBed } from '@angular/core/testing';
 import { TestSetup } from '../models/test-setup';
 import * as mockModuleLib from './mock-module';
 import { ngMock } from './ng-mock';
-import * as declarationTypeModule from './type-checkers';
 import * as mockPipeModule from './mock-pipe';
 import * as mockComponentModule from './mock-component';
 import * as mockDirectiveModule from './mock-directive';
+import { ngModuleResolver } from './reflect';
 
 @Component({ template: '<label>foo</label>' })
 class FooComponent {
@@ -59,7 +59,7 @@ describe('ng-mock', () => {
 
   it('throws a friendly message when mocking fails', () => {
     class BadComponent {}
-    spyOn(declarationTypeModule, 'declarationType').and.throwError('BOOM');
+    spyOn(ngModuleResolver, 'isNgModule').and.throwError('BOOM');
 
     expect(() => ngMock(BadComponent, testSetup)).toThrowError(/Shallow.*BadComponent[\s\S]*BOOM/g);
   });
@@ -68,6 +68,20 @@ describe('ng-mock', () => {
     class MockComponent {}
     spyOn(mockComponentModule, 'mockComponent').and.returnValue(MockComponent);
     const mocked = ngMock(FooComponent, testSetup);
+
+    expect(mocked).toBe(MockComponent as any);
+  });
+
+  it('mocks a component with both a directive and component decorator', () => {
+    // Some libraries do this. It makes no sense, but if we don't detect these
+    // and mock them as components, things break when the component is defined as
+    // an entry component in a module
+    @Directive()
+    @Component({ selector: 'dummy-selector', template: '' })
+    class ComponentWithDirectiveAndComponentDecorators {}
+    class MockComponent {}
+    spyOn(mockComponentModule, 'mockComponent').and.returnValue(MockComponent);
+    const mocked = ngMock(ComponentWithDirectiveAndComponentDecorators, testSetup);
 
     expect(mocked).toBe(MockComponent as any);
   });

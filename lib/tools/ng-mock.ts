@@ -3,7 +3,7 @@ import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { mockModule } from './mock-module';
 import { directiveResolver, ngModuleResolver } from './reflect';
-import { isModuleWithProviders, isPipeTransform, isClass, declarationType } from './type-checkers';
+import { isModuleWithProviders, isPipeTransform, isClass, declarationTypes } from './type-checkers';
 import { CustomError } from '../models/custom-error';
 import { mockPipe } from './mock-pipe';
 import { mockDirective } from './mock-directive';
@@ -35,15 +35,14 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
       mock = mockPipe(thing, setup.mockPipes.get(thing));
     } else if (isClass(thing)) {
       const stubs = setup.mocks.get(thing);
-      mock =
-        declarationType(thing) === 'Component'
-          ? mockComponent(thing, { stubs })
-          : mockDirective(thing, {
-              stubs,
-              renderContentsOnInit:
-                setup.withStructuralDirectives.get(thing) ||
-                (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing) !== false),
-            });
+      mock = declarationTypes(thing).includes('Component')
+        ? mockComponent(thing, { stubs })
+        : mockDirective(thing, {
+            stubs,
+            renderContentsOnInit:
+              setup.withStructuralDirectives.get(thing) ||
+              (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing) !== false),
+          });
       fixEmptySelector(thing, mock);
     } else {
       throw new DoNotKnowHowToMockError(thing);

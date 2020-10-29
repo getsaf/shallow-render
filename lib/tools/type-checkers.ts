@@ -48,7 +48,10 @@ export const isClass = (thing: any): thing is Type<any> => {
   return typeof thing === 'function';
 };
 
-export const declarationType = (declaration: Type<any>): 'Pipe' | 'Component' | 'Directive' =>
+const DECLARATION_TYPES = ['Pipe', 'Component', 'Directive'] as const;
+export type DeclarationType = typeof DECLARATION_TYPES[number];
+export const declarationTypes = (declaration: Type<any>): Array<DeclarationType> =>
   jitReflector
     .annotations(declaration)
-    .find(annotation => ['Pipe', 'Component', 'Directive'].includes(annotation.ngMetadataName))?.ngMetadataName;
+    .filter(annotation => DECLARATION_TYPES.includes(annotation.ngMetadataName))
+    .map(annotation => annotation.ngMetadataName);
