@@ -1,0 +1,1742 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Shallow Render</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .cd {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <link href="stylesheets/screen-9890cc80.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-bccf8c07.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-c5541673.js"></script>
+  </head>
+
+  <body class="index" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar-cad8cdcb.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo-fdd210cb.png" class="logo" alt="Logo" />
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#shallow-render" class="toc-h1 toc-link" data-title="shallow-render">shallow-render</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#resources" class="toc-h2 toc-link" data-title="Resources">Resources</a>
+                  </li>
+                  <li>
+                    <a href="#articles" class="toc-h2 toc-link" data-title="Articles">Articles</a>
+                  </li>
+                  <li>
+                    <a href="#angular-version-support" class="toc-h2 toc-link" data-title="Angular Version Support">Angular Version Support</a>
+                  </li>
+                  <li>
+                    <a href="#super-simple-tests" class="toc-h2 toc-link" data-title="Super Simple Tests">Super Simple Tests</a>
+                  </li>
+                  <li>
+                    <a href="#the-problem" class="toc-h2 toc-link" data-title="The problem">The problem</a>
+                  </li>
+                  <li>
+                    <a href="#the-solution" class="toc-h2 toc-link" data-title="The Solution">The Solution</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#why-not-just-use-testbed" class="toc-h1 toc-link" data-title="Why not just use TestBed?">Why not just use TestBed?</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#how-trustworthy-is-the-test" class="toc-h2 toc-link" data-title="How trustworthy is the test">How trustworthy is the test</a>
+                  </li>
+                  <li>
+                    <a href="#how-brittle-is-the-test" class="toc-h2 toc-link" data-title="How brittle is the test">How brittle is the test</a>
+                  </li>
+                  <li>
+                    <a href="#demo-test-components" class="toc-h2 toc-link" data-title="Demo Test Components">Demo Test Components</a>
+                  </li>
+                  <li>
+                    <a href="#the-testing-options" class="toc-h2 toc-link" data-title="The testing options">The testing options</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#getting-started" class="toc-h1 toc-link" data-title="Getting Started">Getting Started</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#your-first-test" class="toc-h2 toc-link" data-title="Your first test">Your first test</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#pro-tips" class="toc-h1 toc-link" data-title="Pro Tips">Pro Tips</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#optional-templates" class="toc-h2 toc-link" data-title="Optional Templates">Optional Templates</a>
+                  </li>
+                  <li>
+                    <a href="#recursivepartial-mocks" class="toc-h2 toc-link" data-title="RecursivePartial mocks">RecursivePartial mocks</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#rendering" class="toc-h1 toc-link" data-title="Rendering">Rendering</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#with-an-html-template" class="toc-h2 toc-link" data-title="With an HTML template">With an HTML template</a>
+                  </li>
+                  <li>
+                    <a href="#html-template-and-bindings" class="toc-h2 toc-link" data-title="HTML template and bindings">HTML template and bindings</a>
+                  </li>
+                  <li>
+                    <a href="#no-template-or-bindings" class="toc-h2 toc-link" data-title="No template or bindings">No template or bindings</a>
+                  </li>
+                  <li>
+                    <a href="#only-bindings-simplest" class="toc-h2 toc-link" data-title="Only Bindings (simplest)">Only Bindings (simplest)</a>
+                  </li>
+                  <li>
+                    <a href="#component-lifecycle-change-detection" class="toc-h2 toc-link" data-title="Component Lifecycle (change detection)">Component Lifecycle (change detection)</a>
+                  </li>
+                  <li>
+                    <a href="#rendering-class" class="toc-h2 toc-link" data-title="Rendering Class">Rendering Class</a>
+                  </li>
+                  <li>
+                    <a href="#find-findcomponent-finddirective" class="toc-h2 toc-link" data-title="find, findComponent, findDirective"><code>find</code>, <code>findComponent</code>, <code>findDirective</code></a>
+                  </li>
+                  <li>
+                    <a href="#get" class="toc-h2 toc-link" data-title="get"><code>get</code></a>
+                  </li>
+                  <li>
+                    <a href="#inject" class="toc-h2 toc-link" data-title="inject"><code>inject</code></a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#mocking" class="toc-h1 toc-link" data-title="Mocking">Mocking</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#mocking-component-instance-properties" class="toc-h2 toc-link" data-title="Mocking component instance properties">Mocking component instance properties</a>
+                  </li>
+                  <li>
+                    <a href="#skip-mocking-with-dontmock" class="toc-h2 toc-link" data-title="Skip mocking with dontMock">Skip mocking with <code>dontMock</code></a>
+                  </li>
+                  <li>
+                    <a href="#skip-mocking-globally-with-nevermock" class="toc-h2 toc-link" data-title="Skip mocking globally with neverMock">Skip mocking globally with <code>neverMock</code></a>
+                  </li>
+                  <li>
+                    <a href="#use-a-manual-mock-instance-or-class" class="toc-h2 toc-link" data-title="Use a manual mock instance or class">Use a manual mock instance or class</a>
+                  </li>
+                  <li>
+                    <a href="#global-mocks-with-alwaysmock" class="toc-h2 toc-link" data-title="Global mocks with alwaysMock">Global mocks with <code>alwaysMock</code></a>
+                  </li>
+                  <li>
+                    <a href="#global-pipe-mocks-with-alwaysmockpipe" class="toc-h2 toc-link" data-title="Global pipe mocks with alwaysMockPipe">Global pipe mocks with <code>alwaysMockPipe</code></a>
+                  </li>
+                  <li>
+                    <a href="#global-providers-with-alwaysprovide" class="toc-h2 toc-link" data-title="Global providers with alwaysProvide">Global providers with <code>alwaysProvide</code></a>
+                  </li>
+                  <li>
+                    <a href="#mocking-pipes-with-mockpipe" class="toc-h2 toc-link" data-title="Mocking Pipes with mockPipe">Mocking Pipes with <code>mockPipe</code></a>
+                  </li>
+                  <li>
+                    <a href="#replace-a-module-with-a-test-module" class="toc-h2 toc-link" data-title="Replace a module with a test module">Replace a module with a test module</a>
+                  </li>
+                  <li>
+                    <a href="#static-function-mocks" class="toc-h2 toc-link" data-title="Static Function Mocks">Static Function Mocks</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#querying" class="toc-h1 toc-link" data-title="Querying">Querying</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#find" class="toc-h2 toc-link" data-title="find"><code>find</code></a>
+                  </li>
+                  <li>
+                    <a href="#findcomponent" class="toc-h2 toc-link" data-title="findComponent"><code>findComponent</code></a>
+                  </li>
+                  <li>
+                    <a href="#finddirective" class="toc-h2 toc-link" data-title="findDirective"><code>findDirective</code></a>
+                  </li>
+                  <li>
+                    <a href="#findstructuraldirective" class="toc-h2 toc-link" data-title="findStructuralDirective"><code>findStructuralDirective</code></a>
+                  </li>
+                  <li>
+                    <a href="#querymatch-class" class="toc-h2 toc-link" data-title="QueryMatch Class"><code>QueryMatch</code> Class</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#structural-directives" class="toc-h1 toc-link" data-title="Structural Directives">Structural Directives</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#global-configuration" class="toc-h2 toc-link" data-title="Global Configuration">Global Configuration</a>
+                  </li>
+                  <li>
+                    <a href="#per-test-configuration" class="toc-h2 toc-link" data-title="Per-test Configuration">Per-test Configuration</a>
+                  </li>
+                  <li>
+                    <a href="#querying-structural-directives" class="toc-h2 toc-link" data-title="Querying Structural Directives">Querying Structural Directives</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#testing-services" class="toc-h1 toc-link" data-title="Testing Services">Testing Services</a>
+          </li>
+          <li>
+            <a href="#custom-matchers" class="toc-h1 toc-link" data-title="Custom Matchers">Custom Matchers</a>
+          </li>
+          <li>
+            <a href="#configuration" class="toc-h1 toc-link" data-title="Configuration">Configuration</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#global-configuration-2" class="toc-h2 toc-link" data-title="Global Configuration">Global Configuration</a>
+                  </li>
+                  <li>
+                    <a href="#per-spec-configuration" class="toc-h2 toc-link" data-title="Per-spec Configuration">Per-spec Configuration</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#shallow-class" class="toc-h1 toc-link" data-title="Shallow class"><code>Shallow</code> class</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#static-properties" class="toc-h2 toc-link" data-title="Static Properties">Static Properties</a>
+                  </li>
+                  <li>
+                    <a href="#instance-properties" class="toc-h2 toc-link" data-title="Instance Properties">Instance Properties</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#frequently-asked-questions" class="toc-h1 toc-link" data-title="Frequently Asked Questions">Frequently Asked Questions</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#routing" class="toc-h2 toc-link" data-title="Routing">Routing</a>
+                  </li>
+                  <li>
+                    <a href="#entry-components" class="toc-h2 toc-link" data-title="Entry Components">Entry Components</a>
+                  </li>
+                  <li>
+                    <a href="#bindings-on-entrycomponents" class="toc-h2 toc-link" data-title="Bindings on EntryComponents">Bindings on EntryComponents</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#examples" class="toc-h1 toc-link" data-title="Examples">Examples</a>
+          </li>
+      </ul>
+        <ul class="toc-footer">
+            <li><a href='https://github.com/getsaf/shallow-render'>View Project on GitHub</a></li>
+            <li><a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <!--
+# Example MarkDown
+
+<aside class="success">
+Remember — a happy kitten is an authenticated kitten!
+</aside>
+
+<aside class="notice">
+You must replace <code>meowmeowmeow</code> with your personal API key.
+</aside>
+
+<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+
+> To authorize, use this code:
+
+-->
+<h1 id='shallow-render'>shallow-render</h1>
+<p><a href="https://travis-ci.org/getsaf/shallow-render"><img src="https://travis-ci.org/getsaf/shallow-render.svg?branch=master" alt="Build Status" /></a>
+<a href="https://www.npmjs.com/package/shallow-render"><img src="https://badge.fury.io/js/shallow-render.svg" alt="npm version" /></a></p>
+
+<p>Angular testing made easy with shallow rendering and easy mocking.</p>
+<h2 id='resources'>Resources</h2>
+<ul>
+<li><a href="https://github.com/getsaf/shallow-render">GitHub Project</a></li>
+<li><a href="https://stackblitz.com/github/getsaf/shallow-render-stackblitz">StackBlitz Playground</a></li>
+<li><a href="https://github.com/getsaf/shallow-render/releases">Release Notes</a></li>
+</ul>
+<h2 id='articles'>Articles</h2>
+<ul>
+<li><a href="https://medium.com/@getsaf/testing-angular-components-with-shallow-render-9334d16dc2e3?source=friends_link&amp;sk=5c72c2bf4ce91da656916dc680f8b1cf">Testing Angular Components With shallow-render</a></li>
+<li><a href="https://medium.com/@getsaf/advanced-shallow-render-testing-for-angular-components-452ce74d5f88?source=friends_link&amp;sk=91d48511b60871c7b34b1bbb231ce1a5">Advanced shallow-render Testing</a></li>
+<li><a href="https://medium.com/@getsaf/why-shallow-rendering-is-import-in-angular-unit-tests-84569d571b72?source=friends_link&amp;sk=4576570c948a531036cc8fe9e2dc9a19">Why Shallow Rendering is Important</a></li>
+</ul>
+<h2 id='angular-version-support'>Angular Version Support</h2>
+<table><thead>
+<tr>
+<th>Angular</th>
+<th>shallow-render</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>11x</td>
+<td>11x</td>
+</tr>
+<tr>
+<td>10x</td>
+<td>10x</td>
+</tr>
+<tr>
+<td>9x</td>
+<td>9x</td>
+</tr>
+<tr>
+<td>6x-8x</td>
+<td>8x</td>
+</tr>
+<tr>
+<td>5x</td>
+<td>&lt;= 7.2.0</td>
+</tr>
+</tbody></table>
+<h2 id='super-simple-tests'>Super Simple Tests</h2><pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"ColorLinkComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">ColorLinkComponent</span><span class="o">&gt;</span><span class="p">;</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">ColorLinkComponent</span><span class="p">,</span> <span class="nx">MyModule</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"renders a link with the name of the color"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">color</span><span class="p">:</span> <span class="s2">"Blue"</span> <span class="p">}</span> <span class="p">});</span>
+    <span class="c1">// or shallow.render(`&lt;color-link color="Blue"&gt;&lt;/color-link&gt;`);</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"a"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"Blue"</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"emits color when clicked"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">outputs</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span>
+      <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">color</span><span class="p">:</span> <span class="s2">"Red"</span> <span class="p">},</span>
+    <span class="p">});</span>
+    <span class="nx">element</span><span class="p">.</span><span class="nx">click</span><span class="p">();</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">outputs</span><span class="p">.</span><span class="nx">handleClick</span><span class="p">.</span><span class="nx">emit</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s2">"Red"</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre><h2 id='the-problem'>The problem</h2>
+<p>Testing in Angular is <strong>HARD</strong>. TestBed is powerful but its use in component specs ends with lots of duplication.</p>
+
+<p>Here&#39;s a standard TestBed spec for a component that uses a few other components, a directive and a pipe and handles click events:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"MyComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">((</span><span class="k">async</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestModule</span><span class="p">({</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">SomeModuleWithDependencies</span><span class="p">],</span>
+      <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span>
+        <span class="nx">TestHostComponent</span><span class="p">,</span>
+        <span class="nx">MyComponent</span><span class="p">,</span> <span class="c1">// &lt;-- All I want to do is test this!!</span>
+        <span class="c1">// We either must list all our dependencies here</span>
+        <span class="c1">// -- OR --</span>
+        <span class="c1">// Use NO_ERRORS_SCHEMA which allows any HTML to be used</span>
+        <span class="c1">// even if it is invalid!</span>
+        <span class="nx">ButtonComponent</span><span class="p">,</span>
+        <span class="nx">LinkComponent</span><span class="p">,</span>
+        <span class="nx">FooDirective</span><span class="p">,</span>
+        <span class="nx">BarPipe</span><span class="p">,</span>
+      <span class="p">],</span>
+      <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">MyService</span><span class="p">],</span>
+    <span class="p">})</span>
+      <span class="p">.</span><span class="nx">compileComponents</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">myService</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">MyService</span><span class="p">);</span> <span class="c1">// Not type safe</span>
+        <span class="nx">spyOn</span><span class="p">(</span><span class="nx">myService</span><span class="p">,</span> <span class="s2">"foo"</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">(</span><span class="s2">"mocked foo"</span><span class="p">);</span>
+      <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"renders a link with the provided label text"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">TestHostComponent</span><span class="p">);</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">componentInstance</span><span class="p">.</span><span class="nx">labelText</span> <span class="o">=</span> <span class="s2">"my text"</span><span class="p">;</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">link</span> <span class="o">=</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">debugElement</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="nx">By</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s2">"a"</span><span class="p">));</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"my text"</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'sends "foo" to bound click events'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">TestHostComponent</span><span class="p">);</span>
+    <span class="nx">spyOn</span><span class="p">(</span><span class="nx">fixture</span><span class="p">.</span><span class="nx">componentInstance</span><span class="p">,</span> <span class="s2">"handleClick"</span><span class="p">);</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">myComponentElement</span> <span class="o">=</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">debugElement</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+      <span class="nx">By</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">)</span>
+    <span class="p">);</span>
+    <span class="nx">myComponentElement</span><span class="p">.</span><span class="nx">click</span><span class="p">();</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">fixture</span><span class="p">.</span><span class="nx">componentInstance</span><span class="p">.</span><span class="nx">handleClick</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;my-component
+      [linkText]="linkText"
+      (click)="handleClick($event)"
+    &gt;&lt;/my-component&gt;
+  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">TestHostComponent</span> <span class="p">{</span>
+  <span class="na">linkLabel</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nx">handleClick</span><span class="p">()</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre>
+<p>Whew!!! That was a lot of boilerplate. Here&#39;s just some of the issues:</p>
+
+<ul>
+<li>Our TestBed module looks very similar if not identical to the <code>NgModule</code> I&#39;ve probably already added <code>MyComponent</code> too. Total module duplication.</li>
+<li>Since I&#39;ve duplicated my module in my spec, I&#39;m not actually sure the real module was setup correctly.</li>
+<li>I&#39;ve used REAL components and services in my spec which means I have not isolated the component I&#39;m interested in testing.
+
+<ul>
+<li>This also means I have to follow, and provide all the dependencies of those real components to the <code>TestBed</code> module.</li>
+</ul></li>
+<li>I had to create a <code>TestHostComponent</code> so I could pass bindings into my actual component.</li>
+<li>My <code>TestBed</code> boilerplate code-length exceeded my actual test code-length.</li>
+</ul>
+<h2 id='the-solution'>The Solution</h2>
+<p>We should mock everything we can except for the component in test and that should be <strong>EASY</strong>. Our modules already define the environment in which our components live. They should be <em>reused</em>, not <em>rebuilt</em> in our specs.</p>
+
+<p>Here&#39;s the same specs using <code>shallow-render</code>:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"MyComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">MyComponent</span><span class="o">&gt;</span><span class="p">;</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">,</span> <span class="nx">MyModule</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"renders a link with the provided label text"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">linkText</span><span class="p">:</span> <span class="s2">"my text"</span> <span class="p">}</span> <span class="p">});</span>
+    <span class="c1">// or shallow.render(`&lt;my-component linkText="my text"&gt;&lt;/my-component&gt;`);</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"a"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"my text"</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'sends "foo" to bound click events'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">outputs</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+    <span class="nx">element</span><span class="p">.</span><span class="nx">click</span><span class="p">();</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">outputs</span><span class="p">.</span><span class="nx">handleClick</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+<p>Here&#39;s the difference:</p>
+
+<ul>
+<li>Reuses (and verifies) <code>MyModule</code> contains your component and all its dependencies.</li>
+<li>All components inside <code>MyModule</code> are mocked. This is what makes the rendering &quot;shallow&quot;.</li>
+<li>The tests have much less boilerplate which makes the specs easier to follow.</li>
+<li>The HTML used to render the component is IN THE SPEC and easy to find.
+
+<ul>
+<li>This means specs now double examples of how to use your component.</li>
+</ul></li>
+</ul>
+<h1 id='why-not-just-use-testbed'>Why not just use TestBed?</h1>
+<p>In a nutshell, I wanted to make component isolation easy for Angular component tests. I thought it was too difficult with the out-of-the-box solution. Even the Angular docs don&#39;t solve for type-safety and component isolation without adding duplication.</p>
+
+<p>I want a few things from my unit tests that fall into two categories:</p>
+<h2 id='how-trustworthy-is-the-test'>How trustworthy is the test</h2>
+<ul>
+<li>It should fail when:
+
+<ul>
+<li>If a type changes and my component <em>directly</em> misuses that type, I want my tests to fail for that component.</li>
+<li>If my test uses a mock that does not match the contract of the service it is mocking.</li>
+<li>If I mistype a component tag.</li>
+<li>If I use a component that is not accessible from my module.</li>
+<li>If I mistype an input/output on a child-component.</li>
+</ul></li>
+</ul>
+<h2 id='how-brittle-is-the-test'>How brittle is the test</h2>
+<ul>
+<li>It should <em>not</em> fail when:
+
+<ul>
+<li>A child component adds a private dependency but the public contract does not change.</li>
+<li>A child component&#39;s dependency changes but the public contract does not change.</li>
+<li>A service/injectable&#39;s dependency changes but the public contract does not change.</li>
+<li>A child component&#39;s internal DOM structure changes.</li>
+</ul></li>
+</ul>
+
+<p>TestBed alone struggles with a lot of things on this list. I&#39;ll run through the standard options, all of which can be found in various places in the Angular docs.</p>
+<h2 id='demo-test-components'>Demo Test Components</h2>
+<p>Say you have a component you want to test:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"dashboard"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;hello [person]="person"&gt;&lt;/hello&gt;
+    &lt;person-details [person]="person"&gt;&lt;/person-details&gt;
+  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">DashboardComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<p>And my child components look like this:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;h1&gt;Hello {{ person.name }}&lt;/h1&gt;
+    &lt;last-login [person]="person"&gt;&lt;/last-login&gt;
+  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">HelloComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<p>The last-login child component which uses a service...</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"last-login"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;div *ngIf="loaded"&gt;Your last login was {{ lastLogin | date }}&lt;/div&gt;
+  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">LastLoginComponent</span> <span class="k">extends</span> <span class="nx">NgOnInit</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+  <span class="nl">lastLogin</span><span class="p">:</span> <span class="nb">Date</span><span class="p">;</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">private</span> <span class="nx">loginDetailsService</span><span class="p">:</span> <span class="nx">LoginDetailsService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">async</span> <span class="nx">onInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">lastLogin</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">loginDetailsService</span><span class="p">.</span><span class="nx">getLastLoginFor</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">person</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<p>The person-details component which also uses a service...</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"person-details"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;ul *ngIf="details"&gt;
+      &lt;li *ngFor="let detail of details"&gt;
+        {{ detail.name }}: {{ detail.value }}
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">PersonDetailsComponent</span> <span class="k">implements</span> <span class="nx">NgOnInit</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">private</span> <span class="nx">personDetailsService</span><span class="p">:</span> <span class="nx">PersonDetailsService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">async</span> <span class="nx">onInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">details</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">personDetailsService</span><span class="p">.</span><span class="nx">getDetailsFor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">person</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre><h2 id='the-testing-options'>The testing options</h2>
+<p>Ok, now we want to write a unit test for the <code>DashboardComponent</code>. With TestBed alone, this becomes pretty difficult to do while maintaining type-safety and template-safety. Here are our options.</p>
+<h3 id='import-the-whole-module'>Import the whole module</h3><pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"DashboardComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">DashboardModule</span><span class="p">],</span> <span class="c1">// Take the whole thing</span>
+    <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
+
+    <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="cm">/* tests...*/</span>
+<span class="p">});</span>
+</code></pre>
+<p>The problem here is that we&#39;re only intending to render the <code>DashboardComponent</code> but since we pulled in the actual module, it rendered the <em>real</em> <code>HelloComponent</code> and the <em>real</em> <code>PersonDetailsComponent</code> which depend on external services. When those child components <code>onInit</code> methods fire, they&#39;ll blow up on the network calls. I don&#39;t want any actual network calls to go out in my <code>DashboardComponent</code> test because my <code>DashboardComponent</code> doesn&#39;t directly depend on those services, they&#39;re implementation details of the child components (which would be covered in the child component&#39;s specs).</p>
+<h3 id='import-the-whole-module-and-mock-child-grandchild-dependencies'>Import the whole module and mock child/grandchild dependencies</h3>
+<p>I <em>could</em> keep going with my TestBed setup here and mock those services out:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'DashboardComponent'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">DashboardModule</span><span class="p">],</span>
+      <span class="na">provide</span><span class="p">:</span> <span class="p">[</span>
+        <span class="c1">// There is no type-safety with this mock.</span>
+        <span class="p">{</span><span class="na">provide</span><span class="p">:</span> <span class="nx">PersonDetailsService</span><span class="p">,</span> <span class="na">useValue</span><span class="p">:</span> <span class="p">{</span><span class="na">getDetailsFor</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">({</span><span class="na">address</span><span class="p">:</span> <span class="s1">'123 Foo St'</span><span class="p">})}</span>
+        <span class="c1">// No type-safety here either.</span>
+        <span class="p">{</span><span class="nl">provide</span><span class="p">:</span> <span class="nx">LastLoginService</span><span class="p">,</span> <span class="na">useValue</span><span class="p">:</span> <span class="p">{</span><span class="na">getLastLoginFor</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">())}</span>
+    <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
+
+    <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="cm">/* tests...*/</span>
+<span class="p">});</span>
+</code></pre>
+<p>Now, my <code>DashboardComponent</code> spec has all these mock services in its spec just to satisfy the child component&#39;s dependencies. This tightly couples the <code>DashboardComponent</code>&#39;s spec to the private implementation of its dependencies. Bad, right? Our spec doesn&#39;t even appear to use these services and if I look in the <code>DashboardComponent</code> it&#39;s difficult to understand why they were even added to this spec in the first place.</p>
+
+<p>Imagine the TestBed setup for a component that renders a thing that renders another thing that renders the Dashboard component. The higher up the chain you go the more mocking boilerplate you have to provide for the dependencies all-the-way down. This also makes it very difficult to change the <code>PersonDetailsComponent</code>&#39;s internals down the road. Ideally, if the contract for the <code>PersonDetailsService</code> needed a change in the future, you only need to change the <code>PersonDetailsComponent</code> to update your app but if you&#39;re writing tests like this, you&#39;d be on the hook for changing ALL the specs for all the components that render the <code>PersonDetailsComponent</code> AND all specs for things that render parents of things that render the <code>PersonDetailsComponent</code> even though the only component that actually needed changing was the <code>PersonDetailsComponent</code>. In a large project, this could mean hundreds of specs change for a single component&#39;s change.</p>
+<h3 id='manual-component-mocks'>Manual Component Mocks</h3>
+<p>You can combat the dependency-hell by manually breaking down your test module and manually creating mock components with TestBed but even that has drawbacks because you&#39;re duplicating your child components&#39; interfaces and you now have to keep them in sync and maintain a ton of those mock components.</p>
+
+<p>Here&#39;s a small taste of that approach:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span> <span class="na">selector</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="s2">""</span> <span class="p">})</span>
+<span class="kr">class</span> <span class="nx">MockHelloComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="nd">Component</span><span class="p">({</span> <span class="na">selector</span><span class="p">:</span> <span class="s2">"person-details"</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="s2">"person-details"</span> <span class="p">})</span>
+<span class="kr">class</span> <span class="nx">MockPersonDetailsComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s2">"DashboardComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span>
+        <span class="nx">DashboardComponent</span><span class="p">,</span>
+        <span class="nx">MockHelloComponent</span><span class="p">,</span>
+        <span class="nx">MockPersonDetailsComponent</span><span class="p">,</span>
+      <span class="p">],</span>
+    <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
+
+    <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="cm">/* tests...*/</span>
+<span class="p">});</span>
+</code></pre>
+<p>Not bad, but if you have hundreds of components, you have hundreds of mock components that you gotta keep in sync. The compiler won&#39;t help you much here either, you can very easily mess up a mock component and make a test pass when it shouldn&#39;t.</p>
+<h3 id='what-about-no_errors_schema-or-custom_elements_schema'>What about <code>NO_ERRORS_SCHEMA</code> or <code>CUSTOM_ELEMENTS_SCHEMA</code>?</h3>
+<p>See the <a href="https://angular.io/api/core/NO_ERRORS_SCHEMA"><code>NO_ERRORS_SCHEMA</code> docs</a> or the <a href="https://angular.io/api/core/CUSTOM_ELEMENTS_SCHEMA"><code>CUSTOM_ELEMENTS_SCHEMA</code> docs</a> and you&#39;ll see that adding these to your tests explicitly <em>allows errors</em>. I&#39;m not sure why Angular created this hack. It&#39;ll definitely make your tests pass but they pass because errors are not reported, not cool.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"DashboardComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">DashboardComponent</span><span class="p">],</span>
+      <span class="na">schemas</span><span class="p">:</span> <span class="p">[</span><span class="nx">NO_ERRORS_SCHEMA</span><span class="p">],</span>
+    <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
+
+    <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">);</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="cm">/* tests...*/</span>
+<span class="p">});</span>
+</code></pre>
+<p>Unfortunately, this allows your component to be riddled with template errors while your unit tests still pass.</p>
+<h3 id='the-shallow-rendering-alternative'>The Shallow rendering alternative</h3>
+<p>Alternatively, with <code>shallow-render</code>, your test module setup and isolation is easy.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">let</span> <span class="nx">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">DashboardComponent</span><span class="p">,</span> <span class="nx">DashboardModule</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="cm">/* tests... */</span>
+</code></pre>
+<p>All the child components/directives are automatically mocked with the appropriate in/outputs. Your <code>DashboardComponent</code> is completely isolated from the git-go. When you render, <em>ONLY</em> the <code>DashboardComponent</code> is rendered but your template is <em>still checked for errors</em> and any child components you use in your component are verified to exist in your module. This means if you forgot to import something in your component&#39;s module, your test fails so not only is your component tested, your module is verified!</p>
+<h3 id='add-in-type-safe-mocks'>Add in type-safe mocks</h3>
+<p>If we wanted to write a test for the <code>PersonDetailsComponent</code>, which uses a service directly, it&#39;s pretty easy to mock the service.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">let</span> <span class="nx">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">DashboardComponent</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">PersonDetailsComponent</span><span class="p">,</span> <span class="nx">DashboardModule</span><span class="p">)</span>
+    <span class="c1">// the mock below is type-checked so the result of getDetailsFor must match the signature of the PersonDetailsService</span>
+    <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">PersonDetailsService</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">getDetailsFor</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">({</span> <span class="na">address</span><span class="p">:</span> <span class="s2">"123 Foo St"</span> <span class="p">}),</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+<span class="cm">/* tests... */</span>
+</code></pre>
+<p>Your mock is <em>fully type-safe</em> so if you try to return a mismatching type, the compiler complains.</p>
+<h1 id='getting-started'>Getting Started</h1>
+<p>First, install <code>shallow-render</code>:</p>
+
+<p><code>npm install -D shallow-render</code></p>
+
+<p>That&#39;s it, you&#39;re be ready to write a test!</p>
+
+<hr>
+<h2 id='your-first-test'>Your first test</h2>
+<p>Start by identifying the component you want to test, and the Angular module that component lives in.</p>
+
+<p>For this example, we have <code>FooComponent</code> which lives in the <code>FooModule</code> like so:</p>
+
+<blockquote>
+<p>foo.component.ts</p>
+</blockquote>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"foo"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;h1&gt;{{label}}&lt;/h1&gt;"</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="k">export</span> <span class="kr">class</span> <span class="nx">FooComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">label</span> <span class="o">=</span> <span class="s2">"FOO!!"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<blockquote>
+<p>foo.module.ts</p>
+</blockquote>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">NgModule</span><span class="p">({</span>
+  <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">FooComponent</span><span class="p">],</span>
+  <span class="na">exports</span><span class="p">:</span> <span class="p">[</span><span class="nx">FooComponent</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="k">export</span> <span class="kr">class</span> <span class="nx">FooModule</span> <span class="p">{}</span>
+</code></pre>
+<p>We want to write tests to cover the functionality of the <code>FooComponent</code> to make sure it renders the right thing.</p>
+
+<blockquote>
+<p>foo.component.spec.ts</p>
+</blockquote>
+<pre class="highlight typescript tab-typescript"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Shallow</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">"shallow-render"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">FooComponent</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">"./foo.component"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">FooModule</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">"./foo.module"</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s2">"FooComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">FooComponent</span><span class="o">&gt;</span><span class="p">;</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">FooComponent</span><span class="p">,</span> <span class="nx">FooModule</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"displays a default when no label is set"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s2">`&lt;foo&gt;&lt;/foo&gt;`</span><span class="p">);</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"FOO!!"</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"displays provided label"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s2">`&lt;foo label="My Label"&gt;&lt;/foo&gt;`</span><span class="p">);</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"My Label"</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+<p>Let&#39;s break this down starting with the <code>shallow</code> variable:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">let</span> <span class="nx">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">FooComponent</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+<p>This creates a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures">closure</a> that allows all of our specs access the shallow renderer.</p>
+
+<p>Next, our <code>beforeEach</code> fires before each test and sets up a fresh shallow renderer for every test. This means every script gets a clean renderer with fresh mocks.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">FooComponent</span><span class="p">,</span> <span class="nx">FooModule</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+<p>Notice, we pass two items into the <code>Shallow</code> constructor, first, the component we wish to test, in this case the <code>FooComponent</code>. Next, we pass in the module that our test component lives in (the <code>NgModule</code> we <code>declare</code> our component to be a part of). We pass in the module because our Angular module should provide all the dependencies our component needs to render itself including providers, pipes, directives and other components that our component may need. <code>Shallow</code> will mock any child providers and components so they stay out of our way while testing the <code>FooComponent</code>.</p>
+
+<p>Now let&#39;s look at one of the tests, take note of a few things:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"displays provided label"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s2">`&lt;foo label="My Label"&gt;&lt;/foo&gt;`</span><span class="p">);</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"My Label"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+<p>We use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"><code>async</code></a> functions.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</code></pre>
+<p>When we render with <code>Shallow</code>, part of the process involves compiling templates with <code>TestBed</code>. This is an asynchronous process, so we use the <code>async</code> keyword to allow us to use the easier-to-read syntax when dealing with promises.</p>
+
+<p>Then we render our component:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s2">`&lt;foo label="My Label"&gt;&lt;/foo&gt;`</span><span class="p">);</span>
+</code></pre>
+<p>When we render with <code>Shallow</code>, we use the <strong>exact same template HTML style</strong> that we would use when we write Angular HTML. You can even <a href="https://github.com/getsaf/shallow-render/blob/master/lib/examples/component-with-bindings.spec.ts">bind variables and events</a> if you want. Notice we&#39;re setting the <code>label</code> input to <code>My Label</code> in the test.</p>
+
+<p>If the <code>const {find}</code> looks weird, it&#39;s another bit of ES6 syntactic sugar called <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">destructuring</a>. It&#39;s not necessary to destructure, but I like it so you can do it with <code>Shallow</code>.</p>
+
+<p>Once we&#39;re done rendering, we make our assertion:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"My Label"</span><span class="p">);</span>
+</code></pre>
+<p>This is a pretty standard expectation, just make sure that our <code>FooComponent</code> accepted and rendered our label value properly.</p>
+
+<p>That&#39;s it! There are lots of <a href="https://github.com/getsaf/shallow-render/blob/master/lib/examples">examples</a> for all kinds of scenarios.</p>
+<h1 id='pro-tips'>Pro Tips</h1><h2 id='optional-templates'>Optional Templates</h2>
+<p>You aren&#39;t <em>required</em> to use template HTML to render your components if you don&#39;t want to!</p>
+
+<p>For example, the sample above:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s2">`&lt;foo label="My Label"&gt;&lt;/foo&gt;`</span><span class="p">);</span>
+</code></pre>
+<p>could be simplified as:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">label</span><span class="p">:</span> <span class="s2">"My Label"</span> <span class="p">}</span> <span class="p">});</span>
+</code></pre>
+<p>In this case, <code>Shallow</code> will force the <code>bind</code> properties to match the names and types of the inputs for your component. If you want to use HTML templates, that&#39;s cool too. This is just a type-safe alternative.</p>
+<h2 id='recursivepartial-mocks'>RecursivePartial mocks</h2>
+<p>Shallow allows you to provide partials of many arguments. For example:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">type</span> <span class="nx">Car</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">year</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">vin</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">engine</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">cylinders</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">displacement</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</code></pre>
+<p>When testing a component that accepts a <code>Car</code> type, you&#39;re not required to send in <strong>all</strong> the properties of a car all-the-way down. You can supply only what your component needs for your test.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kr">class</span> <span class="nx">CarComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">car</span><span class="p">:</span> <span class="nx">Car</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// can be rendered with just the stuff you want to provide in your test</span>
+<span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">car</span><span class="p">:</span> <span class="p">{</span> <span class="na">year</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span> <span class="na">engine</span><span class="p">:</span> <span class="p">{</span> <span class="na">cylinders</span><span class="p">:</span> <span class="mi">6</span> <span class="p">}</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</code></pre>
+<p>This type is exported so you may also use it in other ways in your test:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"CarComponent"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">testCar</span><span class="p">:</span> <span class="nx">RecursivePartial</span><span class="o">&lt;</span><span class="nx">Car</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">testCar</span> <span class="o">=</span> <span class="p">{</span> <span class="na">year</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span> <span class="na">engine</span><span class="p">:</span> <span class="p">{</span> <span class="na">cylinders</span><span class="p">:</span> <span class="mi">6</span> <span class="p">}</span> <span class="p">};</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"displays the year"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">car</span><span class="p">:</span> <span class="nx">testCar</span> <span class="p">}</span> <span class="p">});</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="s2">"2000"</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre><h1 id='rendering'>Rendering</h1>
+<p>Rendering in Shallow is pretty straight-forward.</p>
+<h2 id='with-an-html-template'>With an HTML template</h2>
+<p>The most basic way is with an HTML template:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="s1">'&lt;my-component label="foo" [my-flag]="true"&gt;&lt;/my-component&gt;'</span>
+<span class="p">);</span>
+</code></pre><h2 id='html-template-and-bindings'>HTML template and bindings</h2>
+<p>You may pass in bindings like so:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="s1">'&lt;my-component [myLabel]="label" [myFlag]="flag" (myOutput)="output"&gt;&lt;/my-component&gt;'</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="na">bind</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">label</span><span class="p">:</span> <span class="s2">"Foo"</span><span class="p">,</span>
+      <span class="na">flag</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">output</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"output fired"</span><span class="p">),</span>
+    <span class="p">},</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+</code></pre><h2 id='no-template-or-bindings'>No template or bindings</h2>
+<p>If you&#39;re not interested in using HTML templates, you may skip the template altogether:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+</code></pre>
+<p>This will render your component with no properties set. You may set your own and call <code>rendering.fixture.detectChanges()</code> as you would in any other TestBed test.</p>
+<h2 id='only-bindings-simplest'>Only Bindings (simplest)</h2>
+<p>Finally, you may skip the template and bind <em>directly</em> to your component (the least wordy method):
+If you&#39;re not interested in using HTML templates, you may skip the template altogether:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">myLabel</span><span class="p">:</span> <span class="s2">"Foo"</span><span class="p">,</span> <span class="na">myFlag</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+</code></pre>
+<p>Two rules must follow here:</p>
+
+<ul>
+<li>The properties you send in <em>must</em> be marked with the <code>@Input</code> decorator.</li>
+<li>You don&#39;t need to pass in outputs, they are automatically mocked!</li>
+</ul>
+<h2 id='component-lifecycle-change-detection'>Component Lifecycle (change detection)</h2>
+<p>On every render, your component will go through the normal component lifecycle (eg: <code>ngOnInit</code>, <code>ngOnChange</code>, etc.) via a call to <code>fixture.detectChanges()</code> and <code>await fixture.whenStable()</code> in shallow. You may control whether or not these are called in shallow-render via a render option.</p>
+
+<p>The normal flow is:</p>
+
+<ul>
+<li>TestBed.createComponent // render</li>
+<li>fixture.detectChanges // fires ngOnInit, etc.</li>
+<li>await fixture.whenStable // waits for async activity to settle</li>
+<li>fixture.detectChanges // makes sure the results of settled async activity is rendered to the DOM</li>
+</ul>
+<h4 id='detectchanges'><code>detectChanges</code></h4>
+<p>You may disable the change detections by setting this flag to <code>false</code>.</p>
+
+<p>The flow will become:</p>
+
+<ul>
+<li>TestBed.createComponent // render</li>
+<li>await fixture.whenStable // waits for async activity to settle</li>
+</ul>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">detectChanges</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span> <span class="c1">// Skip fixture.detectChanges()</span>
+<span class="c1">// Do some setup...</span>
+<span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span> <span class="c1">// Call it manually</span>
+</code></pre><h4 id='whenstable'><code>whenStable</code></h4>
+<p>You may disable the whenStable check by setting this flag to <code>false</code>.</p>
+
+<p>The flow will become:</p>
+
+<ul>
+<li>TestBed.createComponent // render</li>
+<li>fixture.detectChanges // fires ngOnInit, etc.</li>
+</ul>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">whenStable</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span> <span class="c1">// Skips fixture.whenStable()</span>
+</code></pre>
+<hr>
+
+<p>No matter which way you choose render, the result is a <code>Rendering</code> class instance (<a href="https://github.com/getsaf/shallow-render/blob/master/lib/models/rendering.ts"><em>source</em></a>).</p>
+<h2 id='rendering-class'>Rendering Class</h2>
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+<th>type or return type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>instance</code></td>
+<td>Instance of the rendered <code>TestComponent</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>element</code></td>
+<td>The <code>DebugElement</code> of the rendered <code>TestComponent</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>TestBed</code></td>
+<td>Easy access to <code>TestBed</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fixture</code></td>
+<td>The <code>TestBed</code> fixture from rendering the component</td>
+<td></td>
+</tr>
+<tr>
+<td><code>bindings</code></td>
+<td>The bindings object used in your render (if any)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="#find"><code>find(CSS/Directive/Component)</code></a></td>
+<td>Finds elements by CSS or Directive/Component</td>
+<td><a href="QueryMatch-Class"><code>QueryMatch&lt;DebugElement&gt;</code></a></td>
+</tr>
+<tr>
+<td><a href="#findcomponent"><code>findComponent(Component)</code></a></td>
+<td>Finds and returns all matches for a Component</td>
+<td><a href="QueryMatch-Class"><code>QueryMatch&lt;TComponent&gt;</code></a></td>
+</tr>
+<tr>
+<td><a href="#finddirective"><code>findDirective(Directive)</code></a></td>
+<td>Finds and returns all matches for a Directive</td>
+<td><a href="QueryMatch-Class"><code>QueryMatch&lt;TDirective&gt;</code></a></td>
+</tr>
+<tr>
+<td><a href="#inject"><code>inject(Token/Provider)</code></a></td>
+<td>Identical to <code>TestBed.inject</code></td>
+<td><code>TProvider</code></td>
+</tr>
+<tr>
+<td><a href="#get"><code>get(Token/Provider)</code></a></td>
+<td>Deprecated (use <code>inject</code> instead)</td>
+<td><code>TProvider</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+  Note that ALL of these methods and properties can be destructured from the rendering which allows for some syntactic flexibility when rendering.
+</aside>
+
+<p>For example:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">rendering</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">label</span> <span class="o">=</span> <span class="nx">rendering</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">"label"</span><span class="p">);</span>
+</code></pre><h2 id='find-findcomponent-finddirective'><code>find</code>, <code>findComponent</code>, <code>findDirective</code></h2>
+<p>See the section on <a href="#querying">Querying</a> for details.</p>
+<h2 id='get'><code>get</code></h2>
+<aside class="warning">
+This function has been deprecated and will be removed in the next release. Please use <a href="#inject">inject</a> instead.
+</aside>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">get</span><span class="p">(</span><span class="nx">ProvidedClass</span> <span class="o">|</span> <span class="nx">InjectionToken</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">QueryMatch</span><span class="o">&lt;</span><span class="nx">TProvider</span><span class="o">&gt;</span>
+</code></pre>
+<p>This is a type-safe version of <code>TestBed.get()</code>.</p>
+<h2 id='inject'><code>inject</code></h2><pre class="highlight typescript tab-typescript"><code><span class="nx">inject</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="nx">Type</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="o">|</span> <span class="nx">InjectionToken</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="o">|</span> <span class="nx">AbstractType</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">notFoundValue</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">flags</span><span class="p">?:</span> <span class="nx">InjectFlags</span><span class="p">):</span> <span class="nx">T</span> <span class="o">|</span> <span class="kc">null</span>
+</code></pre>
+<p>This is a short-hand for Angular&#39;s <a href="https://angular.io/api/core/testing/TestBed#inject"><code>TestBed.inject</code></a></p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">inject</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">get</span><span class="p">(</span><span class="nx">MyService</span><span class="p">);</span> <span class="c1">// Returns an instance of MyService (or the mock if it's mocked) from the injector</span>
+
+<span class="nx">expect</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">getFoo</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+</code></pre>
+<p>You may also use <code>inject</code> to pull service instances and add more mocks/spys on them <em>AFTER</em> rendering. (This is usually done <em>before</em> rendering by using <code>shallow.mock()</code> but sometimes you need to alter mocks after the initial rendering. I recommend a type-safe mocking library like <a href="https://www.npmjs.com/package/ts-mocks">ts-mocks</a> to do your mocking.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">inject</span><span class="p">,</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span>
+  <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">MyService</span><span class="p">,</span> <span class="p">{</span> <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"FIRST FOO"</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">inject</span><span class="p">(</span><span class="nx">MyService</span><span class="p">);</span>
+<span class="k">new</span> <span class="nx">Mock</span><span class="p">(</span><span class="nx">service</span><span class="p">).</span><span class="nx">extend</span><span class="p">({</span> <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"SECOND FOO"</span> <span class="p">});</span> <span class="c1">// &lt;-- Using ts-mocks here to re-mock a method</span>
+<span class="nx">find</span><span class="p">(</span><span class="s2">"button"</span><span class="p">).</span><span class="nx">triggerEventHandler</span><span class="p">(</span><span class="s2">"click"</span><span class="p">,</span> <span class="p">{});</span>
+<span class="kd">const</span> <span class="nx">responseLabel</span> <span class="o">=</span> <span class="nx">find</span><span class="p">(</span><span class="s2">"label"</span><span class="p">);</span>
+
+<span class="nx">expect</span><span class="p">(</span><span class="nx">responseLabel</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"SECOND FOO"</span><span class="p">);</span>
+</code></pre><h1 id='mocking'>Mocking</h1>
+<p>When writing a spec, you generally want to isolate the component as much as possible and stub/mock out everything else. This lets you really hone in on just the component and reduce the noise of things the component depends on. Mocking in Angular can be tricky, you want to mock things in the most type-safe manner possible.</p>
+
+<p>Shallow will automatically provide an empty mock for injected providers, components, directives and pipes. If the component calls a method on a provider, you&#39;ll need to provide a stub and return the data the component needs to pass the test. All stubs are type-safe and <em>must</em> match the types on the service you&#39;re mocking.</p>
+
+<aside class="notice">
+  Many of Angular's <code>coreModule</code>, <code>commonModule</code> and forms modules never mocked by shallow because they are dependency free and generally helpful to include the real modules in your tests. See the full list of modules <a href="https://github.com/getsaf/shallow-render/blob/master/lib/shallow.ts#L11-L17">here</a>.
+</aside>
+
+<p>Let&#39;s say you have a component that depends on a service, that service depends on 4 other services. You don&#39;t really care about all 5 services for the test, you are only concerned with the one that gives the component data.</p>
+
+<p>Here&#39;s an example of a component that uses a web service to get some data.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">(...)</span>
+<span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
+  <span class="nl">chanceOfRain</span><span class="p">:</span> <span class="kr">number</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">rainService</span><span class="p">:</span> <span class="nx">RainService</span><span class="p">)</span> <span class="p">{</span>
+     <span class="nx">rainService</span><span class="p">.</span><span class="nx">getChanceOfRainForToday</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">chance</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">chanceOfRain</span> <span class="o">=</span> <span class="nx">chance</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<p>When testing this component, you really don&#39;t care about <em>how</em> the <code>RainService</code> does its job, (HTTP, WebSocket, LocalStorage, etc.) you only care about what it gives you back. In this instance it&#39;s just a number.</p>
+
+<p>You can mock this service when testing <code>MyComponent</code> with a single line in a test</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"displays the chance of rain"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">fixture</span><span class="p">,</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span>
+    <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">RainService</span><span class="p">,</span> <span class="p">{</span> <span class="na">getChanceOfRain</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mf">94.2</span><span class="p">)</span> <span class="p">})</span>
+    <span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+  <span class="k">await</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">whenStable</span><span class="p">();</span> <span class="c1">// Waits for all promises to resolve</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"label"</span><span class="p">).</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">textContent</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span>
+    <span class="s2">"There is a 94.2% chance of rain today"</span>
+  <span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+<p>If there are multiple services, mocks are chain-able so you they can be stacked:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span>
+  <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">get</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">),</span>
+    <span class="na">post</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s2">"Fail!"</span><span class="p">),</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">BarService</span><span class="p">,</span> <span class="p">{</span> <span class="na">doBar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">});</span>
+</code></pre>
+<p><code>InjectionToken</code>s work the same way. Stubs are double-checked against the token&#39;s interface to make sure you&#39;re using the correct types.</p>
+
+<p>If all the specs need the same mock, you can do this in the <code>beforeEach</code> block so you only need to do it once. The individual specs may override the initial mocks if they need to.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">let</span> <span class="nx">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">MyComponent</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">,</span> <span class="nx">MyModule</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="p">{</span><span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s1">'mocked foo get'</span><span class="p">})</span>
+    <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">BarService</span><span class="p">,</span> <span class="p">{</span><span class="na">getBar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s1">'mocked bar get'</span><span class="p">});</span>
+<span class="p">})</span>
+
+<span class="nx">it</span><span class="p">(</span><span class="s1">'displays the foo response'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">find</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s1">'label'</span><span class="p">).</span><span class="nx">nativeComponent</span><span class="p">).</span><span class="nx">innerText</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">toContain</span><span class="p">(</span><span class="s1">'mocked foo get'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">it</span><span class="p">(</span><span class="s1">'can override previously defined mocks'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">find</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span>
+    <span class="c1">// Re-mock the same service just for this one spec!!</span>
+    <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="p">{</span><span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s1">'custom foo'</span><span class="p">})</span>
+    <span class="p">.</span><span class="nx">render</span><span class="p">()</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s1">'label'</span><span class="p">).</span><span class="nx">nativeComponent</span><span class="p">).</span><span class="nx">innerText</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">toContain</span><span class="p">(</span><span class="s1">'custom foo'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><h2 id='mocking-component-instance-properties'>Mocking component instance properties</h2>
+<p>When a component is written using the template-hash pattern, we sometimes need to mock methods on these components when we use them. For example:</p>
+
+<p>in <code>MyComponent</code> we may render something like this:</p>
+<pre class="highlight html tab-html"><code><span class="nt">&lt;list-container</span> <span class="err">#</span><span class="na">container</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;list-item</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">container</span><span class="err">.</span><span class="na">collapse</span><span class="err">()"</span><span class="nt">&gt;</span>Collapse the parent!<span class="nt">&lt;/list-item&gt;</span>
+<span class="nt">&lt;/list-container&gt;</span>
+</code></pre>
+<p>Shallow will provide us a mock of <code>list-container</code> and <code>list-item</code>, but if we want to write a test that ensures we hooked up the <code>click</code> handler correctly, we&#39;ll have to call the <code>collapse</code> method on the <code>list-container</code> component so we&#39;ll need to mock that method out. Shallow will apply mock properties to component instances in the same manner as we mock services or other injectables.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span>
+  <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">ListContainerComponent</span><span class="p">,</span> <span class="p">{</span> <span class="na">collapse</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">undefnied</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+<span class="nx">find</span><span class="p">(</span><span class="s2">"list-item"</span><span class="p">).</span><span class="nx">triggerEventHandler</span><span class="p">(</span><span class="s2">"click"</span><span class="p">,</span> <span class="p">{});</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">findComponent</span><span class="p">(</span><span class="nx">ListContainerComponent</span><span class="p">).</span><span class="nx">collapse</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
+</code></pre><h2 id='skip-mocking-with-dontmock'>Skip mocking with <code>dontMock</code></h2>
+<p>Have a service/injection token/component/directive/pipe, etc. that you don&#39;t want to be mocked? Use <code>dontMock</code> to bypass automatic mocking.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">dontMock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="nx">FooComponent</span><span class="p">);</span>
+</code></pre>
+<p>Configures <code>Shallow</code> to use the <em>real</em> <code>FooService</code> and <code>FooComponent</code> in the spec.</p>
+<h2 id='skip-mocking-globally-with-nevermock'>Skip mocking globally with <code>neverMock</code></h2>
+<p>Some components/directives/pipes you may want to always use the real thing. You may choose to &quot;never mock&quot; in the global test setup for all specs.</p>
+
+<p><em>in the global test setup</em></p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">neverMock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="nx">FooPipe</span><span class="p">);</span>
+</code></pre>
+<p>Configures <code>Shallow</code> to always use the <em>real</em> <code>FooService</code> and <code>FooPipe</code> in all specs.</p>
+<h2 id='use-a-manual-mock-instance-or-class'>Use a manual mock instance or class</h2>
+<p>Sometimes, you may want to use a custom mock class or factory for your tests. This can be done in a few ways.</p>
+<h3 id='with-a-single-line-providemock'>With a single-line <code>provideMock</code></h3>
+<p>This automatically issues a <code>provide</code> and <code>dontMock</code> in a simple short-hand:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">provideMock</span><span class="p">({</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">MyService</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MyMockService</span> <span class="p">});</span>
+</code></pre><h3 id='combining-provide-and-dontmock'>Combining <code>provide</code> and <code>dontMock</code></h3>
+<p>This tells Shallow, to provide this mock service-class but don&#39;t run it though Shallow&#39;s auto-mocking.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span>
+  <span class="p">.</span><span class="nx">provide</span><span class="p">({</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">MyService</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MyMockService</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">dontMock</span><span class="p">(</span><span class="nx">MyService</span><span class="p">);</span>
+</code></pre><h2 id='global-mocks-with-alwaysmock'>Global mocks with <code>alwaysMock</code></h2>
+<p>Sometimes you will have things that you&#39;re constantly re-mocking for a spec. You can setup global mocks for these things by using <code>alwaysMock</code> in the global test setup and shallow will always provide the mock in modules that use the provider you specified. Note that doing <code>alwaysMock</code> is <em>NOT</em> a mock-once-for-all-specs solution. Use this feature sparingly, remember specs should generally be self-contained as far as mock data goes. Using <code>alwaysMock</code> is just as bad as using global variables. TL;DR; Use sparingly or not-at-all.</p>
+
+<p><em>in global test setup</em></p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysMock</span><span class="p">(</span><span class="nx">FooService</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">getFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo get"</span><span class="p">,</span>
+  <span class="na">postFoo</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"foo post"</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre><h2 id='global-pipe-mocks-with-alwaysmockpipe'>Global pipe mocks with <code>alwaysMockPipe</code></h2>
+<aside class="notice">
+  added in v9.0.5
+</aside>
+
+<p>Same concept as <code>alwaysMock</code> but for pipes.</p>
+
+<p><em>in global test setup</em></p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysMockPipe</span><span class="p">(</span><span class="nx">FooPipe</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"always foo!"</span><span class="p">);</span>
+</code></pre><h2 id='global-providers-with-alwaysprovide'>Global providers with <code>alwaysProvide</code></h2>
+<p>There are some use cases when an Angular app provides something (usually a configuration) at the top-level of the application. These instances should follow the <a href="https://angular.io/guide/singleton-services"><code>forRoot</code></a> pattern. For these cases, you may want specs to have a similar environment setup where the &#39;root&#39; providers are globally provided to all specs. This can be accomplished by using <code>Shallow.alwaysProvide</code>.</p>
+
+<p><em>in global test setup</em></p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysProvide</span><span class="p">(</span><span class="nx">MyGlobalService</span><span class="p">);</span>
+</code></pre>
+<p>Now, all specs will receive a <em>REAL</em> <code>MyGlobalService</code> when requested for injection.</p>
+
+<p>If you use the <a href="https://angular.io/guide/singleton-services"><code>forRoot</code></a> pattern, you may provide root providers like so:</p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysProvide</span><span class="p">(</span><span class="nx">MyCoreModule</span><span class="p">.</span><span class="nx">forRoot</span><span class="p">().</span><span class="nx">providers</span><span class="p">);</span>
+</code></pre>
+<p>You may also provide a mocked version by chaining <code>alwaysProvide</code> with <code>alwaysMock</code>:</p>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysProvide</span><span class="p">(</span><span class="nx">MyGlobalService</span><span class="p">).</span><span class="nx">alwaysMock</span><span class="p">(</span><span class="nx">MyGlobalService</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">getSomeValue</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"Globally mocked value"</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre>
+<p>Now, all specs will receive a <em>MOCKED</em> <code>MyGlobalService</code> when requested for injection.</p>
+<h2 id='mocking-pipes-with-mockpipe'>Mocking Pipes with <code>mockPipe</code></h2>
+<p>Angular pipes are a little special. They are used to transform data in your templates. By default, Shallow will mock all pipes to have no output. Your specs may want to provide mocks for these transforms to allow validation that a pipe received the correct input data.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">mockPipe</span><span class="p">(</span><span class="nx">MyPipe</span><span class="p">,</span> <span class="p">(</span><span class="nx">input</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="s2">`MyPipe: </span><span class="p">${</span><span class="nx">input</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+</code></pre>
+<p>Configures <code>Shallow</code> to have the <code>MyPipe</code> always perform the following action on input data. This lets you inspect your templates and controls for your Pipe&#39;s side-effects.</p>
+<h2 id='replace-a-module-with-a-test-module'>Replace a module with a test module</h2>
+<p>Angular has a pattern in which they provide full-module replacements specifically designed for testing (see: <a href="https://angular.io/api/common/http/testing/HttpClientTestingModule">HttpClientTestingModule</a>). These testing modules can be used in <code>Shallow</code> tests by replacing the original module with the test module.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">replaceModule</span><span class="p">(</span><span class="nx">HttpClientModule</span><span class="p">,</span> <span class="nx">HttpClientTestingModule</span><span class="p">);</span>
+</code></pre>
+<p>This can also be done globally, you can use <code>alwaysReplaceModule</code> in your global test setup.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysReplaceModule</span><span class="p">(</span><span class="nx">HttpClientModule</span><span class="p">,</span> <span class="nx">HttpClientTestingModule</span><span class="p">);</span>
+</code></pre><h2 id='static-function-mocks'>Static Function Mocks</h2><pre class="highlight typescript tab-typescript"><code><span class="kr">class</span> <span class="nx">MyClass</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="nx">reverse</span><span class="p">(</span><span class="nx">thing</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">thing</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">""</span><span class="p">).</span><span class="nx">reverse</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<p>can be mocked with:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">mockStatic</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span> <span class="p">{</span> <span class="na">reverse</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"mock reverse"</span> <span class="p">});</span>
+</code></pre>
+<p>Regular objects can be mocked in this manner too:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">FOO</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">bar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"bar"</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre>
+<p>Can be mocked with:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">mockStatic</span><span class="p">(</span><span class="nx">FOO</span><span class="p">,</span> <span class="p">{</span> <span class="na">bar</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="s2">"mocked bar"</span> <span class="p">});</span>
+</code></pre>
+<p>Due to Jasmine spy limitations, <strong>only methods are supported</strong>. If you try to mock a non-method property, an error is thrown. When we begin supporting other test frameworks this limitation may go away (or only exist when using Jasmine).</p>
+<pre class="highlight typescript tab-typescript"><code><span class="kr">class</span> <span class="nx">MyClass</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="nx">foo</span> <span class="o">=</span> <span class="s2">"FOO"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+<p>If you try to mock non-method property <code>MyClass.foo</code> will throw an error:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">shallow</span><span class="p">.</span><span class="nx">mockStatic</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span> <span class="p">{</span> <span class="na">foo</span><span class="p">:</span> <span class="s2">"MOCK FOO"</span> <span class="p">});</span> <span class="c1">// throws: InvalidStaticPropertyMockError</span>
+</code></pre><h1 id='querying'>Querying</h1><h2 id='find'><code>find</code></h2><pre class="highlight typescript tab-typescript"><code><span class="nx">find</span><span class="p">(</span><span class="nx">CSSSelector</span> <span class="o">|</span> <span class="nx">Type</span><span class="o">&lt;</span><span class="nx">Directive</span><span class="o">&gt;</span> <span class="o">|</span> <span class="nx">Type</span><span class="o">&lt;</span><span class="nx">Component</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">QueryMatch</span><span class="o">&lt;</span><span class="nx">DebugElement</span><span class="o">&gt;</span>
+</code></pre>
+<p>Accepts a CSS selector, Component class or Directive class and returns all the resulting <code>DebugElements</code> wrapped in a <a href="#querymatch-class"><code>QueryMatch</code></a> object.</p>
+<h3 id='example'>Example</h3><pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"my-component"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;h1 *ngIf="big" class="large"&gt;{{ label }}&lt;/h1&gt;
+    &lt;label *ngIf="!big"&gt;{{ label }}&lt;/label&gt;
+  `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">label</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">big</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre><pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"renders an H1 when big is true"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+    <span class="s1">'&lt;my-component label="foo" [big]="true"&gt;&lt;/my-component'</span>
+  <span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">find</span><span class="p">(</span><span class="s2">"h1.large"</span><span class="p">);</span> <span class="c1">// result is a single H1 DebugElement</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">componentInstance</span><span class="p">.</span><span class="nx">label</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">);</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"label"</span><span class="p">)).</span><span class="nx">toHaveFound</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+<p>You may also pass in the Component class of the thing you are querying for:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">find</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">);</span> <span class="c1">// Returns DebugElements for all occurrences of MyComponent</span>
+</code></pre><h2 id='findcomponent'><code>findComponent</code></h2><pre class="highlight typescript tab-typescript"><code><span class="nx">findComponent</span><span class="p">(</span><span class="nx">Type</span><span class="o">&lt;</span><span class="nx">Component</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">QueryMatch</span><span class="o">&lt;</span><span class="nx">TComponent</span><span class="o">&gt;</span>
+</code></pre>
+<p><code>findComponent</code> differs from <code>find</code> in that it will return the <em>instances</em> of the component, not the <code>DebugElement</code> returned by <code>find</code>. The returned instance(s) are wrapped in a <a href="#querymatch-class"><code>QueryMatch</code></a> object.</p>
+<h3 id='example-2'>Example</h3><pre class="highlight typescript tab-typescript"><code><span class="kr">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">public</span> <span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"person"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;li&gt;{{person.name}}&lt;/li&gt;"</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">PersonComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">person</span><span class="p">:</span> <span class="nx">Person</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"people"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">` &lt;person *ngFor="let p of people" [person]="p"&gt;&lt;/person&gt; `</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">PeopleComponent</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">people</span><span class="p">:</span> <span class="nx">Person</span><span class="p">[];</span>
+<span class="p">}</span>
+</code></pre><pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'renders one item per person'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">findComponent</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+    <span class="s1">'&lt;people [people]="testPeople"&gt;&lt;/people&gt;'</span><span class="p">,</span>
+    <span class="p">{</span><span class="na">bind</span><span class="p">:</span> <span class="p">{</span><span class="na">testPeople</span><span class="p">:</span> <span class="p">[</span><span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">'Foo'</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">'Bar'</span><span class="p">)}}</span>
+  <span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">findComponent</span><span class="p">(</span><span class="nx">PersonComponent</span><span class="p">);</span> <span class="c1">// results is an array of PersonComponent</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">).</span><span class="nx">toHaveFound</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">p</span> <span class="o">=&gt;</span> <span class="nx">p</span><span class="p">.</span><span class="nx">name</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Foo'</span><span class="p">,</span> <span class="s1">'Bar'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><h2 id='finddirective'><code>findDirective</code></h2><pre class="highlight typescript tab-typescript"><code><span class="nx">findDirective</span><span class="p">(</span><span class="nx">Type</span><span class="o">&lt;</span><span class="nx">Directive</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">QueryMatch</span><span class="o">&lt;</span><span class="nx">TDirective</span><span class="o">&gt;</span>
+</code></pre>
+<p><code>findDirective</code> is similar to <code>findComponent</code> except it returns directive instances wrapped in a <a href="#querymatch-class"><code>QueryMatch</code></a> object.</p>
+<h3 id='example-3'>Example</h3><pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Directive</span><span class="p">({</span><span class="na">selector</span><span class="p">:</span> <span class="s1">'size'</span><span class="p">})</span>
+<span class="kr">class</span> <span class="nx">SizeDirective</span> <span class="p">{</span>
+  <span class="p">@</span><span class="nd">Input</span><span class="p">()</span> <span class="nx">size</span><span class="p">:</span> <span class="s1">'sm'</span> <span class="o">|</span> <span class="s1">'md'</span> <span class="o">|</span> <span class="s1">'lg'</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-component'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div size="lg"/&gt;'</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{}</span>
+</code></pre><pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"is large"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">findDirective</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">findDirective</span><span class="p">(</span><span class="nx">SizeDirective</span><span class="p">);</span> <span class="c1">// result is an instance of SizeDirective</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">size</span><span class="p">).</span><span class="k">is</span><span class="p">(</span><span class="s2">"lg"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><h2 id='findstructuraldirective'><code>findStructuralDirective</code></h2>
+<p>See <a href="#querying-structural-directives">Structural Directives</a></p>
+<h2 id='querymatch-class'><code>QueryMatch</code> Class</h2>
+<p>All shallow-render queries return a <code>QueryMatch</code> object. When a query returns a single item, you may just use the result as a that item. However, if your query yielded multiple items, the result acts like an array and can be used in a <code>forEach</code>, <code>map</code>, etc just like any other array.</p>
+
+<p>This lets us use the same object semantically in our tests.</p>
+<h3 id='single-result'>Single Result</h3>
+<p>If you expect a single item in your response just use it like a single item:</p>
+
+<blockquote>
+<p>html</p>
+</blockquote>
+<pre class="highlight html tab-html"><code><span class="nt">&lt;foo</span> <span class="na">class=</span><span class="s">"bold"</span><span class="nt">&gt;</span>Bold Foo!<span class="nt">&lt;/foo&gt;</span>
+</code></pre>
+<blockquote>
+<p>test</p>
+</blockquote>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">find</span><span class="p">(</span><span class="s2">"foo.bold"</span><span class="p">);</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">match</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">"Bold Foo!"</span><span class="p">);</span>
+</code></pre><h3 id='multiple-results'>Multiple Results</h3>
+<p>If you expect multiple items, use <code>Array</code> methods on the matches:</p>
+
+<blockquote>
+<p>html</p>
+</blockquote>
+<pre class="highlight html tab-html"><code><span class="nt">&lt;foo&gt;</span>One<span class="nt">&lt;/foo&gt;</span>
+<span class="nt">&lt;foo&gt;</span>Two<span class="nt">&lt;/foo&gt;</span>
+<span class="nt">&lt;foo&gt;</span>Three<span class="nt">&lt;/foo&gt;</span>
+</code></pre>
+<blockquote>
+<p>test</p>
+</blockquote>
+<pre class="highlight typescript tab-typescript"><code><span class="kd">const</span> <span class="nx">matches</span> <span class="o">=</span> <span class="nx">find</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">);</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">matches</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">match</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">match</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">.</span><span class="nx">innerText</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">([</span>
+  <span class="s2">"One"</span><span class="p">,</span>
+  <span class="s2">"Two"</span><span class="p">,</span>
+  <span class="s2">"Three"</span><span class="p">,</span>
+<span class="p">]);</span>
+</code></pre>
+<aside class="warning">
+  If your query finds multiple items, and you try to use the results as if it were a single item, <b>Shallow will throw an error</b> letting you know multiple items were found when you expected only one. This extra check makes your tests more reliable and more readable.
+</aside>
+<h1 id='structural-directives'>Structural Directives</h1>
+<p>Structural directive mocks are not rendered by default. You may configure this setting globally or per-test.</p>
+<h2 id='global-configuration'>Global Configuration</h2><h3 id='enable-all-structural-directives-to-be-rendered-globally'>Enable ALL structural directives to be rendered globally</h3><pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysRenderStructuralDirectives</span><span class="p">();</span>
+</code></pre><h3 id='enable-certain-structural-directives-to-be-rendered-globally'>Enable <em>certain</em> structural directives to be rendered globally</h3><pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">withStructuralDirective</span><span class="p">(</span><span class="nx">FooDirective</span><span class="p">).</span><span class="nx">withStructuralDirective</span><span class="p">(</span>
+  <span class="nx">BarDirective</span>
+<span class="p">);</span>
+</code></pre><h3 id='enable-all-structural-directives-except-certain-ones-globally'>Enable ALL structural directives except certain ones globally</h3><pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysRenderStructuralDirectives</span><span class="p">().</span><span class="nx">withStructuralDirective</span><span class="p">(</span>
+  <span class="nx">FooDirective</span><span class="p">,</span>
+  <span class="kc">false</span>
+<span class="p">);</span>
+</code></pre><h2 id='per-test-configuration'>Per-test Configuration</h2>
+<p>You may also address this per-test. There are two ways to handle structural directives in a test:</p>
+<h3 id='during-the-shallow-configuration-before-the-render'>During the shallow configuration (before the render)</h3>
+<p>You may instruct shallow to always render a particular directive with <code>withStructuralDirective</code>.</p>
+
+<blockquote>
+<p>This will render <em>ALL</em> instances of the directive.</p>
+</blockquote>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"can render structural directives"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">withStructuralDirective</span><span class="p">(</span><span class="nx">FooDirective</span><span class="p">).</span><span class="nx">render</span><span class="p">();</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".myThing"</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre><h3 id='after-the-render-fine-grained-control'>After the render (fine grained control)</h3>
+<p>Here, we render all of the <code>FooDirective</code> instances:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"can render structural directives"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">renderStructuralDirective</span><span class="p">,</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+  <span class="nx">renderStructuralDirective</span><span class="p">(</span><span class="nx">FooDirective</span><span class="p">);</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".myThing"</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre>
+<p>If you have multiple instances, and you wish to render just one of them, you may query for a specific one and render it directly:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"can render structural directives"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span>
+    <span class="nx">findStructuralDirective</span><span class="p">,</span>
+    <span class="nx">renderStructuralDirective</span><span class="p">,</span>
+    <span class="nx">find</span><span class="p">,</span>
+  <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+  <span class="c1">// Find one that has a particular input property assigned to 'first-foo'</span>
+  <span class="kd">const</span> <span class="nx">firstFoo</span> <span class="o">=</span> <span class="nx">findStructuralDirective</span><span class="p">(</span>
+    <span class="nx">FooDirective</span><span class="p">,</span>
+    <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">inputOnDirective</span> <span class="o">===</span> <span class="s2">"first-foo"</span>
+  <span class="p">);</span>
+  <span class="nx">renderStructuralDirective</span><span class="p">(</span><span class="nx">firstFoo</span><span class="p">);</span>
+
+  <span class="c1">// Or, just render the n-th one</span>
+  <span class="kd">const</span> <span class="nx">fooDirecives</span> <span class="o">=</span> <span class="nx">findStructuralDirective</span><span class="p">(</span><span class="nx">FooDirective</span><span class="p">);</span>
+  <span class="nx">renderStructuralDirective</span><span class="p">(</span><span class="nx">fooDirectives</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".myThing"</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre><h2 id='querying-structural-directives'>Querying Structural Directives</h2>
+<p>Structural directives that are not rendered will NOT be available in the DOM. You can still query for them using shallow-render:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"can find structural directives"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">findStructuralDirective</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">findStructuralDirective</span><span class="p">(</span><span class="nx">FooDirective</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre>
+<p>If you are dealing with multiple instances of the same directive, your search may yield multiple results. You can narrow them down with a predicate as the second argument to <code>findStructuralDirective</code>:</p>
+
+<p>Say, your template looks like this:</p>
+<pre class="highlight html tab-html"><code><span class="nt">&lt;div&gt;</span>
+  <span class="nt">&lt;label</span> <span class="err">*</span><span class="na">whenEven=</span><span class="s">"age"</span> <span class="na">class=</span><span class="s">"age"</span><span class="nt">&gt;</span>
+    Age is an even value {{age}}
+  <span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;label</span> <span class="err">*</span><span class="na">whenEven=</span><span class="s">"streetNumber"</span> <span class="na">class=</span><span class="s">"street"</span><span class="nt">&gt;</span>
+    Street number is an even value {{street}}
+  <span class="nt">&lt;/label&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre>
+<p>Let&#39;s test only the age label</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"can find structural directives"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span>
+    <span class="nx">find</span><span class="p">,</span>
+    <span class="nx">findStructuralDirective</span><span class="p">,</span>
+    <span class="nx">renderStructuralDirective</span><span class="p">,</span>
+  <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">({</span> <span class="na">bind</span><span class="p">:</span> <span class="p">{</span> <span class="na">age</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span> <span class="na">streetNumber</span><span class="p">:</span> <span class="mi">50</span> <span class="p">}</span> <span class="p">});</span>
+  <span class="kd">const</span> <span class="nx">ageDirective</span> <span class="o">=</span> <span class="nx">findStructuralDirective</span><span class="p">(</span>
+    <span class="nx">WhenEvenDirective</span><span class="p">,</span>
+    <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">whenEven</span> <span class="o">===</span> <span class="mi">37</span>
+  <span class="p">);</span>
+  <span class="nx">renderStructuralDirective</span><span class="p">(</span><span class="nx">ageDirective</span><span class="p">);</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".age"</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".street"</span><span class="p">)).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre>
+<aside class="notice">
+  This is a totally contrived example, in reality, the <code>WhenEvenDirective</code> is pure and we can likely just use the actual directive with <code>shallow.dontMock(WhenEvenDirective)</code>.
+</aside>
+<h1 id='testing-services'>Testing Services</h1>
+<blockquote>
+<p>Added in v10.2.0</p>
+</blockquote>
+
+<p>In addition to component testing, shallow-render also supports testing service classes. This allows you to use the same mocking/module setups that normal shallow tests use while testing services.</p>
+
+<p>Usage is the same as when testing components, except that instead of an async <code>render</code> call, you will use the <code>createService</code> call on the <code>shallow</code> instance.</p>
+
+<p>Here&#39;s a basic example:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span><span class="p">{</span> 
+  <span class="c1">// Use a service class instead of a component when newing up the Shallow instance</span>
+  <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">MyService</span><span class="p">,</span> <span class="nx">MyModule</span><span class="p">);</span>
+<span class="p">})</span>
+
+<span class="nx">it</span><span class="p">(</span><span class="s1">'reverses a string'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">instance</span><span class="p">}</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">createService</span><span class="p">();</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">reverse</span><span class="p">(</span><span class="s1">'foobar'</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'raboof'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><h1 id='custom-matchers'>Custom Matchers</h1>
+<p>To help with test readability, <code>Shallow</code> comes pre-packaged with some custom matchers for Jasmine and Jest.</p>
+
+<p><code>toHaveFound(count: number)</code> - Expect a query to have found an exact number of items.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">)).</span><span class="nx">toHaveFound</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</code></pre>
+<p><code>toHaveFoundOne()</code> - Expect a query to have found exactly one items.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+</code></pre>
+<p><code>toHaveFoundMoreThan(count: number)</code> - Expect a query to have found more than x items.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">)).</span><span class="nx">toHaveFoundMoreThan</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// 1 or more</span>
+</code></pre>
+<p><code>toHaveFoundLessThan(count: number)</code> - Expect a query to have found fewer than x items.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">"h1"</span><span class="p">)).</span><span class="nx">toHaveFoundLessThan</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">// 2 or fewer</span>
+</code></pre><h1 id='configuration'>Configuration</h1><h2 id='global-configuration-2'>Global Configuration</h2>
+<p>In your karma test init, you may setup mocks, providers, etc. globally. These settings will automatically apply to <em>all</em> shallow-render tests. Any mocks you provide directly in your spec will override the global mocks so you still have total control over your mocks.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysMock</span><span class="p">(</span><span class="nx">WeatherService</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">willItRain</span><span class="p">:</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="kc">true</span><span class="p">,</span>
+<span class="p">}).</span><span class="nx">alwaysReplaceModule</span><span class="p">(</span><span class="nx">HttpClientModule</span><span class="p">,</span> <span class="nx">HttpClientTestingModule</span><span class="p">);</span>
+</code></pre><h2 id='per-spec-configuration'>Per-spec Configuration</h2>
+<p>Most of the time, you will configure shallow specs via your <code>beforeEach</code> block. These settings will only apply to the tests in your <code>describe</code> block. Any mocks you provide directly in your spec will override the mocks from your <code>beforeEach</code> setup so you still have total control.</p>
+<h1 id='shallow-class'><code>Shallow</code> class</h1><h2 id='static-properties'>Static Properties</h2>
+<p>Shallow has some global configuration options. These can be applied in your top-level test setup (the same place where TestBed is initialized).</p>
+
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>alwaysMock(provider, stubs)</td>
+<td>Mocks a provider for all tests</td>
+</tr>
+<tr>
+<td>neverMock(provider/component/directive/pipe)</td>
+<td>Prevents mocking a thing for all tests</td>
+</tr>
+<tr>
+<td>alwaysProvide(provider)</td>
+<td>Provides an <code>Injectable</code> for all tests</td>
+</tr>
+<tr>
+<td>alwaysReplaceModule(ngModule, replacementModule)</td>
+<td>Replaces a module in all tests</td>
+</tr>
+<tr>
+<td>alwaysImport(ngModule)</td>
+<td>Imports a module in all tests</td>
+</tr>
+</tbody></table>
+<h2 id='instance-properties'>Instance Properties</h2>
+<p>Setup mocks and other options for your test. Usually used in your <code>beforeEach</code> or directly in your test.</p>
+
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>render(template?, options?)</td>
+<td>Renders your <code>TestComponent</code></td>
+<td><code>Promise&lt;Rendering&lt;TestComponent&gt;&gt;</code></td>
+</tr>
+<tr>
+<td>mock(provider, stubs)</td>
+<td>Sets up mock properties/functions for providers to your test component</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>mockPipe(pipe, transformStub)</td>
+<td>Mocks a pipe transform to a custom function</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>dontMock(...provider/component/pipe)</td>
+<td>Prevents a provider from being mocked (uses the real thing in your test)</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>provide(...providers)</td>
+<td>Adds a provider to your test module (this provider is not mocked)</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>provideMock(...providers)</td>
+<td>Adds an empty mock for a provider to your test module</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>replaceModule(ngModule, replacementModule)</td>
+<td>Replaces an imported module with a replacement</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>import(...ngModules)</td>
+<td>Imports an additional module into your test module</td>
+<td>self (chainable)</td>
+</tr>
+<tr>
+<td>declare(...components)</td>
+<td>Adds components to the test module&#39;s declarations and entryComponents</td>
+<td>self (chainable)</td>
+</tr>
+</tbody></table>
+<h1 id='frequently-asked-questions'>Frequently Asked Questions</h1>
+<p>The most complete list of issues/resolutions for popular frameworks will be in the <a href="https://github.com/getsaf/shallow-render/issues">issues</a> list for the project, but this is a list of especially popular difficulties.</p>
+<h2 id='routing'>Routing</h2>
+<p>Angular supplies the <a href="https://angular.io/api/router/testing/RouterTestingModule"><code>RouterTestingModule</code></a> as a drop-in replacement for the actual <code>RouterModule</code>. To use this in your tests, you can simply &quot;replace&quot; the <code>RouterModule</code> with the <code>RouterTestingModule</code> in your global test setup:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">Shallow</span><span class="p">.</span><span class="nx">alwaysReplaceModule</span><span class="p">(</span>
+  <span class="nx">RouterModule</span><span class="p">,</span>
+  <span class="nx">RouterTestingModule</span><span class="p">.</span><span class="nx">withRoutes</span><span class="p">({</span>
+    <span class="na">path</span><span class="p">:</span> <span class="s2">"**"</span><span class="p">,</span>
+    <span class="na">component</span><span class="p">:</span> <span class="kr">class</span> <span class="nx">DummyComponent</span> <span class="p">{},</span>
+  <span class="p">})</span>
+<span class="p">);</span>
+</code></pre>
+<aside class="notice">
+ See <a href="https://github.com/getsaf/shallow-render/blob/master/lib/examples/component-with-routing.spec.ts">this example test</a> for the full usage.
+</aside>
+<h2 id='entry-components'>Entry Components</h2>
+<p>When rendering &quot;normal&quot; components, Angular looks for &quot;selectors&quot; in the template and searches in the module-tree for a component that matches the selector. In testing, we have total control over the module so we can swap out dummy components to match up with selectors and our tests are happy.</p>
+
+<p>EntryComponents bypass this and are referenced directly by their class object instead of being plucked out of the module by their selectors. This can make components that render EntryComponents hard to test.</p>
+
+<p>Here&#39;s what I mean:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Injectable</span><span class="p">()</span>
+<span class="kr">class</span> <span class="nx">ComponentService</span> <span class="p">{</span>
+  <span class="nx">getDynamicComponent</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">===</span> <span class="mi">1</span> <span class="p">?</span> <span class="nx">FooComponent</span> <span class="p">:</span> <span class="nx">BarComponent</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre><pre class="highlight typescript tab-typescript"><code><span class="p">@</span><span class="nd">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s2">"foo"</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span>
+    <span class="s1">'&lt;ng-container *ngComponentOutlet="componentService.getDynamicComponent()" /&gt;'</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="k">public</span> <span class="nx">componentService</span><span class="p">:</span> <span class="nx">ComponentService</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre>
+<p>If we want to test <code>MyComponent</code>, we have two options:</p>
+
+<ol>
+<li>Use the <em>real</em> <code>ComponentService</code> and render the <em>real</em> <code>FooComponent</code> or <code>BarComponent</code>. This is typically undesirable because Foo or Bar components could be complex which would require the tests for <code>MyComponent</code> to provide setup/mocks/etc to satisfy Foo and Bar components requirements.</li>
+<li>Mock the <code>ComponentService</code> and provide <em>dummy</em> entry components. 😎</li>
+</ol>
+
+<p>Here&#39;s an example of option 2:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"option 2"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="na">shallow</span><span class="p">:</span> <span class="nx">Shallow</span><span class="o">&lt;</span><span class="nx">MyComponent</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="p">@</span><span class="nd">Component</span><span class="p">({</span> <span class="na">selector</span><span class="p">:</span> <span class="s2">"dummy"</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="s2">"&lt;i&gt;&lt;/i&gt;"</span> <span class="p">})</span>
+  <span class="kr">class</span> <span class="nx">DummyComponent</span> <span class="p">{}</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">,</span> <span class="nx">MyModule</span><span class="p">)</span>
+      <span class="p">.</span><span class="kr">declare</span><span class="p">(</span><span class="nx">DummyComponent</span><span class="p">)</span>
+      <span class="c1">// We cannot mock the DummyComponent because the getDynamicComponent method below</span>
+      <span class="c1">// will return the *REAL* component so the *actual* DummyComponent must exist in our test setup!</span>
+      <span class="p">.</span><span class="nx">dontMock</span><span class="p">(</span><span class="nx">DummyComponent</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">ComponentService</span><span class="p">,</span> <span class="p">{</span> <span class="na">getDynamicComponent</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">DummyComponent</span> <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s2">"renders the component from the ComponentSevice"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="nx">DummyComponent</span><span class="p">)).</span><span class="nx">toHaveFoundOne</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+<p>This means that if we want to test an EntryComponent that is provided by an external service, we will be required to mock the service that provides the component <strong>and</strong> we will have to declare a suitable dummy component to render.</p>
+<h2 id='bindings-on-entrycomponents'>Bindings on EntryComponents</h2>
+<p>EntryComponents are not rendered with an HTML Template string like a normal component. Therefore, you cannot have <code>@Input</code> properties on an EntryComponent and bind to them with shallow-render. If you need to manipulate properties on an EntryComponent in your test, you may access the <code>instance</code> directly or better-yet, refactor your component to have the values you need passed in with injection to avoid direct interaction with the <code>instance</code>.</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"does something funky if funk is set to true"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">instance</span><span class="p">,</span> <span class="nx">fixture</span><span class="p">,</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+  <span class="nx">instance</span><span class="p">.</span><span class="nx">funk</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".funkiness"</span><span class="p">)).</span><span class="nx">toHaveFound</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><pre class="highlight typescript tab-typescript"><code><span class="nx">it</span><span class="p">(</span><span class="s2">"does something funky if the FunkService is funky"</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">instance</span><span class="p">,</span> <span class="nx">fixture</span><span class="p">,</span> <span class="nx">find</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">shallow</span>
+    <span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">FunkService</span><span class="p">,</span> <span class="p">{</span> <span class="na">isFunky</span><span class="p">:</span> <span class="kc">true</span> <span class="p">})</span>
+    <span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">find</span><span class="p">(</span><span class="s2">".funkiness"</span><span class="p">)).</span><span class="nx">toHaveFound</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><h1 id='examples'>Examples</h1>
+<p>Check out the <a href="https://github.com/getsaf/shallow-render/tree/master/lib/examples">examples</a> folder for more specific use cases.</p>
+
+<p>Many of these examples live in the <a href="https://stackblitz.com/edit/shallow-render?file=examples%2Findex.ts">StackBlitz project</a>, so you can try it in real-time.</p>
+
+      </div>
+      <div class="dark-box">
+      </div>
+    </div>
+  </body>
+</html>
