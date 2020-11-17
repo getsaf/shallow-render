@@ -64,7 +64,6 @@
     "@angular/platform-browser": "11.x",
     "@angular/platform-browser-dynamic": "11.x",
     "@angular/router": "11.x",
-    "@angular-devkit/build-angular": "~0.1100.1",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^13.13.30",
