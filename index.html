@@ -376,6 +376,9 @@
               </ul>
           </li>
           <li>
+            <a href="#testing-services" class="toc-h1 toc-link" data-title="Testing Services">Testing Services</a>
+          </li>
+          <li>
             <a href="#custom-matchers" class="toc-h1 toc-link" data-title="Custom Matchers">Custom Matchers</a>
           </li>
           <li>
@@ -466,6 +469,10 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 <th>shallow-render</th>
 </tr>
 </thead><tbody>
+<tr>
+<td>11x</td>
+<td>11x</td>
+</tr>
 <tr>
 <td>10x</td>
 <td>10x</td>
@@ -1514,7 +1521,22 @@ This function has been deprecated and will be removed in the next release. Pleas
 <aside class="notice">
   This is a totally contrived example, in reality, the <code>WhenEvenDirective</code> is pure and we can likely just use the actual directive with <code>shallow.dontMock(WhenEvenDirective)</code>.
 </aside>
-<h1 id='custom-matchers'>Custom Matchers</h1>
+<h1 id='testing-services'>Testing Services</h1>
+<p>In addition to component testing, shallow-render also supports testing service classes. This allows you to use the same mocking/module setups that normal shallow tests use while testing services.</p>
+
+<p>Usage is the same as when testing components, except that instead of an async <code>render</code> call, you will use the <code>createService</code> call on the <code>shallow</code> instance.</p>
+
+<p>Here&#39;s a basic example:</p>
+<pre class="highlight typescript tab-typescript"><code><span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span><span class="p">{</span> 
+  <span class="c1">// Use a service class instead of a component when newing up the Shallow instance</span>
+  <span class="nx">shallow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Shallow</span><span class="p">(</span><span class="nx">MyService</span><span class="p">,</span> <span class="nx">MyModule</span><span class="p">);</span>
+<span class="p">})</span>
+
+<span class="nx">it</span><span class="p">(</span><span class="s1">'reverses a string'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">instance</span><span class="p">}</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">.</span><span class="nx">createService</span><span class="p">();</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">reverse</span><span class="p">(</span><span class="s1">'foobar'</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'raboof'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre><h1 id='custom-matchers'>Custom Matchers</h1>
 <p>To help with test readability, <code>Shallow</code> comes pre-packaged with some custom matchers for Jasmine and Jest.</p>
 
 <p><code>toHaveFound(count: number)</code> - Expect a query to have found an exact number of items.</p>
