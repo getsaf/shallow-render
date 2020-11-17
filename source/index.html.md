@@ -48,6 +48,7 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 | Angular | shallow-render |
 | ------- | -------------- |
+| 11x     | 11x            |
 | 10x     | 10x            |
 | 9x      | 9x             |
 | 6x-8x   | 8x             |
@@ -1376,6 +1377,28 @@ it("can find structural directives", async () => {
 <aside class="notice">
   This is a totally contrived example, in reality, the <code>WhenEvenDirective</code> is pure and we can likely just use the actual directive with <code>shallow.dontMock(WhenEvenDirective)</code>.
 </aside>
+
+# Testing Services
+
+> Added in v10.2.0
+
+In addition to component testing, shallow-render also supports testing service classes. This allows you to use the same mocking/module setups that normal shallow tests use while testing services.
+
+Usage is the same as when testing components, except that instead of an async `render` call, you will use the `createService` call on the `shallow` instance.
+
+Here's a basic example:
+
+```typescript
+beforeEach(() =>{ 
+  // Use a service class instead of a component when newing up the Shallow instance
+  shallow = new Shallow(MyService, MyModule);
+})
+
+it('reverses a string', () => {
+  const {instance} = shallow.createService();
+  expect(instance.reverse('foobar')).toBe('raboof');
+});
+```
 
 # Custom Matchers
 
