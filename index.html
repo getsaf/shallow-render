@@ -1522,6 +1522,10 @@ This function has been deprecated and will be removed in the next release. Pleas
   This is a totally contrived example, in reality, the <code>WhenEvenDirective</code> is pure and we can likely just use the actual directive with <code>shallow.dontMock(WhenEvenDirective)</code>.
 </aside>
 <h1 id='testing-services'>Testing Services</h1>
+<blockquote>
+<p>Added in v10.2.0</p>
+</blockquote>
+
 <p>In addition to component testing, shallow-render also supports testing service classes. This allows you to use the same mocking/module setups that normal shallow tests use while testing services.</p>
 
 <p>Usage is the same as when testing components, except that instead of an async <code>render</code> call, you will use the <code>createService</code> call on the <code>shallow</code> instance.</p>
