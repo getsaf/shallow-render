@@ -35,25 +35,23 @@ describe('using replaceModule', () => {
     shallow = new Shallow(FooLabelComponent, FooLabelModule).replaceModule(HttpClientModule, HttpClientTestingModule);
   });
 
-  it('displays the response from the foo service', fakeAsync(() => {
-    shallow.render().then(async ({ element, inject, fixture }) => {
-      const client = inject(HttpTestingController);
-      client.expectOne('/foo/as/a/service').flush('foo response');
-      flush();
-      fixture.detectChanges();
+  it('displays the response from the foo service', fakeAsync(async () => {
+    const { element, inject, fixture } = await shallow.render();
+    const client = inject(HttpTestingController);
+    client.expectOne('/foo/as/a/service').flush('foo response');
+    flush();
+    fixture.detectChanges();
 
-      expect(element.nativeElement.innerText).toBe('foo response');
-    });
+    expect(element.nativeElement.innerText).toBe('foo response');
   }));
 
-  it('displays ERROR when a service error occurs', fakeAsync(() => {
-    shallow.render().then(async ({ element, inject, fixture }) => {
-      const client = inject(HttpTestingController);
-      client.expectOne('/foo/as/a/service').error(new ErrorEvent('BOOM'));
-      flush();
-      fixture.detectChanges();
+  it('displays ERROR when a service error occurs', fakeAsync(async () => {
+    const { element, inject, fixture } = await shallow.render();
+    const client = inject(HttpTestingController);
+    client.expectOne('/foo/as/a/service').error(new ErrorEvent('BOOM'));
+    flush();
+    fixture.detectChanges();
 
-      expect(element.nativeElement.innerText).toBe('ERROR');
-    });
+    expect(element.nativeElement.innerText).toBe('ERROR');
   }));
 });
