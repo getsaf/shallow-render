@@ -447,6 +447,11 @@ First, install `shallow-render`:
 
 That's it, you're be ready to write a test!
 
+<aside class="notice">
+  <b>Optional</b>: Install schematics for automatic test scaffolding when using ng to add components <a href="https://github.com/mihalcan/shallow-render-shematics">@mihalcan/shallow-render-shematics</a>
+</aside>
+
+
 ---
 
 ## Your first test
