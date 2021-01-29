@@ -13,6 +13,10 @@ Angular testing made easy with shallow rendering and easy mocking.
 - [StackBlitz Playground](https://stackblitz.com/github/getsaf/shallow-render-stackblitz)
 - [Release Notes](https://github.com/getsaf/shallow-render/releases)
 
+## Schematics
+
+- [Angular Schematics](https://github.com/mihalcan/shallow-render-shematics) (thanks @mihalcan!)
+
 ## Articles
 
 - [Testing Angular Components With shallow-render](https://medium.com/@getsaf/testing-angular-components-with-shallow-render-9334d16dc2e3?source=friends_link&sk=5c72c2bf4ce91da656916dc680f8b1cf)
