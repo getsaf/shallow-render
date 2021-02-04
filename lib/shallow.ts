@@ -82,7 +82,7 @@ export class Shallow<TTestTarget> {
   constructor(testComponentOrService: Type<TTestTarget>, testModule: AngularModule) {
     this.setup = new TestSetup(testComponentOrService, testModule);
     this.setup.dontMock.push(testComponentOrService, ...Shallow._neverMock);
-    this.setup.providers.push(...Shallow._alwaysProvide);
+    this.setup.providers.unshift(...Shallow._alwaysProvide);
     this.setup.imports.push(...Shallow._alwaysImport);
     this.setup.alwaysRenderStructuralDirectives = Shallow._alwaysRenderStructuralDirectives;
     Shallow._alwaysMock.forEach((value, key) => this.setup.mocks.set(key, value));
@@ -104,12 +104,12 @@ export class Shallow<TTestTarget> {
   }
 
   provide(...providers: Provider[]): this {
-    this.setup.providers.push(...providers);
+    this.setup.providers.unshift(...providers);
     return this;
   }
 
   provideMock(...providers: Provider[]): this {
-    this.setup.providers.push(...providers);
+    this.setup.providers.unshift(...providers);
     this.setup.dontMock.push(...providers);
     return this;
   }
