@@ -38,7 +38,7 @@ export function createTestModule<TComponent>(
       [
         // Reverse the setup providers because Angular accepts the first provider as the winner
         // but in test setup, the last provided mock wins.
-        ...[...setup.providers.reverse()],
+        ...[...setup.providers].reverse(),
         ...ngModule.providers,
         ...additionalProviders,
       ],
