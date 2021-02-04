@@ -34,7 +34,7 @@ export function createTestModule<TComponent>(
     imports: [...ngMock([...ngModule.imports, ...setup.imports], setup), CommonModule],
     declarations: [...declarations, ...testComponents],
     entryComponents,
-    providers: mockProvider([...ngModule.providers, ...additionalProviders, ...setup.providers], setup),
+    providers: mockProvider([...[...setup.providers].reverse(), ...ngModule.providers, ...additionalProviders], setup),
     exports: [...declarations, ...entryComponents],
     schemas: ngModule.schemas || [],
   })
