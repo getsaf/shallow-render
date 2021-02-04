@@ -25,25 +25,33 @@ class ColorModule {}
 //////////////////////////
 
 class MockRedService implements RedService {
+  constructor(private _color: string) {}
   color() {
-    return 'FAKE RESPONSE';
+    return this._color;
   }
 }
 
-describe('using dontMock', () => {
+describe('using provideMock', () => {
   let shallow: Shallow<ColorLabelComponent>;
 
   beforeEach(() => {
     shallow = new Shallow(ColorLabelComponent, ColorModule).provideMock({
       provide: RedService,
-      useValue: new MockRedService(),
+      useValue: new MockRedService('Mocked Red'),
     });
   });
 
   it('Uses the color from the MockRedService', async () => {
-    const { element } = await shallow.render();
+    const { element } = await shallow
+      // Provider mocks can be stacked by providing the mock again.
+      // The last mock wins!
+      .provideMock({
+        provide: RedService,
+        useValue: new MockRedService('BAR'),
+      })
+      .render();
 
     // Using the mocked service response here
-    expect(element.nativeElement.innerText).toBe('FAKE RESPONSE');
+    expect(element.nativeElement.innerText).toBe('BAR');
   });
 });
