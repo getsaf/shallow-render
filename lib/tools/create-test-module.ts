@@ -34,16 +34,7 @@ export function createTestModule<TComponent>(
     imports: [...ngMock([...ngModule.imports, ...setup.imports], setup), CommonModule],
     declarations: [...declarations, ...testComponents],
     entryComponents,
-    providers: mockProvider(
-      [
-        // Reverse the setup providers because Angular accepts the first provider as the winner
-        // but in test setup, the last provided mock wins.
-        ...[...setup.providers].reverse(),
-        ...ngModule.providers,
-        ...additionalProviders,
-      ],
-      setup
-    ),
+    providers: mockProvider([...setup.providers, ...ngModule.providers, ...additionalProviders], setup),
     exports: [...declarations, ...entryComponents],
     schemas: ngModule.schemas || [],
   })

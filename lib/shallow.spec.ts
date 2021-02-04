@@ -179,21 +179,24 @@ describe('Shallow', () => {
   });
 
   describe('provide', () => {
-    it('adds to the setup.providers array', () => {
+    it('adds to the beginning of setup.providers array', () => {
       class MyService {}
-      const shallow = new Shallow(MyTestComponent, MyTestModule).provide(MyService);
+      class MyOtherService {}
+      const shallow = new Shallow(MyTestComponent, MyTestModule).provide(MyService).provide(MyOtherService);
 
-      expect(shallow.setup.providers).toContain(MyService);
+      expect(shallow.setup.providers.slice(0, 2)).toEqual([MyOtherService, MyService]);
     });
   });
 
   describe('provideMock', () => {
-    it('adds to the setup.providers and setup.dontMock', () => {
+    it('adds to the beginning of the setup.providers and setup.dontMock', () => {
       class MyService {}
-      const shallow = new Shallow(MyTestComponent, MyTestModule).provideMock(MyService);
+      class MyOtherService {}
+      const shallow = new Shallow(MyTestComponent, MyTestModule).provideMock(MyService).provideMock(MyOtherService);
 
-      expect(shallow.setup.providers).toContain(MyService);
+      expect(shallow.setup.providers.slice(0, 2)).toEqual([MyOtherService, MyService]);
       expect(shallow.setup.dontMock).toContain(MyService);
+      expect(shallow.setup.dontMock).toContain(MyOtherService);
     });
   });
 
