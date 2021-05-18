@@ -50,27 +50,27 @@
   },
   "homepage": "https://github.com/getsaf/shallow-render#readme",
   "peerDependencies": {
-    "@angular/common": "11.x",
-    "@angular/compiler": "11.x",
-    "@angular/core": "11.x",
-    "@angular/forms": "11.x",
-    "@angular/platform-browser": "11.x"
+    "@angular/common": "12.x",
+    "@angular/compiler": "12.x",
+    "@angular/core": "12.x",
+    "@angular/forms": "12.x",
+    "@angular/platform-browser": "12.x"
   },
   "devDependencies": {
-    "@angular/common": "11.x",
-    "@angular/compiler": "11.x",
-    "@angular/core": "11.x",
-    "@angular/forms": "11.x",
-    "@angular/platform-browser": "11.x",
-    "@angular/platform-browser-dynamic": "11.x",
-    "@angular/router": "11.x",
+    "@angular/common": "12.x",
+    "@angular/compiler": "12.x",
+    "@angular/core": "12.x",
+    "@angular/forms": "12.x",
+    "@angular/platform-browser": "12.x",
+    "@angular/platform-browser-dynamic": "12.x",
+    "@angular/router": "12.x",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^13.13.30",
     "codelyzer": "^6.0.0",
     "core-js": "^2.5.7",
     "jasmine": "^3.5.0",
-    "jasmine-core": "^3.5.0",
+    "jasmine-core": "^3.7.0",
     "jasmine-spec-reporter": "^5.0.2",
     "karma": "^5.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -83,8 +83,8 @@
     "ts-node": "^9.0.0",
     "tslint": "^6.1.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "~4.0.2",
-    "zone.js": "~0.10.2"
+    "typescript": "~4.2.3",
+    "zone.js": "~0.11.4"
   },
   "dependencies": {}
 }

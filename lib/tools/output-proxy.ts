@@ -37,15 +37,16 @@ export const outputProxy = <TComponent>(component: TComponent): PickByType<TComp
   return new Proxy(
     {},
     {
-      get: (_, key: keyof TComponent) => {
+      get: (_, key) => {
         if (!outputs.includes(String(key))) {
           throw new PropertyNotMarkedAsOutputError(key, component);
         }
-        if (!(component[key] instanceof EventEmitter)) {
+        const maybeOutput = (component as any)[key];
+        if (!(maybeOutput instanceof EventEmitter)) {
           throw new PropertyNotAnEventEmitterError(key, component);
         }
 
-        return component[key];
+        return maybeOutput;
       },
     }
   ) as any;

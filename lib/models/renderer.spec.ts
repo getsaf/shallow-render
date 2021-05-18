@@ -157,7 +157,7 @@ describe('Renderer', () => {
       expect(true).toBe(true);
     });
 
-    it('throws an error when binding to a property that is not marked as an @Input', async done => {
+    it('throws an error when binding to a property that is not marked as an @Input', async () => {
       try {
         await renderer.render({
           bind: { myProperty: 'FOO' },
@@ -165,7 +165,6 @@ describe('Renderer', () => {
         fail('Render should have thrown an error because the myProperty is not an @Input');
       } catch (e) {
         expect(e).toBeInstanceOf(InvalidInputBindError);
-        done();
       }
     });
 
