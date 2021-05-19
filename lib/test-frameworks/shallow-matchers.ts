@@ -24,12 +24,12 @@ type JasmineMatcher<TActual, TExpected> = () => {
   compare(actual: TActual, expected: TExpected): { pass: boolean; message: string };
 };
 type JestMatcher<TActual, TExpected> = (actual: TActual, expected: TExpected) => { pass: boolean; message(): string };
-const jasmineToJestMatcher = <TActual, TExpected>(
-  jasmineMatcher: JasmineMatcher<TActual, TExpected>
-): JestMatcher<TActual, TExpected> => (actual: TActual, expected: TExpected) => {
-  const { pass, message } = jasmineMatcher().compare(actual, expected);
-  return { pass, message: () => message };
-};
+const jasmineToJestMatcher =
+  <TActual, TExpected>(jasmineMatcher: JasmineMatcher<TActual, TExpected>): JestMatcher<TActual, TExpected> =>
+  (actual: TActual, expected: TExpected) => {
+    const { pass, message } = jasmineMatcher().compare(actual, expected);
+    return { pass, message: () => message };
+  };
 
 const jasmineMatchers = {
   toHaveFound: () => ({

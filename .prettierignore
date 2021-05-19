@@ -4,3 +4,4 @@ LICENSE
 .editorconfig
 .gitignore
 .prettierignore
+.npmrc
