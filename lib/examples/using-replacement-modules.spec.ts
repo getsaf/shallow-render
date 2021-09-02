@@ -1,7 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { fakeAsync, flush } from '@angular/core/testing';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
@@ -35,23 +34,23 @@ describe('using replaceModule', () => {
     shallow = new Shallow(FooLabelComponent, FooLabelModule).replaceModule(HttpClientModule, HttpClientTestingModule);
   });
 
-  it('displays the response from the foo service', fakeAsync(async () => {
+  it('displays the response from the foo service', async () => {
     const { element, inject, fixture } = await shallow.render();
     const client = inject(HttpTestingController);
     client.expectOne('/foo/as/a/service').flush('foo response');
-    flush();
+    await new Promise(resolve => setTimeout(resolve, 1));
     fixture.detectChanges();
 
     expect(element.nativeElement.innerText).toBe('foo response');
-  }));
+  });
 
-  it('displays ERROR when a service error occurs', fakeAsync(async () => {
+  it('displays ERROR when a service error occurs', async () => {
     const { element, inject, fixture } = await shallow.render();
     const client = inject(HttpTestingController);
     client.expectOne('/foo/as/a/service').error(new ErrorEvent('BOOM'));
-    flush();
+    await new Promise(resolve => setTimeout(resolve, 1));
     fixture.detectChanges();
 
     expect(element.nativeElement.innerText).toBe('ERROR');
-  }));
+  });
 });
