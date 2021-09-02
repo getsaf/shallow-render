@@ -1,3 +1,7 @@
+/**
+ * Utility type that converts an object to recursively have optional properties.
+ * This includes items an arrays and return values for functions.
+ */
 export type RecursivePartial<T> = Partial<
   {
     [key in keyof T]: T[key] extends (...a: Array<infer U>) => any

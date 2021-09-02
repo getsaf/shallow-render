@@ -1,4 +1,38 @@
 import { CustomError } from './custom-error';
+
+/**
+ * The results of a shallow-render query.
+ *
+ * This will contain either a single `TMatch` OR an Array of `TMatch`. Your test
+ * must give proper treatment to the result based on the expected results.
+ *
+ * If your query is expected to have multiple matches, you *must* treat your results
+ * as an Array or you will recieve errors when accessing properties on your results.
+ *
+ * You may treat a single result as an array but you cannot treat an array of results as a single result.
+ *
+ * For example, if your test expects a single result, you may treat the result as a `DebugElement` or an array of `DebugElement`s with one entry.
+ *
+ * @example
+ * expect(find('h1.large').nativeElement.textContent).toBe('Foo');
+ *
+ * // If your query results in multiple matches, you may iterate over the matches but if you attempt
+ * // to treat the collection of matches as a single match, the test will fail due to a mismatched
+ * // usage of the query results in the test.
+ *
+ * // This would throw an error if the query resulted in multiple matches
+ * expect(find('h1.large').nativeElement.textContent).toBe('Foo');
+ *
+ * const results = find('h1.large');
+ * expect(results.length).toBe(3);
+ * expect(results.map(result => result.nativeElement.innerText)).toEqual([
+ *   'Foo',
+ *   'Bar',
+ *   'Baz'
+ * ])
+ *
+ * @link https://getsaf.github.io/shallow-render/#querying
+ */
 export type QueryMatch<TMatch> = TMatch[] & TMatch;
 
 export class NoMatchesError extends CustomError {
