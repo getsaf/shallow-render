@@ -14,7 +14,6 @@
     "outDir": "dist",
     "declarationDir": "dist",
     "allowSyntheticDefaultImports": true,
-    "removeComments": true,
     "experimentalDecorators": true,
     "types": ["node", "jasmine"],
     "strict": true,
