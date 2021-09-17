@@ -11,6 +11,7 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 - [API Docs](https://getsaf.github.io/shallow-render)
 - [StackBlitz Playground](https://stackblitz.com/github/getsaf/shallow-render-stackblitz)
+- [Example Tests](https://github.com/getsaf/shallow-render/tree/master/lib/examples)
 - [Release Notes](https://github.com/getsaf/shallow-render/releases)
 
 ## Schematics
