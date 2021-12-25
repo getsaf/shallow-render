@@ -28,7 +28,7 @@ export class PropertyNotAnEventEmitterError extends CustomError {
   }
 }
 
-export const outputProxy = <TComponent extends object>(
+export const outputProxy = <TComponent extends Object>(
   component: TComponent
 ): PickByType<TComponent, EventEmitter<any>> => {
   const outputs = reflect.getInputsAndOutputs(component.constructor).outputs.map(o => o.propertyName);

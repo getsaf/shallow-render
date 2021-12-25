@@ -1,4 +1,3 @@
-import { testFramework } from '../test-frameworks/test-framework';
 import { createContainer } from './create-container';
 
 describe('createContainerComponent', () => {

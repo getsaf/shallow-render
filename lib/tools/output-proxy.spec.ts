@@ -14,7 +14,6 @@ describe('outputProxy', () => {
   class FooComponent {
     @Output() normalOutput = new EventEmitter<string>();
     @Output() notAnEventEmitter = 'foo';
-    // tslint:disable-next-line: no-output-rename
     @Output('renamed') renamedOutput = new EventEmitter<string>();
     notMarkedAsOutput = new EventEmitter<string>();
   }

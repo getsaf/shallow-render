@@ -7,13 +7,10 @@ export interface ShallowMatchers {
 }
 declare global {
   namespace jasmine {
-    // tslint:disable-next-line
     interface ArrayLikeMatchers<T> extends ShallowMatchers {}
   }
   namespace jest {
-    // tslint:disable-next-line
     interface ArrayLikeMatchers<T> extends ShallowMatchers {}
-    // tslint:disable-next-line
     interface Matchers<R> extends ShallowMatchers {}
   }
 }

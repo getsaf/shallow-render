@@ -74,10 +74,10 @@ describe('ng-mock', () => {
     // an entry component in a module
     @Directive()
     @Component({ selector: 'dummy-selector', template: '' })
-    class ComponentWithDirectiveAndComponentDecorators {}
-    const MockedCombo = ngMock(ComponentWithDirectiveAndComponentDecorators, testSetup);
+    class WithDirectiveAndComponentDecoratorsComponent {}
+    const MockedCombo = ngMock(WithDirectiveAndComponentDecoratorsComponent, testSetup);
 
-    expect(MockedCombo.name).toBe('MockOfComponentWithDirectiveAndComponentDecorators');
+    expect(MockedCombo.name).toBe('MockOfWithDirectiveAndComponentDecoratorsComponent');
   });
 
   describe('components with mocks', () => {
@@ -152,7 +152,6 @@ describe('ng-mock', () => {
 
     const mock = ngMock(moduleWithProviders, testSetup) as typeof moduleWithProviders;
 
-    // tslint:disable-next-line: no-non-null-assertion
     const providers = mock.providers as ValueProvider[];
     expect(mock.ngModule.name).toBe('MockOfFooModule');
     expect(providers.length).toBe(1);

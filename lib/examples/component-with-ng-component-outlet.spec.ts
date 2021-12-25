@@ -38,22 +38,22 @@ class StepModule {}
 describe('component with ngComponentOutlet and entry component', () => {
   let shallow: Shallow<StepDisplayComponent>;
   @Component({ selector: 'dummy-step-one', template: '<i></i>' })
-  class DummyStepOne {}
+  class DummyStepOneComponent {}
 
   @Component({ selector: 'dummy-step-two', template: '<i></i>' })
-  class DummyStepTwo {}
+  class DummyStepTwoComponent {}
 
   beforeEach(() => {
     shallow = new Shallow(StepDisplayComponent, StepModule)
-      .declare(DummyStepOne, DummyStepTwo)
-      .dontMock(DummyStepOne, DummyStepTwo)
-      .mock(StepService, { getSteps: () => [DummyStepOne, DummyStepTwo] });
+      .declare(DummyStepOneComponent, DummyStepTwoComponent)
+      .dontMock(DummyStepOneComponent, DummyStepTwoComponent)
+      .mock(StepService, { getSteps: () => [DummyStepOneComponent, DummyStepTwoComponent] });
   });
 
   it('renders dynamic steps', async () => {
     const { find } = await shallow.render();
 
-    expect(find(DummyStepOne)).toHaveFoundOne();
-    expect(find(DummyStepTwo)).toHaveFoundOne();
+    expect(find(DummyStepOneComponent)).toHaveFoundOne();
+    expect(find(DummyStepTwoComponent)).toHaveFoundOne();
   });
 });

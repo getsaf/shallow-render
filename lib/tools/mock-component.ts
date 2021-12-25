@@ -16,17 +16,17 @@ export const mockComponent = <TComponent extends Type<any>>(
     selector: meta?.selector,
     template: '<ng-content></ng-content>',
     providers: [
-      { provide: component, useExisting: forwardRef(() => Mock) },
+      { provide: component, useExisting: forwardRef(() => MockComponent) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
     exportAs: meta?.exportAs,
   })
-  class Mock extends mockWithInputsOutputsAndStubs(component, config?.stubs) {}
+  class MockComponent extends mockWithInputsOutputsAndStubs(component, config?.stubs) {}
 
   // Provide our mock in place of any other usage of 'thing'.
   // This makes `ViewChild` and `ContentChildren` selectors work!
-  TestBed.overrideComponent(Mock, {
-    add: { providers: [{ provide: component, useExisting: forwardRef(() => Mock) }] },
+  TestBed.overrideComponent(MockComponent, {
+    add: { providers: [{ provide: component, useExisting: forwardRef(() => MockComponent) }] },
   });
-  return Mock as any;
+  return MockComponent as any;
 };

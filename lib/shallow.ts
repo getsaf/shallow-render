@@ -16,7 +16,6 @@ import { createService } from './tools/create-service';
  * mocks and providers. When test setup is complet, you can render with the `render` method.
  */
 export class Shallow<TTestTarget> {
-  // tslint:disable: member-ordering
   readonly setup: TestSetup<TTestTarget>;
 
   /**
@@ -89,11 +88,7 @@ export class Shallow<TTestTarget> {
     this._alwaysMockPipes.set(pipe, transform);
     return this;
   }
-  private static readonly _alwaysMockPipes = new Map<
-    PipeTransform | Type<PipeTransform>,
-    // tslint:disable-next-line: ban-types
-    Function
-  >();
+  private static readonly _alwaysMockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>();
 
   /**
    * Instruct *all* shallow-render tests to replace references to one module with another module.

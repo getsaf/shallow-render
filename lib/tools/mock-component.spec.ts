@@ -22,7 +22,6 @@ describe('mockComponent', () => {
     @Component({ selector: 'my-component' })
     class MyComponent {
       @Input() myInput!: string;
-      // tslint:disable-next-line: no-input-rename
       @Input('withAlias') myAliasedInput!: string;
     }
 
@@ -41,7 +40,6 @@ describe('mockComponent', () => {
     @Component({ selector: 'my-component' })
     class MyComponent {
       @Output() myOutput = new EventEmitter();
-      // tslint:disable-next-line: no-output-rename
       @Output('withAlias') myAliasedOutput = new EventEmitter();
     }
 
@@ -75,8 +73,8 @@ describe('mockComponent', () => {
 
 const testHost = (template: string) => {
   @Component({ selector: 'test-host', template })
-  class TestHost {
+  class TestHostComponent {
     handleEvent = jest.fn();
   }
-  return TestHost;
+  return TestHostComponent;
 };

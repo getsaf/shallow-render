@@ -22,7 +22,6 @@ describe('mockDirective', () => {
     @Directive({ selector: '[myDirective]' })
     class MyDirective {
       @Input() myInput!: string;
-      // tslint:disable-next-line: no-input-rename
       @Input('withAlias') myAliasedInput!: string;
     }
 
@@ -41,7 +40,6 @@ describe('mockDirective', () => {
     @Directive({ selector: '[myDirective]' })
     class MyDirective {
       @Output() myOutput = new EventEmitter();
-      // tslint:disable-next-line: no-output-rename
       @Output('withAlias') myAliasedOutput = new EventEmitter();
     }
 
@@ -126,8 +124,8 @@ describe('mockDirective', () => {
 
 const testHost = (template: string) => {
   @Component({ selector: 'test-host', template })
-  class TestHost {
+  class TestHostComponent {
     handleEvent = jest.fn();
   }
-  return TestHost;
+  return TestHostComponent;
 };

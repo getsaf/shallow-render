@@ -13,13 +13,11 @@ export class JitReflector {
   }
 
   componentModuleUrl(type: any, _cmpMetadata: Component): string {
-    /* tslint:disable-line prefer-function-over-method */
     return `./${stringify(type)}`;
   }
 
   // This does not exist in Angular 5.1.x but is required to exist in 5.2+
   guards(_type: any): { [key: string]: any } {
-    /* tslint:disable-line prefer-function-over-method */
     return {};
   }
 
@@ -36,7 +34,6 @@ export class JitReflector {
   }
 
   resolveExternalReference(ref: ExternalReference): any {
-    /* tslint:disable-line prefer-function-over-method */
     return ref.runtime;
   }
 

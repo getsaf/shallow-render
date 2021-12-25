@@ -1,6 +1,6 @@
 import { Component, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs'; // tslint:disable-line no-implicit-dependencies
+import { Subscription } from 'rxjs';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////

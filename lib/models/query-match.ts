@@ -97,7 +97,7 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
     },
     deleteProperty: (_obj, key: string) => {
       throwErrorIfNotOneMatch(key, matches);
-      delete match[key]; /* tslint:disable-line no-dynamic-delete */
+      delete match[key];
       return true;
     },
     getPrototypeOf: (_target: any) => {

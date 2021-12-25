@@ -14,19 +14,18 @@ export function mockDirective<TDirective extends Type<any>>(
   directive: TDirective,
   config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
-  // tslint:disable-next-line: no-non-null-assertion
   const meta = reflect.directive.resolve(directive)!;
 
   @MockOf(directive)
   @Directive({
     selector: meta.selector || `__${directive.name}-selector`,
     providers: [
-      { provide: directive, useExisting: forwardRef(() => Mock) },
+      { provide: directive, useExisting: forwardRef(() => MockDirective) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
     exportAs: meta.exportAs,
   })
-  class Mock extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
+  class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
     constructor(
       @Optional() private _viewContainer?: ViewContainerRef,
       @Optional() private _template?: TemplateRef<any>
@@ -54,9 +53,9 @@ export function mockDirective<TDirective extends Type<any>>(
 
   // Provide our mock in place of any other usage of 'thing'.
   // This makes `ViewChild` and `ContentChildren` selectors work!
-  TestBed.overrideDirective(Mock, {
-    add: { providers: [{ provide: directive, useExisting: forwardRef(() => Mock) }] },
+  TestBed.overrideDirective(MockDirective, {
+    add: { providers: [{ provide: directive, useExisting: forwardRef(() => MockDirective) }] },
   });
 
-  return Mock as any;
+  return MockDirective as any;
 }
