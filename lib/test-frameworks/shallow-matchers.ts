@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { QueryMatch } from '../models/query-match';
 export interface ShallowMatchers {
   toHaveFoundOne(): void;

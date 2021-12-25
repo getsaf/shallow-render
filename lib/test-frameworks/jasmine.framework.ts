@@ -1,7 +1,7 @@
 import { AnyFunction, TestFramework } from './types';
 
-declare var jasmine: any;
-declare var spyOn: any;
+declare const jasmine: any;
+declare const spyOn: any;
 
 export const jasmineFramework: TestFramework = {
   createSpy: () => jasmine.createSpy(),

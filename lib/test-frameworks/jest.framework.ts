@@ -1,6 +1,6 @@
 import { AnyFunction, TestFramework } from './types';
 
-declare var jest: any;
+declare const jest: any;
 
 export const jestFramework: TestFramework = {
   createSpy: () => jest.fn(),

@@ -88,6 +88,7 @@ export class Shallow<TTestTarget> {
     this._alwaysMockPipes.set(pipe, transform);
     return this;
   }
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private static readonly _alwaysMockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>();
 
   /**
@@ -158,7 +159,7 @@ export class Shallow<TTestTarget> {
    *
    * @link https://getsaf.github.io/shallow-render/#structural-directives
    */
-  public static alwaysWithStructuralDirective(directive: Type<any>, renderContents: boolean = true) {
+  public static alwaysWithStructuralDirective(directive: Type<any>, renderContents = true) {
     this._alwaysWithStructuralDirectives.set(directive, renderContents);
     return Shallow;
   }

@@ -7,6 +7,7 @@ export class TestSetup<TTestTarget> {
   readonly mocks = new Map();
   readonly staticMocks = new Map();
   readonly moduleReplacements = new Map<AngularModule, AngularModule>();
+  // eslint-disable-next-line @typescript-eslint/ban-types
   readonly mockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>();
   readonly mockCache = new MockCache();
   readonly providers: Provider[] = [];

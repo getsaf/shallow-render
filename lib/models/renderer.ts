@@ -82,6 +82,7 @@ export class Renderer<TComponent> {
     mockStatics(this._setup);
     injectRootProviders(this._setup);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const resolvedTestComponent = reflect.directive.resolve(this._setup.testComponentOrService)!;
     if (!template) {
       // If no template is used, the bindings should be verified to match the

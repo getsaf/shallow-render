@@ -100,7 +100,7 @@ export function createQueryMatch<TMatch>(matches: TMatch[]): QueryMatch<TMatch> 
       delete match[key];
       return true;
     },
-    getPrototypeOf: (_target: any) => {
+    getPrototypeOf: () => {
       throwErrorIfNotOneMatch('prototype', matches);
       return Object.getPrototypeOf(match);
     },

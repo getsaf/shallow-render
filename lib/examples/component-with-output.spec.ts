@@ -20,6 +20,7 @@ class InnerComponent {
   template: '<inner-component (output)="outputHandler($event)"></inner-component>',
 })
 class OuterComponent {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   outputHandler(_event: MyEvent) {
     // implementation
   }

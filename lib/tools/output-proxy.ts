@@ -28,6 +28,7 @@ export class PropertyNotAnEventEmitterError extends CustomError {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const outputProxy = <TComponent extends Object>(
   component: TComponent
 ): PickByType<TComponent, EventEmitter<any>> => {

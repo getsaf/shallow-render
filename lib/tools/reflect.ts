@@ -1,6 +1,5 @@
 import { Component, Directive, Input, NgModule, Output, Pipe, PipeTransform } from '@angular/core';
 import { getTestBed } from '@angular/core/testing';
-import { JitReflector } from './jit-reflector';
 
 type DirectiveResolver = {
   resolve(directiveOrComponent: any): Directive | null;
@@ -71,7 +70,6 @@ const isNgModule = (thing: any) => !!resolvers.module.resolve(thing);
 const isPipe = (thing: any): thing is PipeTransform => !!resolvers.pipe.resolve(thing);
 
 export const reflect = {
-  jitReflector: new JitReflector(),
   component: resolvers.component,
   directive: resolvers.directive,
   module: resolvers.module,
