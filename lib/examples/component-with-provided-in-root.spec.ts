@@ -35,6 +35,6 @@ describe('component with service providedIn root', () => {
   it('Uses the rootName from the RootService', async () => {
     const { element } = await shallow.render();
 
-    expect(element.nativeElement.innerText).toBe('MOCKED ROOT NAME');
+    expect(element.nativeElement.textContent).toBe('MOCKED ROOT NAME');
   });
 });

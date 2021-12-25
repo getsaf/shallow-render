@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "es2016"],
-    "module": "commonjs",
-    "target": "es2015",
+    "lib": ["dom", "es2020"],
+    "module": "es2020",
+    "target": "es2017",
+    "importHelpers": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
@@ -15,7 +16,7 @@
     "declarationDir": "dist",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "types": ["node", "jasmine"],
+    "types": ["node", "jest"],
     "strict": true,
     "alwaysStrict": true
   },

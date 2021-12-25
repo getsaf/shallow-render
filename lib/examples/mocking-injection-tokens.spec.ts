@@ -59,18 +59,18 @@ describe('simple component example', () => {
     const { find } = await shallow.render('<label-text>Woot!</label-text>');
 
     const label = find('label');
-    expect(label.nativeElement.innerText.trim()).toBe('Woot!');
+    expect(label.nativeElement.textContent.trim()).toBe('Woot!');
   });
 
   it('renders the string token', async () => {
     const { find } = await shallow.render();
 
-    expect(find('#token-string').nativeElement.innerText).toBe('MOCK-STRING');
+    expect(find('#token-string').nativeElement.textContent).toBe('MOCK-STRING');
   });
 
   it('renders the results of the function token', async () => {
     const { find } = await shallow.render();
 
-    expect(find('#token-function').nativeElement.innerText).toBe('MOCK-FUNCTION');
+    expect(find('#token-function').nativeElement.textContent).toBe('MOCK-FUNCTION');
   });
 });

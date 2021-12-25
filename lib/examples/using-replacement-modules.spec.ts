@@ -41,7 +41,7 @@ describe('using replaceModule', () => {
     await new Promise(resolve => setTimeout(resolve, 1));
     fixture.detectChanges();
 
-    expect(element.nativeElement.innerText).toBe('foo response');
+    expect(element.nativeElement.textContent).toBe('foo response');
   });
 
   it('displays ERROR when a service error occurs', async () => {
@@ -51,6 +51,6 @@ describe('using replaceModule', () => {
     await new Promise(resolve => setTimeout(resolve, 1));
     fixture.detectChanges();
 
-    expect(element.nativeElement.innerText).toBe('ERROR');
+    expect(element.nativeElement.textContent).toBe('ERROR');
   });
 });

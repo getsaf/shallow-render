@@ -2,8 +2,6 @@ import { Component, NgModule } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
-  NG_VALUE_ACCESSOR,
-  DefaultValueAccessor,
   Validators,
   FormBuilder,
   FormControlName,

@@ -32,12 +32,12 @@ describe('simple component example', () => {
     shallow = new Shallow(TitleTextComponent, TitleTextModule);
   });
 
-  it('displays text piped through the HighlightPipe', async () => {
+  it('displays text piped through the UnderlinePipe', async () => {
     const { find } = await shallow
       .mockPipe(UnderlinePipe, input => `pipe got: ${input}`)
       .render({ bind: { label: 'woot' } });
 
     const h1 = find('h4');
-    expect(h1.nativeElement.innerText).toBe('pipe got: woot');
+    expect(h1.nativeElement.textContent).toBe('pipe got: woot');
   });
 });

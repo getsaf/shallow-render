@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { outputProxy, PropertyNotAnEventEmitterError, PropertyNotMarkedAsOutputError } from './output-proxy';
+import { outputProxy, PickByType, PropertyNotAnEventEmitterError, PropertyNotMarkedAsOutputError } from './output-proxy';
 
 describe('outputProxy', () => {
   @Component({
@@ -13,8 +13,13 @@ describe('outputProxy', () => {
     @Output('renamed') renamedOutput = new EventEmitter<string>();
     notMarkedAsOutput = new EventEmitter<string>();
   }
-  const component = new FooComponent();
-  const outputs = outputProxy(component);
+  let component: FooComponent;
+  let outputs: PickByType<FooComponent, EventEmitter<any>>;
+
+  beforeEach(() => {
+    component = new FooComponent();
+    outputs = outputProxy(component);
+  });
 
   it('allows access to eventEmitters that are marked as @Output', () => {
     expect(outputs.normalOutput).toBe(component.normalOutput);

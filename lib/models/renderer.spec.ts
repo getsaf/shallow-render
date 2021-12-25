@@ -14,6 +14,7 @@ import {
 import { InvalidBindOnEntryComponentError, InvalidInputBindError, Renderer } from './renderer';
 import { TestSetup } from './test-setup';
 import { InvalidStaticPropertyMockError } from '../tools/mock-statics';
+import '../test-frameworks/shallow-matchers';
 
 class TestUtility {
   // tslint:disable-line no-unnecessary-class
@@ -104,9 +105,7 @@ describe('Renderer', () => {
     const { instance } = await renderer.render();
     instance.myOutput.emit('FOO');
 
-    // Spys have a `calls` property on them. This is the only way I know
-    // how to detect an existing spy.
-    expect((instance.myOutput.emit as jasmine.Spy).calls).toBeDefined();
+    expect(jest.isMockFunction(instance.myOutput.emit)).toBe(true);
     expect(instance.myOutput.emit).toHaveBeenCalledWith('FOO');
   });
 

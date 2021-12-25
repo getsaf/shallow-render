@@ -5,6 +5,7 @@ import { Rendering } from './rendering';
 import { TestSetup } from './test-setup';
 import { mockComponent } from '../tools/mock-component';
 import { mockDirective } from '../tools/mock-directive';
+import '../test-frameworks/shallow-matchers';
 
 @Component({
   template: '<outer></outer>',
@@ -21,6 +22,7 @@ class WillBeMockedDirective {}
 })
 class WillBeMockedStructuralDirective {
   @Input() structuralDirectiveToMock!: string;
+  @Input('blah') blahThing!: string;
 }
 
 @Directive({
@@ -54,6 +56,7 @@ class OtherDirective {
 })
 class OuterComponent {
   @Output() markedAsOutput = new EventEmitter<string>();
+  @Output('foo') foothing = new EventEmitter<string>();
   notMarkedAsOutput = new EventEmitter<string>();
 }
 
@@ -278,8 +281,8 @@ describe('Rendering', () => {
       const { renderStructuralDirective, find } = new Rendering(fixture, element, instance, {}, testSetup);
       renderStructuralDirective(WillBeMockedStructuralDirective);
 
-      expect(find('.first').nativeElement.innerText).toContain('first foo');
-      expect(find('.second').nativeElement.innerText).toContain('second foo');
+      expect(find('.first').nativeElement.textContent).toContain('first foo');
+      expect(find('.second').nativeElement.textContent).toContain('second foo');
     });
 
     it('clears directive when renderContents is false', () => {
@@ -373,7 +376,7 @@ describe('Rendering', () => {
 
   describe('get', () => {
     it('returns the result of TestBed.inject', () => {
-      spyOn(TestBed, 'inject').and.returnValue('foo');
+      jest.spyOn(TestBed, 'inject').mockReturnValue('foo');
       // tslint:disable-next-line: deprecation
       const { get } = new Rendering(fixture, element, instance, {}, testSetup);
 
@@ -384,7 +387,7 @@ describe('Rendering', () => {
 
   describe('inject', () => {
     it('returns the result of TestBed.inject', () => {
-      spyOn(TestBed, 'inject').and.returnValue('foo');
+      jest.spyOn(TestBed, 'inject').mockReturnValue('foo');
       const { inject } = new Rendering(fixture, element, instance, {}, testSetup);
 
       expect(inject(class {})).toBe('foo');

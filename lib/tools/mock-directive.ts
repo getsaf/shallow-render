@@ -1,5 +1,5 @@
 import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, OnInit } from '@angular/core';
-import { directiveResolver } from './reflect';
+import { reflect } from './reflect';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
 import { mockWithInputsOutputsAndStubs } from './mock-with-inputs-and-outputs-and-stubs';
@@ -14,16 +14,16 @@ export function mockDirective<TDirective extends Type<any>>(
   directive: TDirective,
   config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
-  const { selector, exportAs } = directiveResolver.resolve(directive);
+  const meta = reflect.directive.resolve(directive)!;
 
   @MockOf(directive)
   @Directive({
-    selector: selector || `__${directive.name}-selector`,
+    selector: meta.selector || `__${directive.name}-selector`,
     providers: [
       { provide: directive, useExisting: forwardRef(() => Mock) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
-    exportAs,
+    exportAs: meta.exportAs,
   })
   class Mock extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
     constructor(

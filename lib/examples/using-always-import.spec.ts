@@ -44,7 +44,7 @@ describe('alwaysImport', () => {
     const { element } = await shallow.render('<color-label></color-label>');
 
     // Using the actual service response here (not mocked)
-    expect(element.nativeElement.innerText).toBe('RED');
+    expect(element.nativeElement.textContent).toBe('RED');
   });
 
   it('Uses the color from the mocked RedService', async () => {
@@ -53,6 +53,6 @@ describe('alwaysImport', () => {
       .mock(RedService, { color: () => 'MOCKED VALUE' })
       .render('<color-label></color-label>');
 
-    expect(element.nativeElement.innerText).toBe('MOCKED VALUE');
+    expect(element.nativeElement.textContent).toBe('MOCKED VALUE');
   });
 });

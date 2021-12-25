@@ -2,8 +2,8 @@ import { PipeTransform, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { mockModule } from './mock-module';
-import { directiveResolver, ngModuleResolver } from './reflect';
-import { isModuleWithProviders, isPipeTransform, isClass, declarationTypes } from './type-checkers';
+import {reflect} from './reflect';
+import { isModuleWithProviders, isPipeTransform, isClass } from './type-checkers';
 import { CustomError } from '../models/custom-error';
 import { mockPipe } from './mock-pipe';
 import { mockDirective } from './mock-directive';
@@ -29,13 +29,13 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
 
   let mock: NgMockable;
   try {
-    if (ngModuleResolver.isNgModule(thing) || isModuleWithProviders(thing)) {
+    if (reflect.isNgModule(thing) || isModuleWithProviders(thing)) {
       mock = mockModule(thing, setup);
     } else if (isPipeTransform(thing)) {
       mock = mockPipe(thing, setup.mockPipes.get(thing));
     } else if (isClass(thing)) {
       const stubs = setup.mocks.get(thing);
-      mock = declarationTypes(thing).includes('Component')
+      mock = reflect.isComponent(thing)
         ? mockComponent(thing, { stubs })
         : mockDirective(thing, {
             stubs,
@@ -72,8 +72,8 @@ class MockError extends CustomError {
 }
 
 const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
-  const { selector } = directiveResolver.resolve(thing);
-  if (!selector) {
+  const resolved = reflect.directive.resolve(thing);
+  if (!resolved?.selector) {
     TestBed.overrideDirective(mock, { add: { selector: `.__${mock.name}-selector` } });
   }
 };

@@ -1,7 +1,6 @@
 import { Component, InjectionToken, NgModule, Pipe, PipeTransform } from '@angular/core';
 import { Shallow } from './shallow';
 import { InvalidStaticPropertyMockError } from './tools/mock-statics';
-import { CustomError } from './models/custom-error';
 
 class MyTestService {
   static staticFoo() {

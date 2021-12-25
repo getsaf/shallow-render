@@ -41,6 +41,6 @@ describe('module with forRoot', () => {
   it('Uses the color from the RedService', async () => {
     const { element } = await shallow.render();
 
-    expect(element.nativeElement.innerText).toBe('MOCKED COLOR');
+    expect(element.nativeElement.textContent).toBe('MOCKED COLOR');
   });
 });

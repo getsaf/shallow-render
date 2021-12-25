@@ -127,7 +127,7 @@ describe('QueryMatch', () => {
     });
 
     it('allows forEach over results', () => {
-      emptyMatch.forEach(fail);
+      emptyMatch.forEach(() => {throw new Error()});
       expect(true).toBe(true);
     });
   });

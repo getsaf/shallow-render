@@ -1,4 +1,4 @@
-import { directiveResolver } from './reflect';
+import { reflect } from './reflect';
 import { Component, forwardRef, Type } from '@angular/core';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
@@ -9,17 +9,17 @@ export const mockComponent = <TComponent extends Type<any>>(
   component: TComponent,
   config?: { stubs?: object }
 ): TComponent => {
-  const { exportAs, selector } = directiveResolver.resolve(component);
+  const meta = reflect.directive.resolve(component);
 
   @MockOf(component)
   @Component({
-    selector,
+    selector: meta?.selector,
     template: '<ng-content></ng-content>',
     providers: [
       { provide: component, useExisting: forwardRef(() => Mock) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
-    exportAs,
+    exportAs: meta?.exportAs,
   })
   class Mock extends mockWithInputsOutputsAndStubs(component, config?.stubs) {}
 

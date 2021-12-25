@@ -25,6 +25,6 @@ describe('simple component example', () => {
     const { find } = await shallow.render('<big-text>Woot!</big-text>');
 
     const h1 = find('h1');
-    expect(h1.nativeElement.innerText).toBe('Woot!');
+    expect(h1.nativeElement.textContent).toBe('Woot!');
   });
 });

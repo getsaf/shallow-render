@@ -19,7 +19,7 @@ class WeatherService {
     return this._http
       .get<WeatherServiceResults>('https://my-weather-api.com', { params: { zipcode } })
       .toPromise()
-      .then(result => result.temperature);
+      .then(result => result?.temperature);
   }
 }
 
@@ -45,7 +45,7 @@ describe('WeatherService', () => {
       const { inject, instance } = shallow.mock(HttpClient, { get: () => of({ temperature: 20 }) }).createService();
       const temperature = await instance.getTemperatureForZip('12345');
 
-      expect(inject(HttpClient).get).toHaveBeenCalledWith(jasmine.stringMatching('my-weather-api.com'), {
+      expect(inject(HttpClient).get).toHaveBeenCalledWith(expect.stringMatching('my-weather-api.com'), {
         params: { zipcode: '12345' },
       });
       expect(temperature).toBe(20);

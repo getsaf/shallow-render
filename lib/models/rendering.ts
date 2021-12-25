@@ -71,7 +71,7 @@ export class Rendering<TComponent, TBindings> {
    *
    * const results = find('h1.large');
    * expect(results.length).toBe(3);
-   * expect(results.map(result => result.nativeElement.innerText)).toEqual([
+   * expect(results.map(result => result.nativeElement.textContent)).toEqual([
    *   'Foo',
    *   'Bar',
    *   'Baz'

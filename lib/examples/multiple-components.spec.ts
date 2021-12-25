@@ -54,7 +54,7 @@ describe('multiple components', () => {
     const { find } = await shallow.render('<awesome-list></awesome-list>');
 
     // Note we query by the component here
-    expect(find(ListItemComponent).map(li => li.nativeElement.innerText.trim())).toEqual(['Chuck Norris', 'Tom Hanks']);
+    expect(find(ListItemComponent).map(li => li.nativeElement.textContent.trim())).toEqual(['Chuck Norris', 'Tom Hanks']);
   });
 
   it('reports when Chuck is pressed', async () => {
@@ -64,13 +64,13 @@ describe('multiple components', () => {
     findComponent(ListItemComponent, { query: '#chuck' }).select.emit(true);
     fixture.detectChanges();
 
-    expect(find('#chuck-report').nativeElement.innerText).toBe('Selected Chuck: true');
+    expect(find('#chuck-report').nativeElement.textContent).toBe('Selected Chuck: true');
   });
 
   it('renders a top-item when provided', async () => {
     const { find } = await shallow.render('<awesome-list topItem="Brandon"></awesome-list>');
 
-    expect(find('.top-item').nativeElement.innerText.trim()).toBe('Brandon');
+    expect(find('.top-item').nativeElement.textContent.trim()).toBe('Brandon');
   });
 
   it('renders the top-item as bold', async () => {

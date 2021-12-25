@@ -49,7 +49,7 @@ describe('ColorLinkComponent', () => {
     const { find } = await shallow.render({ bind: { color: 'Blue' } });
     // or shallow.render(`<color-link color="Blue"></color-link>`);
 
-    expect(find('a').nativeElement.innerText).toBe('Blue');
+    expect(find('a').nativeElement.textContent).toBe('Blue');
   });
 
   it('emits color when clicked', async () => {
@@ -99,7 +99,7 @@ describe('MyComponent', () => {
     fixture.detectChanges();
     const link = fixture.debugElement.query(By.css('a'));
 
-    expect(a.nativeElement.innerText).toBe('my text');
+    expect(a.nativeElement.textContent).toBe('my text');
   });
 
   it('sends "foo" to bound click events', () => {
@@ -149,7 +149,7 @@ describe('MyComponent', () => {
     const { find } = await shallow.render({ bind: { linkText: 'my text' } });
     // or shallow.render(`<my-component linkText="my text"></my-component>`);
 
-    expect(find('a').nativeElement.innerText).toBe('my text');
+    expect(find('a').nativeElement.textContent).toBe('my text');
   });
 
   it('sends "foo" to bound click events', async () => {

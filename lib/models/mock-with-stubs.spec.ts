@@ -1,3 +1,4 @@
+import { testFramework } from '../test-frameworks/test-framework';
 import { MockWithStubs } from './mock-with-stubs';
 
 describe('MockWithStubs', () => {
@@ -15,7 +16,7 @@ describe('MockWithStubs', () => {
   });
 
   it('does not spy on an already stubbed method', () => {
-    const mock = new MockWithStubs({ getFoo: jasmine.createSpy() }) as any;
+    const mock = new MockWithStubs({ getFoo: testFramework.createSpy() }) as any;
     mock.getFoo();
 
     expect(mock.getFoo).toHaveBeenCalled();

@@ -60,6 +60,6 @@ describe('alwaysProvide', () => {
   it('renders the configured title', async () => {
     const { find } = await shallow.mock(AppConfiguration, { title: 'Mocked title' }).render(`<app-title></app-title>`);
 
-    expect(find('h1').nativeElement.innerText).toContain('Mocked title');
+    expect(find('h1').nativeElement.textContent).toContain('Mocked title');
   });
 });
