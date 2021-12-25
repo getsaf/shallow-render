@@ -16,7 +16,7 @@
     "declarationDir": "dist",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "types": ["node", "jest"],
+    "types": ["jest"],
     "strict": true,
     "alwaysStrict": true
   },

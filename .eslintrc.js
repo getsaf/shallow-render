@@ -4,6 +4,7 @@ module.exports = {
     project: ['tsconfig.json'],
     createDefaultProgram: true,
   },
+  ignorePatterns: ['dist', 'coverage'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:@angular-eslint/recommended',
