@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { outputProxy, PickByType, PropertyNotAnEventEmitterError, PropertyNotMarkedAsOutputError } from './output-proxy';
+import {
+  outputProxy,
+  PickByType,
+  PropertyNotAnEventEmitterError,
+  PropertyNotMarkedAsOutputError,
+} from './output-proxy';
 
 describe('outputProxy', () => {
   @Component({

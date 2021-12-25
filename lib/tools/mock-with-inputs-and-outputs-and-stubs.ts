@@ -8,12 +8,12 @@ export const mockWithInputsOutputsAndStubs = (componentOrDirective: Type<any>, s
   class Mock extends MockWithStubs {
     constructor() {
       super(stubs);
-      outputs.forEach(({propertyName}) => Object.assign(this, { [propertyName]: new EventEmitter() }));
+      outputs.forEach(({ propertyName }) => Object.assign(this, { [propertyName]: new EventEmitter() }));
     }
   }
 
-  inputs.forEach(({propertyName, alias}) => Input(alias)(Mock.prototype, propertyName));
-  outputs.forEach(({propertyName, alias}) => Output(alias)(Mock.prototype, propertyName));
+  inputs.forEach(({ propertyName, alias }) => Input(alias)(Mock.prototype, propertyName));
+  outputs.forEach(({ propertyName, alias }) => Output(alias)(Mock.prototype, propertyName));
 
   return Mock;
 };

@@ -22,6 +22,7 @@ class WillBeMockedDirective {}
 })
 class WillBeMockedStructuralDirective {
   @Input() structuralDirectiveToMock!: string;
+  // tslint:disable-next-line: no-input-rename
   @Input('blah') blahThing!: string;
 }
 
@@ -56,6 +57,7 @@ class OtherDirective {
 })
 class OuterComponent {
   @Output() markedAsOutput = new EventEmitter<string>();
+  // tslint:disable-next-line: no-output-rename
   @Output('foo') foothing = new EventEmitter<string>();
   notMarkedAsOutput = new EventEmitter<string>();
 }

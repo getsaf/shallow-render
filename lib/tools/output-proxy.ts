@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { CustomError } from '../models/custom-error';
-import {reflect} from './reflect';
+import { reflect } from './reflect';
 
 const className = (object: any) => (object && object.constructor && object.constructor.name) || '<UnknownClass>';
 
@@ -28,7 +28,9 @@ export class PropertyNotAnEventEmitterError extends CustomError {
   }
 }
 
-export const outputProxy = <TComponent extends Object>(component: TComponent): PickByType<TComponent, EventEmitter<any>> => {
+export const outputProxy = <TComponent extends object>(
+  component: TComponent
+): PickByType<TComponent, EventEmitter<any>> => {
   const outputs = reflect.getInputsAndOutputs(component.constructor).outputs.map(o => o.propertyName);
 
   return new Proxy(

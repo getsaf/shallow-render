@@ -14,6 +14,7 @@ export function mockDirective<TDirective extends Type<any>>(
   directive: TDirective,
   config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
+  // tslint:disable-next-line: no-non-null-assertion
   const meta = reflect.directive.resolve(directive)!;
 
   @MockOf(directive)

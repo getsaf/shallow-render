@@ -1,11 +1,5 @@
 import { Component, NgModule } from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-  FormBuilder,
-  FormControlName,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormControlName } from '@angular/forms';
 import { Shallow } from '../shallow';
 
 @Component({

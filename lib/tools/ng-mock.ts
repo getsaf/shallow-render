@@ -2,7 +2,7 @@ import { PipeTransform, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { mockModule } from './mock-module';
-import {reflect} from './reflect';
+import { reflect } from './reflect';
 import { isModuleWithProviders, isPipeTransform, isClass } from './type-checkers';
 import { CustomError } from '../models/custom-error';
 import { mockPipe } from './mock-pipe';

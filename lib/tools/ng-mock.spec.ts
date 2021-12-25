@@ -13,7 +13,7 @@ import { TestBed } from '@angular/core/testing';
 import { TestSetup } from '../models/test-setup';
 import { ngMock } from './ng-mock';
 import * as mockDirectiveModule from './mock-directive';
-import {reflect} from './reflect';
+import { reflect } from './reflect';
 
 @Component({ template: '<label>foo</label>' })
 class FooComponent {
@@ -49,7 +49,7 @@ describe('ng-mock', () => {
     const FirstMock = ngMock(FooComponent, testSetup);
     const SecondMock = ngMock(FooComponent, testSetup);
 
-    expect(SecondMock).toBe(FirstMock)
+    expect(SecondMock).toBe(FirstMock);
   });
 
   it('throws a friendly message when mocking fails', () => {
@@ -152,20 +152,27 @@ describe('ng-mock', () => {
 
     const mock = ngMock(moduleWithProviders, testSetup) as typeof moduleWithProviders;
 
+    // tslint:disable-next-line: no-non-null-assertion
+    const providers = mock.providers as ValueProvider[];
     expect(mock.ngModule.name).toBe('MockOfFooModule');
-    expect(mock.providers!.length).toBe(1);
-    expect((mock.providers![0] as ValueProvider).provide).toBe(FooService);
-    expect((mock.providers![0] as ValueProvider).useValue.constructor.name).toBe('MockOfFooService');
+    expect(providers.length).toBe(1);
+    expect(providers[0].provide).toBe(FooService);
+    expect(providers[0].useValue.constructor.name).toBe('MockOfFooService');
   });
 
   it('mocks arrays of things', () => {
     const mocked = ngMock([FooComponent, FooDirective, FooPipe, FooModule], testSetup);
 
-    expect(mocked.map(m => m.name)).toEqual(['MockOfFooComponent', 'MockOfFooDirective', 'MockOfFooPipe', 'MockOfFooModule']);
-    expect(reflect.isComponent(mocked[0])).toBe(true)
-    expect(reflect.isDirective(mocked[1])).toBe(true)
-    expect(reflect.isPipe(mocked[2])).toBe(true)
-    expect(reflect.isNgModule(mocked[3])).toBe(true)
+    expect(mocked.map(m => m.name)).toEqual([
+      'MockOfFooComponent',
+      'MockOfFooDirective',
+      'MockOfFooPipe',
+      'MockOfFooModule',
+    ]);
+    expect(reflect.isComponent(mocked[0])).toBe(true);
+    expect(reflect.isDirective(mocked[1])).toBe(true);
+    expect(reflect.isPipe(mocked[2])).toBe(true);
+    expect(reflect.isNgModule(mocked[3])).toBe(true);
   });
 
   it('works in TestBed and does not error when mocking a component without a selector', async () => {
@@ -173,8 +180,9 @@ describe('ng-mock', () => {
     class NoSelectorComponent {}
     const mocked = ngMock(NoSelectorComponent, testSetup);
 
-    await expect(TestBed.configureTestingModule({ declarations: [mocked] }).compileComponents())
-    .resolves.toBe(undefined);
+    await expect(TestBed.configureTestingModule({ declarations: [mocked] }).compileComponents()).resolves.toBe(
+      undefined
+    );
   });
 
   it('does not mock things in setup.dontMock', () => {

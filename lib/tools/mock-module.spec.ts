@@ -36,7 +36,7 @@ describe('mockModule', () => {
       ngModule,
       mockedModule,
       annotations: getNgModuleAnnotations(mockedModule) as {
-        [K in keyof TParams]: K extends 'providers' ? ValueProvider[] : TParams[K]
+        [K in keyof TParams]: K extends 'providers' ? ValueProvider[] : TParams[K];
       },
     };
   };
@@ -99,7 +99,11 @@ describe('mockModule', () => {
     const ModuleOne = makeModule();
     const ModuleTwo = makeModule();
     const imports = [ModuleOne, ModuleTwo];
-    const { annotations: {imports: [MockOne, MockTwo] } } = makeMock({ imports });
+    const {
+      annotations: {
+        imports: [MockOne, MockTwo],
+      },
+    } = makeMock({ imports });
 
     expect(isMockOf(MockOne, ModuleOne)).toBe(true);
     expect(isMockOf(MockTwo, ModuleTwo)).toBe(true);
@@ -107,7 +111,11 @@ describe('mockModule', () => {
 
   it('mocks declarations', () => {
     const declarations = [FooComponent, BarComponent];
-    const { annotations: {declarations: [MockFoo, MockBar]} } = makeMock({ declarations });
+    const {
+      annotations: {
+        declarations: [MockFoo, MockBar],
+      },
+    } = makeMock({ declarations });
 
     expect(isMockOf(MockFoo, FooComponent)).toBe(true);
     expect(isMockOf(MockBar, BarComponent)).toBe(true);
@@ -115,7 +123,11 @@ describe('mockModule', () => {
 
   it('mocks entryComponents', () => {
     const entryComponents = [FooComponent, BarComponent];
-    const { annotations: {entryComponents: [MockFoo, MockBar]} } = makeMock({ entryComponents });
+    const {
+      annotations: {
+        entryComponents: [MockFoo, MockBar],
+      },
+    } = makeMock({ entryComponents });
 
     expect(isMockOf(MockFoo, FooComponent)).toBe(true);
     expect(isMockOf(MockBar, BarComponent)).toBe(true);
@@ -124,8 +136,11 @@ describe('mockModule', () => {
   it('mocks providers', () => {
     class FooService {}
     class BarService {}
-    const { annotations: {providers: [{useValue: mockFooInstance}, {useValue: mockBarInstance}]} }
-     = makeMock({ providers: [FooService, BarService] });
+    const {
+      annotations: {
+        providers: [{ useValue: mockFooInstance }, { useValue: mockBarInstance }],
+      },
+    } = makeMock({ providers: [FooService, BarService] });
 
     expect(isMockOf(mockFooInstance.constructor, FooService)).toBe(true);
     expect(isMockOf(mockBarInstance.constructor, BarService)).toBe(true);
