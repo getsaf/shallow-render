@@ -17,7 +17,6 @@ class CustomFormComponent implements OnInit, OnDestroy {
     this.subscription.add(this.myControl.valueChanges.subscribe(change => this.inputHandler(change)));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   inputHandler(_text: string) {
     //  implementation
     return 2 + 2;

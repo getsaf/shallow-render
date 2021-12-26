@@ -1,29 +1,14 @@
-import { Component, Directive, Input, NgModule, Output, Pipe, PipeTransform } from '@angular/core';
-import { getTestBed } from '@angular/core/testing';
-
-type DirectiveResolver = {
-  resolve(directiveOrComponent: any): Directive | null;
-};
-type ComponentResolver = {
-  resolve(component: any): Component | null;
-};
-
-type ModuleResolver = {
-  resolve(module: any): NgModule | null;
-};
-
-type PipeResolver = {
-  resolve(pipe: any): Pipe | null;
-};
-
-type Resolvers = {
-  directive: DirectiveResolver;
-  module: ModuleResolver;
-  component: ComponentResolver;
-  pipe: PipeResolver;
-};
-
-const resolvers = (getTestBed() as any)._compiler.resolvers as Resolvers;
+import {
+  Component,
+  Directive,
+  Input,
+  NgModule,
+  Output,
+  Pipe,
+  PipeTransform,
+  Type,
+  ɵReflectionCapabilities,
+} from '@angular/core';
 
 type IODefinition = { propertyName: string; alias: string };
 
@@ -40,43 +25,77 @@ type PropDecorators = Record<
   }[]
 >;
 
-const getInputsAndOutputs = (componentOrDirective: any): InputsAndOutputs => {
-  return Object.entries((componentOrDirective.propDecorators || {}) as PropDecorators).reduce<InputsAndOutputs>(
-    (acc, [key, value]) => {
-      const input = value.find(v => v.type === Input);
-      if (input) {
-        return {
-          ...acc,
-          inputs: [...acc.inputs, { propertyName: key, alias: input.args?.[0] || key }],
-        };
-      }
-
-      const output = value.find(v => v.type === Output);
-      if (output) {
-        return {
-          ...acc,
-          outputs: [...acc.outputs, { propertyName: key, alias: output.args?.[0] || key }],
-        };
-      }
-      return acc;
-    },
-    { inputs: [], outputs: [] }
-  );
+const reflection = new ɵReflectionCapabilities();
+const getAnnotation = <TType extends Directive | Component | Pipe | NgModule>(
+  type: Type<TType>,
+  thing: Type<any>
+): TType | null => {
+  const annotations = reflection.annotations(thing);
+  // Try to find the nearest known Type annotation and make sure that this annotation is an
+  // instance of the type we are looking for, so we can use it for resolution. Note: there might
+  // be multiple known annotations found due to the fact that Components can extend Directives (so
+  // both Directive and Component annotations would be present), so we always check if the known
+  // annotation has the right type.
+  for (let i = annotations.length - 1; i >= 0; i--) {
+    const annotation = annotations[i];
+    const isKnownType =
+      annotation instanceof Directive ||
+      annotation instanceof Component ||
+      annotation instanceof Pipe ||
+      annotation instanceof NgModule;
+    if (isKnownType) {
+      return annotation instanceof type ? annotation : null;
+    }
+  }
+  return null;
 };
 
-const isComponent = (thing: any) => !!resolvers.component.resolve(thing);
-const isDirective = (thing: any) => !!resolvers.directive.resolve(thing);
-const isNgModule = (thing: any) => !!resolvers.module.resolve(thing);
-const isPipe = (thing: any): thing is PipeTransform => !!resolvers.pipe.resolve(thing);
-
 export const reflect = {
-  component: resolvers.component,
-  directive: resolvers.directive,
-  module: resolvers.module,
-  pipe: resolvers.pipe,
-  isComponent,
-  isDirective,
-  isNgModule,
-  isPipe,
-  getInputsAndOutputs,
+  component: {
+    resolve: (thing: any) => getAnnotation(Component, thing),
+  },
+  directive: {
+    resolve: (thing: any) => getAnnotation(Directive, thing),
+  },
+  module: {
+    resolve: (thing: any) => getAnnotation(NgModule, thing),
+  },
+  pipe: {
+    resolve: (thing: any) => getAnnotation(Pipe, thing),
+  },
+  isComponent(thing: any) {
+    return !!this.component.resolve(thing);
+  },
+  isDirective(thing: any) {
+    return !!this.directive.resolve(thing);
+  },
+  isNgModule(thing: any) {
+    return !!this.module.resolve(thing);
+  },
+  isPipe(thing: any): thing is PipeTransform {
+    return !!this.pipe.resolve(thing);
+  },
+  getInputsAndOutputs(componentOrDirective: any): InputsAndOutputs {
+    return Object.entries((componentOrDirective.propDecorators || {}) as PropDecorators).reduce<InputsAndOutputs>(
+      (acc, [key, value]) => {
+        const input = value.find(v => v.type === Input);
+        if (input) {
+          return {
+            ...acc,
+            inputs: [...acc.inputs, { propertyName: key, alias: input.args?.[0] || key }],
+          };
+        }
+
+        const output = value.find(v => v.type === Output);
+        if (output) {
+          return {
+            ...acc,
+            outputs: [...acc.outputs, { propertyName: key, alias: output.args?.[0] || key }],
+          };
+        }
+        return acc;
+      },
+      { inputs: [], outputs: [] }
+    );
+  },
 };
