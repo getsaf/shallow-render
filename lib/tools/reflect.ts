@@ -51,30 +51,16 @@ const getAnnotation = <TType extends Directive | Component | Pipe | NgModule>(
 };
 
 export const reflect = {
-  component: {
-    resolve: (thing: any) => getAnnotation(Component, thing),
-  },
-  directive: {
-    resolve: (thing: any) => getAnnotation(Directive, thing),
-  },
-  module: {
-    resolve: (thing: any) => getAnnotation(NgModule, thing),
-  },
-  pipe: {
-    resolve: (thing: any) => getAnnotation(Pipe, thing),
-  },
-  isComponent(thing: any) {
-    return !!this.component.resolve(thing);
-  },
-  isDirective(thing: any) {
-    return !!this.directive.resolve(thing);
-  },
-  isNgModule(thing: any) {
-    return !!this.module.resolve(thing);
-  },
-  isPipe(thing: any): thing is PipeTransform {
-    return !!this.pipe.resolve(thing);
-  },
+  resolveComponent: (thing: any) => getAnnotation(Component, thing) || {},
+  resolveDirective: (thing: any) => getAnnotation(Directive, thing) || {},
+  resolveModule: (thing: any) => getAnnotation(NgModule, thing) || {},
+  resolvePipe: (thing: any) => getAnnotation(Pipe, thing),
+  isComponent: (thing: any) => !!getAnnotation(Component, thing),
+
+  isDirective: (thing: any) => !!getAnnotation(Directive, thing),
+  isNgModule: (thing: any) => !!getAnnotation(NgModule, thing),
+  isPipe: (thing: any): thing is PipeTransform => !!getAnnotation(Pipe, thing),
+
   getInputsAndOutputs(componentOrDirective: any): InputsAndOutputs {
     return Object.entries((componentOrDirective.propDecorators || {}) as PropDecorators).reduce<InputsAndOutputs>(
       (acc, [key, value]) => {

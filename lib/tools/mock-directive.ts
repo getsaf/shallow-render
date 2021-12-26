@@ -15,16 +15,16 @@ export function mockDirective<TDirective extends Type<any>>(
   config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const meta = reflect.directive.resolve(directive)!;
+  const { selector, exportAs } = reflect.resolveDirective(directive);
 
   @MockOf(directive)
   @Directive({
-    selector: meta.selector || `__${directive.name}-selector`,
+    selector: selector || `__${directive.name}-selector`,
     providers: [
       { provide: directive, useExisting: forwardRef(() => MockDirective) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
-    exportAs: meta.exportAs,
+    exportAs,
   })
   class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
     constructor(

@@ -19,7 +19,7 @@ export function getNgModuleAnnotations(ngModule: Type<any>): NgModuleAnnotations
     exports = [],
     entryComponents = [],
     schemas = [],
-  } = reflect.module.resolve(ngModule) || {};
+  } = reflect.resolveModule(ngModule) || {};
 
   return { imports, providers, declarations, exports, entryComponents, schemas };
 }

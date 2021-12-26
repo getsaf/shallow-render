@@ -72,8 +72,8 @@ class MockError extends CustomError {
 }
 
 const fixEmptySelector = (thing: Type<any>, mock: Type<any>) => {
-  const resolved = reflect.directive.resolve(thing);
-  if (!resolved?.selector) {
+  const { selector } = reflect.resolveDirective(thing);
+  if (!selector) {
     TestBed.overrideDirective(mock, { add: { selector: `.__${mock.name}-selector` } });
   }
 };

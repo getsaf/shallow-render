@@ -7,7 +7,7 @@ export const mockPipe = <TPipe extends Type<PipeTransform>>(
   pipe: TPipe,
   transform: TPipe['prototype']['transform'] = () => undefined
 ): TPipe => {
-  const meta = reflect.pipe.resolve(pipe);
+  const meta = reflect.resolvePipe(pipe);
   if (!meta) {
     throw new Error(`Cannot mock pipe ${getProviderName(pipe)}`);
   }
