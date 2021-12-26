@@ -48,6 +48,8 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 | Angular | shallow-render |
 | ------- | -------------- |
+| 13x     | 13x            |
+| 12x     | 12x            |
 | 11x     | 11x            |
 | 10x     | 10x            |
 | 9x      | 9x             |
@@ -441,9 +443,14 @@ Your mock is _fully type-safe_ so if you try to return a mismatching type, the c
 
 # Getting Started
 
-First, install `shallow-render`:
+First, install the correct version of `shallow-render`:
 
-`npm install -D shallow-render`
+> See [Angular Version Support](#AngularVersionSupport)
+
+
+```sh
+npm install -D shallow-render@13 # <-- Make sure the version is correct!
+```
 
 That's it, you're be ready to write a test!
 
