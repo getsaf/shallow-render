@@ -35,7 +35,6 @@ Angular testing made easy with shallow rendering and easy mocking.
 ## Resources
 
 - [GitHub Project](https://github.com/getsaf/shallow-render)
-- [StackBlitz Playground](https://stackblitz.com/github/getsaf/shallow-render-stackblitz)
 - [Release Notes](https://github.com/getsaf/shallow-render/releases)
 
 ## Articles
@@ -1595,5 +1594,3 @@ it("does something funky if the FunkService is funky", async () => {
 # Examples
 
 Check out the [examples](https://github.com/getsaf/shallow-render/tree/master/lib/examples) folder for more specific use cases.
-
-Many of these examples live in the [StackBlitz project](https://stackblitz.com/edit/shallow-render?file=examples%2Findex.ts), so you can try it in real-time.
