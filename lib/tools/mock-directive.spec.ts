@@ -2,7 +2,6 @@ import { Directive, Component, Input, EventEmitter, Output } from '@angular/core
 import { TestBed } from '@angular/core/testing';
 import { mockDirective, MockDirective } from './mock-directive';
 import { By } from '@angular/platform-browser';
-import { directiveResolver } from './reflect';
 
 describe('mockDirective', () => {
   it('mocks the correct selector', () => {
@@ -23,7 +22,6 @@ describe('mockDirective', () => {
     @Directive({ selector: '[myDirective]' })
     class MyDirective {
       @Input() myInput!: string;
-      // tslint:disable-next-line: no-input-rename
       @Input('withAlias') myAliasedInput!: string;
     }
 
@@ -42,7 +40,6 @@ describe('mockDirective', () => {
     @Directive({ selector: '[myDirective]' })
     class MyDirective {
       @Output() myOutput = new EventEmitter();
-      // tslint:disable-next-line: no-output-rename
       @Output('withAlias') myAliasedOutput = new EventEmitter();
     }
 
@@ -69,7 +66,7 @@ describe('mockDirective', () => {
       declarations: [TestHost, mockDirective(MyDirective)],
     }).createComponent(TestHost);
 
-    expect(fixture.debugElement.nativeElement.innerText).toBe('');
+    expect(fixture.debugElement.nativeElement.textContent).toBe('');
   });
 
   it('renders structural content when renderContents() is called', () => {
@@ -86,7 +83,7 @@ describe('mockDirective', () => {
     instance.renderContents();
     fixture.detectChanges();
 
-    expect(fixture.debugElement.nativeElement.innerText).toBe('foo');
+    expect(fixture.debugElement.nativeElement.textContent).toBe('foo');
   });
 
   it('clears structural content when clearContent() is called', () => {
@@ -104,7 +101,7 @@ describe('mockDirective', () => {
     instance.clearContents();
     fixture.detectChanges();
 
-    expect(fixture.debugElement.nativeElement.innerText).toBe('');
+    expect(fixture.debugElement.nativeElement.textContent).toBe('');
   });
 
   it('is exportedAs the same as the original directive', () => {
@@ -127,8 +124,8 @@ describe('mockDirective', () => {
 
 const testHost = (template: string) => {
   @Component({ selector: 'test-host', template })
-  class TestHost {
-    handleEvent = jasmine.createSpy();
+  class TestHostComponent {
+    handleEvent = jest.fn();
   }
-  return TestHost;
+  return TestHostComponent;
 };

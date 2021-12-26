@@ -1,9 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, NgModule, Type } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, NgModule, Type, ValueProvider } from '@angular/core';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
 import { InvalidModuleError, mockModule } from './mock-module';
-import * as _mockProvider from './mock-provider';
-import * as _ngMock from './ng-mock';
 
 @Component({
   selector: 'foo-component',
@@ -23,12 +21,8 @@ const makeModule = (params: NgModule = {}): Type<any> => {
   return TestModule;
 };
 
-const dummyMocker: any = (thing: any) =>
-  class Mock {
-    static original = thing;
-  };
 const isMocked = (thing: any) => thing.name.includes('Mock');
-const isMockOf = (mock: any, thing: any) => mock.original === thing;
+const isMockOf = (mock: any, thing: any) => mock.mockOf === thing;
 
 describe('mockModule', () => {
   let setup: TestSetup<any>;
@@ -39,7 +33,9 @@ describe('mockModule', () => {
     return {
       ngModule,
       mockedModule,
-      annotations: getNgModuleAnnotations(mockedModule) as TParams,
+      annotations: getNgModuleAnnotations(mockedModule) as {
+        [K in keyof TParams]: K extends 'providers' ? ValueProvider[] : TParams[K];
+      },
     };
   };
 
@@ -98,39 +94,54 @@ describe('mockModule', () => {
   });
 
   it('mocks imports', () => {
-    const imports = [makeModule(), makeModule()];
-    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    const { annotations } = makeMock({ imports });
+    const ModuleOne = makeModule();
+    const ModuleTwo = makeModule();
+    const imports = [ModuleOne, ModuleTwo];
+    const {
+      annotations: {
+        imports: [MockOne, MockTwo],
+      },
+    } = makeMock({ imports });
 
-    expect(isMockOf(annotations.imports, imports)).toBe(true);
+    expect(isMockOf(MockOne, ModuleOne)).toBe(true);
+    expect(isMockOf(MockTwo, ModuleTwo)).toBe(true);
   });
 
   it('mocks declarations', () => {
     const declarations = [FooComponent, BarComponent];
-    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    const { annotations } = makeMock({ declarations });
+    const {
+      annotations: {
+        declarations: [MockFoo, MockBar],
+      },
+    } = makeMock({ declarations });
 
-    expect(isMockOf(annotations.declarations, declarations)).toBe(true);
+    expect(isMockOf(MockFoo, FooComponent)).toBe(true);
+    expect(isMockOf(MockBar, BarComponent)).toBe(true);
   });
 
   it('mocks entryComponents', () => {
     const entryComponents = [FooComponent, BarComponent];
-    spyOn(_ngMock, 'ngMock').and.callFake(dummyMocker);
-    const { annotations } = makeMock({ entryComponents });
+    const {
+      annotations: {
+        entryComponents: [MockFoo, MockBar],
+      },
+    } = makeMock({ entryComponents });
 
-    expect(isMockOf(annotations.entryComponents, entryComponents)).toBe(true);
+    expect(isMockOf(MockFoo, FooComponent)).toBe(true);
+    expect(isMockOf(MockBar, BarComponent)).toBe(true);
   });
 
   it('mocks providers', () => {
     class FooService {}
     class BarService {}
-    spyOn(_mockProvider, 'mockProvider').and.callFake(dummyMocker);
-    const { annotations } = makeMock({
-      providers: [FooService, BarService],
-    });
+    const {
+      annotations: {
+        providers: [{ useValue: mockFooInstance }, { useValue: mockBarInstance }],
+      },
+    } = makeMock({ providers: [FooService, BarService] });
 
-    expect(isMockOf(annotations.providers[0], FooService)).toBe(true);
-    expect(isMockOf(annotations.providers[1], BarService)).toBe(true);
+    expect(isMockOf(mockFooInstance.constructor, FooService)).toBe(true);
+    expect(isMockOf(mockBarInstance.constructor, BarService)).toBe(true);
   });
 
   it('applies schemas', () => {

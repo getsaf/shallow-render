@@ -2,7 +2,6 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { mockComponent } from './mock-component';
-import { directiveResolver } from './reflect';
 
 describe('mockComponent', () => {
   it('mocks the correct selector', () => {
@@ -23,7 +22,6 @@ describe('mockComponent', () => {
     @Component({ selector: 'my-component' })
     class MyComponent {
       @Input() myInput!: string;
-      // tslint:disable-next-line: no-input-rename
       @Input('withAlias') myAliasedInput!: string;
     }
 
@@ -42,7 +40,6 @@ describe('mockComponent', () => {
     @Component({ selector: 'my-component' })
     class MyComponent {
       @Output() myOutput = new EventEmitter();
-      // tslint:disable-next-line: no-output-rename
       @Output('withAlias') myAliasedOutput = new EventEmitter();
     }
 
@@ -70,14 +67,14 @@ describe('mockComponent', () => {
     }).createComponent(TestHost);
     const element = fixture.debugElement.query(By.css('my-component'));
 
-    expect(element.nativeElement.innerText).toBe('foo');
+    expect(element.nativeElement.textContent).toBe('foo');
   });
 });
 
 const testHost = (template: string) => {
   @Component({ selector: 'test-host', template })
-  class TestHost {
-    handleEvent = jasmine.createSpy();
+  class TestHostComponent {
+    handleEvent = jest.fn();
   }
-  return TestHost;
+  return TestHostComponent;
 };

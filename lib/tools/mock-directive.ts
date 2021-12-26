@@ -1,5 +1,5 @@
 import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, OnInit } from '@angular/core';
-import { directiveResolver } from './reflect';
+import { reflect } from './reflect';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
 import { mockWithInputsOutputsAndStubs } from './mock-with-inputs-and-outputs-and-stubs';
@@ -14,18 +14,19 @@ export function mockDirective<TDirective extends Type<any>>(
   directive: TDirective,
   config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
-  const { selector, exportAs } = directiveResolver.resolve(directive);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const { selector, exportAs } = reflect.resolveDirective(directive);
 
   @MockOf(directive)
   @Directive({
     selector: selector || `__${directive.name}-selector`,
     providers: [
-      { provide: directive, useExisting: forwardRef(() => Mock) },
+      { provide: directive, useExisting: forwardRef(() => MockDirective) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
     exportAs,
   })
-  class Mock extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
+  class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
     constructor(
       @Optional() private _viewContainer?: ViewContainerRef,
       @Optional() private _template?: TemplateRef<any>
@@ -53,9 +54,9 @@ export function mockDirective<TDirective extends Type<any>>(
 
   // Provide our mock in place of any other usage of 'thing'.
   // This makes `ViewChild` and `ContentChildren` selectors work!
-  TestBed.overrideDirective(Mock, {
-    add: { providers: [{ provide: directive, useExisting: forwardRef(() => Mock) }] },
+  TestBed.overrideDirective(MockDirective, {
+    add: { providers: [{ provide: directive, useExisting: forwardRef(() => MockDirective) }] },
   });
 
-  return Mock as any;
+  return MockDirective as any;
 }

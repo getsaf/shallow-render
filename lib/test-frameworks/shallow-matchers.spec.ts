@@ -1,7 +1,7 @@
 import { createQueryMatch } from '../models/query-match';
 import './shallow-matchers';
 
-describe('JasmineMatchers', () => {
+describe('shallow-matchers', () => {
   describe('toHaveFound', () => {
     it('passes when match length equals expected', () => {
       const match = createQueryMatch(['one', 'two']);

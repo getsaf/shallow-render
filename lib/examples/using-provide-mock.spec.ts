@@ -52,6 +52,6 @@ describe('using provideMock', () => {
       .render();
 
     // Using the mocked service response here
-    expect(element.nativeElement.innerText).toBe('BAR');
+    expect(element.nativeElement.textContent).toBe('BAR');
   });
 });

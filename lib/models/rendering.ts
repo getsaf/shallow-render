@@ -71,7 +71,7 @@ export class Rendering<TComponent, TBindings> {
    *
    * const results = find('h1.large');
    * expect(results.length).toBe(3);
-   * expect(results.map(result => result.nativeElement.innerText)).toEqual([
+   * expect(results.map(result => result.nativeElement.textContent)).toEqual([
    *   'Foo',
    *   'Bar',
    *   'Baz'
@@ -193,7 +193,6 @@ export class Rendering<TComponent, TBindings> {
    *
    * This is identical to `TestBed.inject`
    */
-  // tslint:disable-next-line: member-ordering
   readonly inject = TestBed.inject.bind(TestBed);
 
   /**
@@ -236,7 +235,7 @@ export class Rendering<TComponent, TBindings> {
             if (instance) {
               return options && options.query ? options.query(instance) : true;
             }
-          } catch (e) {} // tslint:disable-line no-empty
+          } catch (e) {}
           return false;
         })
         .map(node => node.injector.get<TDirective>(directiveClass))

@@ -1,19 +1,19 @@
 import { Input, Output, EventEmitter, Type } from '@angular/core';
-import { directiveResolver } from './reflect';
+import { reflect } from './reflect';
 import { MockWithStubs } from '../models/mock-with-stubs';
 
 export const mockWithInputsOutputsAndStubs = (componentOrDirective: Type<any>, stubs?: object): Type<any> => {
-  const { inputs, outputs } = directiveResolver.resolve(componentOrDirective);
+  const { inputs, outputs } = reflect.getInputsAndOutputs(componentOrDirective);
 
   class Mock extends MockWithStubs {
     constructor() {
       super(stubs);
-      outputs?.map(output => output.split(': ')).forEach(([key]) => Object.assign(this, { [key]: new EventEmitter() }));
+      outputs.forEach(({ propertyName }) => Object.assign(this, { [propertyName]: new EventEmitter() }));
     }
   }
 
-  inputs?.map(input => input.split(': ')).forEach(([key, alias]) => Input(alias)(Mock.prototype, key));
-  outputs?.map(output => output.split(': ')).forEach(([key, alias]) => Output(alias)(Mock.prototype, key));
+  inputs.forEach(({ propertyName, alias }) => Input(alias)(Mock.prototype, propertyName));
+  outputs.forEach(({ propertyName, alias }) => Output(alias)(Mock.prototype, propertyName));
 
   return Mock;
 };

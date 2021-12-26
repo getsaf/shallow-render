@@ -5,7 +5,7 @@ import { testFramework } from '../test-frameworks/test-framework';
 import { createContainer } from '../tools/create-container';
 import { createTestModule } from '../tools/create-test-module';
 import { mockProvider } from '../tools/mock-provider';
-import { directiveResolver } from '../tools/reflect';
+import { reflect } from '../tools/reflect';
 import { CustomError } from './custom-error';
 import { RecursivePartial } from './recursive-partial';
 import { Rendering, RenderOptions } from './rendering';
@@ -41,9 +41,15 @@ export class Renderer<TComponent> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}
 
   private _createTemplateString(directive: Directive, bindings: any) {
-    const componentInputs = (directive.inputs || [])
-      .map(key => [key.replace(/:.*/, ''), key.replace(/.*: ?/, '')])
-      .reduce((acc, [name, renamed]) => ({ ...acc, [name]: renamed }), {} as any);
+    const componentInputs = reflect
+      .getInputsAndOutputs(this._setup.testComponentOrService)
+      .inputs.reduce<Record<string, string>>(
+        (acc, input) => ({
+          ...acc,
+          [input.propertyName]: input.alias || input.propertyName,
+        }),
+        {}
+      );
     const inputBindings = Object.keys(bindings)
       .map(key => `[${componentInputs[key]}]="${key}"`)
       .join(' ');
@@ -76,7 +82,8 @@ export class Renderer<TComponent> {
     mockStatics(this._setup);
     injectRootProviders(this._setup);
 
-    const resolvedTestComponent = directiveResolver.resolve(this._setup.testComponentOrService);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const resolvedTestComponent = reflect.resolveDirective(this._setup.testComponentOrService)!;
     if (!template) {
       // If no template is used, the bindings should be verified to match the
       // component @Input properties
@@ -107,7 +114,7 @@ export class Renderer<TComponent> {
     const fixture = TestBed.createComponent(ComponentClass);
     const instance = this._getInstance(fixture);
 
-    this._spyOnOutputs(instance, resolvedTestComponent);
+    this._spyOnOutputs(instance);
 
     await this._runComponentLifecycle(fixture, finalOptions);
     const element = this._getElement(fixture);
@@ -115,15 +122,14 @@ export class Renderer<TComponent> {
     return new Rendering(fixture, element, instance, finalOptions.bind, this._setup);
   }
 
-  private _spyOnOutputs(instance: TComponent, directive: Directive) {
-    if (directive.outputs) {
-      directive.outputs.forEach(k => {
-        const value = (instance as any)[k];
-        if (value && value instanceof EventEmitter) {
-          testFramework.spyOn(value, 'emit');
-        }
-      });
-    }
+  private _spyOnOutputs(instance: TComponent) {
+    const outputs = reflect.getInputsAndOutputs(this._setup.testComponentOrService).outputs;
+    outputs.forEach(({ propertyName }) => {
+      const value = (instance as any)[propertyName];
+      if (value && value instanceof EventEmitter) {
+        testFramework.spyOn(value, 'emit');
+      }
+    });
   }
 
   private _verifyComponentBindings(directive: Directive, bindings: Partial<TComponent>) {
@@ -131,7 +137,9 @@ export class Renderer<TComponent> {
       throw new InvalidBindOnEntryComponentError(this._setup.testComponentOrService);
     }
 
-    const inputPropertyNames = (directive.inputs || []).map(k => k.split(':')[0]);
+    const inputPropertyNames = reflect
+      .getInputsAndOutputs(this._setup.testComponentOrService)
+      .inputs.map(i => i.propertyName);
     Object.keys(bindings).forEach(k => {
       if (!inputPropertyNames.includes(k)) {
         throw new InvalidInputBindError(inputPropertyNames, k);

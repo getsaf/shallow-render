@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { CustomError } from '../models/custom-error';
-import { directiveResolver } from './reflect';
+import { reflect } from './reflect';
 
 const className = (object: any) => (object && object.constructor && object.constructor.name) || '<UnknownClass>';
 
@@ -28,11 +28,11 @@ export class PropertyNotAnEventEmitterError extends CustomError {
   }
 }
 
-export const outputProxy = <TComponent>(component: TComponent): PickByType<TComponent, EventEmitter<any>> => {
-  const directive =
-    component && 'constructor' in component && directiveResolver.resolve((component as any).constructor);
-
-  const outputs = ((directive && directive.outputs) || []).map(output => output.split(':')[0]);
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const outputProxy = <TComponent extends Object>(
+  component: TComponent
+): PickByType<TComponent, EventEmitter<any>> => {
+  const outputs = reflect.getInputsAndOutputs(component.constructor).outputs.map(o => o.propertyName);
 
   return new Proxy(
     {},

@@ -7,7 +7,9 @@ import { Type } from '@angular/core';
 
 const ExtendableBuiltIn = <T>(cls: Type<T>): Type<T> => {
   function Extendable() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line prefer-rest-params
     cls.apply(this, arguments);
   }
   Extendable.prototype = Object.create(cls.prototype);

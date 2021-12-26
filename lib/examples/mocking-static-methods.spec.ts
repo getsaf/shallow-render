@@ -2,7 +2,6 @@ import { Component, Input, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
 class Foo {
-  // tslint:disable-line no-unnecessary-class
   static fooify(name: string) {
     return `${name}-foo`;
   }

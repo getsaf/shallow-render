@@ -35,7 +35,7 @@ describe('QueryMatch', () => {
 
     it('deletes properties on the first match', () => {
       match.fooProperty = 'foo';
-      delete match.fooProperty; /* tslint:disable-line no-dynamic-delete no-string-literal */
+      delete match.fooProperty;
       expect(match.fooProperty).not.toBeDefined();
     });
 
@@ -127,7 +127,9 @@ describe('QueryMatch', () => {
     });
 
     it('allows forEach over results', () => {
-      emptyMatch.forEach(fail);
+      emptyMatch.forEach(() => {
+        throw new Error();
+      });
       expect(true).toBe(true);
     });
   });

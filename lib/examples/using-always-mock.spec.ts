@@ -39,6 +39,6 @@ describe('alwaysMock', () => {
   it('renders the title from the title service', async () => {
     const { find } = await shallow.render(`<app-title></app-title>`);
 
-    expect(find('h1').nativeElement.innerText).toContain('Always mocked');
+    expect(find('h1').nativeElement.textContent).toContain('Always mocked');
   });
 });

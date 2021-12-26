@@ -18,7 +18,7 @@ describe('createContainerComponent', () => {
   });
 
   it('does not spy on a spy', () => {
-    const Container = createContainer('', { foo: jasmine.createSpy() });
+    const Container = createContainer('', { foo: jest.fn() });
     const container: any = new Container();
 
     container.foo();

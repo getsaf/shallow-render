@@ -1,7 +1,7 @@
 import { APP_BASE_HREF, Location } from '@angular/common';
 import { Component, NgModule } from '@angular/core';
-import { Router, RouterModule, Routes } from '@angular/router'; // tslint:disable-line no-implicit-dependencies
-import { RouterTestingModule } from '@angular/router/testing'; // tslint:disable-line no-implicit-dependencies
+import { Router, RouterModule, Routes } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { Shallow } from '../shallow';
 
 //////////////////////////////////////////////////////////////

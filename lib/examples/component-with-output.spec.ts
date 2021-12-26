@@ -46,7 +46,7 @@ describe('component with output', () => {
 
   it('input updates ngModel', async () => {
     const { find, instance } = await shallow.render();
-    spyOn(instance, 'outputHandler');
+    jest.spyOn(instance, 'outputHandler');
 
     const innerComponent = find('inner-component');
     innerComponent.triggerEventHandler('output', { id: 1, name: 'myEvent' } as MyEvent);

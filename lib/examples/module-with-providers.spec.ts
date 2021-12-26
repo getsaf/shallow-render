@@ -21,7 +21,6 @@ class ColorLabelComponent {
   declarations: [ColorLabelComponent],
 })
 class ColorModule {
-  // tslint:disable-line no-unnecessary-class
   static forRoot(): ModuleWithProviders<ColorModule> {
     return {
       ngModule: ColorModule,
@@ -41,6 +40,6 @@ describe('module with forRoot', () => {
   it('Uses the color from the RedService', async () => {
     const { element } = await shallow.render();
 
-    expect(element.nativeElement.innerText).toBe('MOCKED COLOR');
+    expect(element.nativeElement.textContent).toBe('MOCKED COLOR');
   });
 });

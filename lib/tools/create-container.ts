@@ -5,12 +5,12 @@ export class ShallowRenderContainer {}
 
 export function createContainer(template: string, bindings: any): Type<ShallowRenderContainer> {
   @Component({ template })
-  class ProxyShallowContainer extends ShallowRenderContainer {
+  class ProxyShallowContainerComponent extends ShallowRenderContainer {
     constructor() {
       super();
       const spies = spyOnBindings(bindings);
       Object.defineProperties(
-        ProxyShallowContainer.prototype,
+        ProxyShallowContainerComponent.prototype,
         Object.keys(spies).reduce((acc, key) => {
           return { ...acc, [key]: { get: () => spies[key] } };
         }, {})
@@ -18,7 +18,7 @@ export function createContainer(template: string, bindings: any): Type<ShallowRe
     }
   }
 
-  return ProxyShallowContainer;
+  return ProxyShallowContainerComponent;
 }
 
 const spyOnBindings = (bindings: any) => {

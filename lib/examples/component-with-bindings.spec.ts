@@ -50,7 +50,7 @@ describe('component with bindings', () => {
   it('displays the name and year the person was born', async () => {
     const { find } = await shallow.render({ bind: { person } });
 
-    expect(find('#personLabel').nativeElement.innerText).toContain('Brandon Domingue was born in 1982');
+    expect(find('#personLabel').nativeElement.textContent).toContain('Brandon Domingue was born in 1982');
   });
 
   it('emits the person when clicked', async () => {
@@ -63,11 +63,11 @@ describe('component with bindings', () => {
   it('displays the number of times the person was updated', async () => {
     const { find, fixture, bindings } = await shallow.render({ bind: { person } });
 
-    expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('1');
+    expect(find('#ngOnChangesCount').nativeElement.textContent).toBe('1');
 
     bindings.person = { firstName: 'Isaac', lastName: 'Datlof', birthDate: new Date('1983-08-24') };
     fixture.detectChanges();
 
-    expect(find('#ngOnChangesCount').nativeElement.innerText).toBe('2');
+    expect(find('#ngOnChangesCount').nativeElement.textContent).toBe('2');
   });
 });

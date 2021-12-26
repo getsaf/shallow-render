@@ -1,4 +1,4 @@
-import { directiveResolver } from './reflect';
+import { reflect } from './reflect';
 import { Component, forwardRef, Type } from '@angular/core';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
@@ -9,24 +9,24 @@ export const mockComponent = <TComponent extends Type<any>>(
   component: TComponent,
   config?: { stubs?: object }
 ): TComponent => {
-  const { exportAs, selector } = directiveResolver.resolve(component);
+  const { selector, exportAs } = reflect.resolveDirective(component);
 
   @MockOf(component)
   @Component({
     selector,
     template: '<ng-content></ng-content>',
     providers: [
-      { provide: component, useExisting: forwardRef(() => Mock) },
+      { provide: component, useExisting: forwardRef(() => MockComponent) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
     exportAs,
   })
-  class Mock extends mockWithInputsOutputsAndStubs(component, config?.stubs) {}
+  class MockComponent extends mockWithInputsOutputsAndStubs(component, config?.stubs) {}
 
   // Provide our mock in place of any other usage of 'thing'.
   // This makes `ViewChild` and `ContentChildren` selectors work!
-  TestBed.overrideComponent(Mock, {
-    add: { providers: [{ provide: component, useExisting: forwardRef(() => Mock) }] },
+  TestBed.overrideComponent(MockComponent, {
+    add: { providers: [{ provide: component, useExisting: forwardRef(() => MockComponent) }] },
   });
-  return Mock as any;
+  return MockComponent as any;
 };

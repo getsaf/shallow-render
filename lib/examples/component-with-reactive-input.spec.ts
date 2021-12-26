@@ -1,6 +1,6 @@
 import { Component, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs'; // tslint:disable-line no-implicit-dependencies
+import { Subscription } from 'rxjs';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
@@ -49,7 +49,7 @@ describe('component with reactive input', () => {
 
   it('destroy cancel subscriptions', async () => {
     const { instance } = await shallow.render();
-    spyOn(instance.subscription, 'unsubscribe');
+    jest.spyOn(instance.subscription, 'unsubscribe');
 
     instance.ngOnDestroy();
 
@@ -58,7 +58,7 @@ describe('component with reactive input', () => {
 
   it('input change calls inputHandler', async () => {
     const { find, instance } = await shallow.dontMock(ReactiveFormsModule).render();
-    spyOn(instance, 'inputHandler');
+    jest.spyOn(instance, 'inputHandler');
 
     const input = find('#customInput');
     input.nativeElement.value = 'It works!';

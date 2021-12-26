@@ -35,6 +35,6 @@ describe('using dontMock', () => {
     const { element } = await shallow.dontMock(RedService).render('<color-label></color-label>');
 
     // Using the actual service response here (not mocked)
-    expect(element.nativeElement.innerText).toBe('RED');
+    expect(element.nativeElement.textContent).toBe('RED');
   });
 });

@@ -14,9 +14,9 @@ import {
 import { InvalidBindOnEntryComponentError, InvalidInputBindError, Renderer } from './renderer';
 import { TestSetup } from './test-setup';
 import { InvalidStaticPropertyMockError } from '../tools/mock-statics';
+import '../test-frameworks/shallow-matchers';
 
 class TestUtility {
-  // tslint:disable-line no-unnecessary-class
   static readonly staticNumber = 123;
   static staticMethod() {
     return 'foo';
@@ -36,7 +36,6 @@ const staticObject = {
   `,
 })
 class TestComponent implements OnInit {
-  // tslint:disable-next-line: no-input-rename
   @Input('renamedInput') fooInput!: string;
   @Input() myInput!: string;
   myProperty!: string;
@@ -104,9 +103,7 @@ describe('Renderer', () => {
     const { instance } = await renderer.render();
     instance.myOutput.emit('FOO');
 
-    // Spys have a `calls` property on them. This is the only way I know
-    // how to detect an existing spy.
-    expect((instance.myOutput.emit as jasmine.Spy).calls).toBeDefined();
+    expect(jest.isMockFunction(instance.myOutput.emit)).toBe(true);
     expect(instance.myOutput.emit).toHaveBeenCalledWith('FOO');
   });
 
@@ -170,14 +167,14 @@ describe('Renderer', () => {
 
     describe('without a selector defined on the component', () => {
       @Component({ template: '<div>Without selector</div>' })
-      class TestComponentWithoutSelector {}
+      class WithoutSelectorComponent {}
 
-      @NgModule({ declarations: [TestComponentWithoutSelector] })
+      @NgModule({ declarations: [WithoutSelectorComponent] })
       class NoSelectorModule {}
 
       it('should be able to render without a template specified', async () => {
-        const testSetup = new TestSetup(TestComponentWithoutSelector, NoSelectorModule);
-        testSetup.dontMock.push(TestComponentWithoutSelector);
+        const testSetup = new TestSetup(WithoutSelectorComponent, NoSelectorModule);
+        testSetup.dontMock.push(WithoutSelectorComponent);
 
         const { element } = await new Renderer(testSetup).render();
 
