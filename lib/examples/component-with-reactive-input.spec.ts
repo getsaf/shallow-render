@@ -17,7 +17,7 @@ class CustomFormComponent implements OnInit, OnDestroy {
     this.subscription.add(this.myControl.valueChanges.subscribe(change => this.inputHandler(change)));
   }
 
-  inputHandler(_text: string) {
+  inputHandler(_text: string | null) {
     //  implementation
     return 2 + 2;
   }
