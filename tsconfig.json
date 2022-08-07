@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "es2020"],
+    "lib": [
+      "dom",
+      "es2020"
+    ],
     "module": "commonjs",
-    "target": "es2015",
+    "target": "es2020",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
@@ -15,9 +18,14 @@
     "declarationDir": "dist",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "types": ["jest"],
+    "types": [
+      "jest"
+    ],
     "strict": true,
     "alwaysStrict": true
   },
-  "include": ["index.ts", "lib/**/*"]
+  "include": [
+    "index.ts",
+    "lib/**/*"
+  ]
 }
