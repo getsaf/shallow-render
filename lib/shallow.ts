@@ -13,7 +13,7 @@ import { createService } from './tools/create-service';
 
 /**
  * Test setup wrapper. This class tracks all the test module configurations including
- * mocks and providers. When test setup is complet, you can render with the `render` method.
+ * mocks and providers. When the test setup is complete, you can render with the `render` method.
  */
 export class Shallow<TTestTarget> {
   readonly setup: TestSetup<TTestTarget>;
@@ -77,7 +77,7 @@ export class Shallow<TTestTarget> {
   private static readonly _alwaysMock = new Map<Type<any> | InjectionToken<any>, any>();
 
   /**
-   * Instruct *all* shallow-render tests to always mock pipe.
+   * Instruct *all* shallow-render tests to always mock pipes.
    *
    * NOTE: Designed to be used in a global test setup
    * If you wish to mock a pipe for a specific test (or test file) @see Shallow#mockPipe
@@ -123,7 +123,7 @@ export class Shallow<TTestTarget> {
   private static readonly _alwaysImport: AngularModule[] = [];
 
   /**
-   * Instruct *all* shallow-render tests to always render templates assocuated with
+   * Instruct *all* shallow-render tests to always render templates associated with
    * mocked structural directives. The default behavior is not to render structural directives
    * until the user specifically enables the directive in their test.
    *
@@ -192,10 +192,10 @@ export class Shallow<TTestTarget> {
   }
 
   /**
-   * Adds a compontnt/directive to the test module's `declarations` array.
+   * Adds a component/directive to the test module's `declarations` array.
    *
    * NOTE: Generally speaking, your declarations should be supplied in your modules. Use of this function
-   * should be take with caution because it can mask issues with missing declarations in your modules.
+   * should be taken with caution because it can mask issues with missing declarations in your modules.
    */
   declare(...declarations: Type<any>[]): this {
     this.setup.declarations.push(...declarations);
@@ -205,7 +205,7 @@ export class Shallow<TTestTarget> {
   /**
    * Adds a provider to the test module's `providers` array.
    *
-   * Can be usefult to supply Singleton services (aka: services that are `providedIn: 'root'`).
+   * Can be useful to supply Singleton services (aka: services that are `providedIn: 'root'`).
    *
    * Providers can match any structure allowed Angular's module system
    *
@@ -299,7 +299,7 @@ export class Shallow<TTestTarget> {
    * By default, all pipes are mocked to simply return the same value that was input as their output
    *
    * @example
-   * // Fake the tranlate pipe to do simple text reversal
+   * // Fake the translate pipe to do simple text reversal
    * shallow.mockPipe(TranslatePipe, input => input.split('').reverse().join(''));
    *
    * @link https://getsaf.github.io/shallow-render/#mocking-pipes-with-mockpipe
@@ -339,7 +339,7 @@ export class Shallow<TTestTarget> {
   /**
    * Renders the test component
    *
-   * You may optionally suppoly custom bindings to your template.
+   * You may optionally supply custom bindings to your template.
    *
    * @example
    * const rendering = await shallow.render(
@@ -360,7 +360,7 @@ export class Shallow<TTestTarget> {
   /**
    * Renders the test component with an HTML template.
    *
-   * You may optionally suppoly custom bindings to your template.
+   * You may optionally supply custom bindings to your template.
    *
    * @example
    * const rendering = await shallow.render(
@@ -384,7 +384,7 @@ export class Shallow<TTestTarget> {
   /**
    * Renders the test component
    *
-   * You may optionally suppoly custom bindings to your template.
+   * You may optionally supply custom bindings to your template.
    *
    * @example
    * const rendering = await shallow.render(
