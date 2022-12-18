@@ -1,4 +1,4 @@
-import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, OnInit } from '@angular/core';
+import { Directive, forwardRef, Type, Optional, ViewContainerRef, TemplateRef, OnInit, Inject } from '@angular/core';
 import { reflect } from './reflect';
 import { MockOf } from './mock-of.directive';
 import { TestBed } from '@angular/core/testing';
@@ -26,10 +26,10 @@ export function mockDirective<TDirective extends Type<any>>(
     ],
     exportAs,
   })
-  class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit, MockDirective {
+  class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit {
     constructor(
-      @Optional() private _viewContainer?: ViewContainerRef,
-      @Optional() private _template?: TemplateRef<any>
+      @Inject(ViewContainerRef) @Optional() private _viewContainer: ViewContainerRef,
+      @Inject(TemplateRef<any>) @Optional() private _template?: TemplateRef<any>
     ) {
       super();
     }
