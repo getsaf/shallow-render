@@ -1,4 +1,4 @@
-import { Component, Directive, NgModule, Pipe, PipeTransform } from '@angular/core';
+import { Component, Directive, EventEmitter, Input, NgModule, Output, Pipe, PipeTransform } from '@angular/core';
 import { reflect } from './reflect';
 describe('reflect', () => {
   @Directive({ selector: 'foo-directive' })
@@ -54,5 +54,74 @@ describe('reflect', () => {
     expect(reflect.isPipe(MyDirective)).toBe(false);
     expect(reflect.isPipe(MyComponent)).toBe(false);
     expect(reflect.isPipe(NonAngularClass)).toBe(false);
+  });
+
+  describe('getInputsAndOutputs', () => {
+    it('gets inputs and outputs', () => {
+      @Component({ selector: 'my-component', template: '<div></div>' })
+      class TestComponent {
+        @Input() myInput!: string;
+        @Output() myOutput = new EventEmitter<string>();
+      }
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [{ alias: 'myInput', propertyName: 'myInput' }],
+        outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
+      });
+    });
+
+    it('includes inherited inputs and outputs', () => {
+      class BaseComponent {
+        @Input() baseInput!: string;
+        @Output() baseOutput = new EventEmitter<string>();
+      }
+      @Component({ selector: 'my-component', template: '<div></div>' })
+      class TestComponent extends BaseComponent {
+        @Input() myInput!: string;
+        @Output() myOutput = new EventEmitter<string>();
+      }
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [
+          { alias: 'baseInput', propertyName: 'baseInput' },
+          { alias: 'myInput', propertyName: 'myInput' },
+        ],
+        outputs: [
+          { alias: 'baseOutput', propertyName: 'baseOutput' },
+          { alias: 'myOutput', propertyName: 'myOutput' },
+        ],
+      });
+    });
+
+    it('returns input/output aliases', () => {
+      @Component({ selector: 'my-component', template: '<div></div>' })
+      class TestComponent {
+        @Input('inputAlias') myInput!: string;
+        @Output('outputAlias') myOutput = new EventEmitter<string>();
+      }
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [{ alias: 'inputAlias', propertyName: 'myInput' }],
+        outputs: [{ alias: 'outputAlias', propertyName: 'myOutput' }],
+      });
+    });
+
+    it('prefers lowest level of inherited inputs and outputs', () => {
+      class BaseComponent {
+        @Input('this-input-alias-wont-show') myInput!: string;
+        @Output('this-output-alias-wont-show') myOutput = new EventEmitter<string>();
+      }
+
+      @Component({ selector: 'my-component', template: '<div></div>' })
+      class TestComponent extends BaseComponent {
+        @Input() myInput!: string;
+        @Output() myOutput = new EventEmitter<string>();
+      }
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [{ alias: 'myInput', propertyName: 'myInput' }],
+        outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
+      });
+    });
   });
 });
