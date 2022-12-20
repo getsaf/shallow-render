@@ -62,7 +62,13 @@ export const reflect = {
   isPipe: (thing: any): thing is PipeTransform => !!getAnnotation(Pipe, thing),
 
   getInputsAndOutputs(componentOrDirective: any): InputsAndOutputs {
-    return Object.entries((componentOrDirective.propDecorators || {}) as PropDecorators).reduce<InputsAndOutputs>(
+    let propDecorators: PropDecorators = {};
+    let currentComponent = componentOrDirective;
+    // Walk up the prototype tree to find inherited in/outputs
+    do propDecorators = { ...currentComponent.propDecorators, ...propDecorators };
+    while ((currentComponent = Object.getPrototypeOf(currentComponent)) && typeof currentComponent === 'function');
+
+    return Object.entries(propDecorators).reduce<InputsAndOutputs>(
       (acc, [key, value]) => {
         const input = value.find(v => v.type === Input);
         if (input) {
