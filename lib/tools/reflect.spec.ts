@@ -1,3 +1,5 @@
+/* eslint-disable @angular-eslint/no-outputs-metadata-property */
+/* eslint-disable @angular-eslint/no-inputs-metadata-property */
 import { Component, Directive, EventEmitter, Input, NgModule, Output, Pipe, PipeTransform } from '@angular/core';
 import { reflect } from './reflect';
 describe('reflect', () => {
@@ -121,6 +123,103 @@ describe('reflect', () => {
       expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
         inputs: [{ alias: 'myInput', propertyName: 'myInput' }],
         outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
+      });
+    });
+
+    it('returns inputs and outputs defined in the component metadata', () => {
+      @Component({
+        selector: 'my-component',
+        template: '<div></div>',
+        inputs: ['inputOne', 'inputTwo'],
+        outputs: ['outputOne', 'outputTwo'],
+      })
+      class TestComponent {}
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [
+          { alias: 'inputOne', propertyName: 'inputOne' },
+          { alias: 'inputTwo', propertyName: 'inputTwo' },
+        ],
+        outputs: [
+          { alias: 'outputOne', propertyName: 'outputOne' },
+          { alias: 'outputTwo', propertyName: 'outputTwo' },
+        ],
+      });
+    });
+
+    it('returns extended inputs and outputs defined in the component metadata', () => {
+      @Component({
+        selector: 'base-component',
+        template: '<div></div>',
+        inputs: ['baseInputOne', 'baseInputTwo'],
+        outputs: ['baseOutputOne', 'baseOutputTwo'],
+      })
+      class BaseComponent {}
+
+      @Component({
+        selector: 'my-component',
+        template: '<div></div>',
+        inputs: ['extendedInputOne', 'extendedInputTwo'],
+        outputs: ['extendedOutputOne', 'extendedOutputTwo'],
+      })
+      class TestComponent extends BaseComponent {}
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [
+          { alias: 'baseInputOne', propertyName: 'baseInputOne' },
+          { alias: 'baseInputTwo', propertyName: 'baseInputTwo' },
+          { alias: 'extendedInputOne', propertyName: 'extendedInputOne' },
+          { alias: 'extendedInputTwo', propertyName: 'extendedInputTwo' },
+        ],
+        outputs: [
+          { alias: 'baseOutputOne', propertyName: 'baseOutputOne' },
+          { alias: 'baseOutputTwo', propertyName: 'baseOutputTwo' },
+          { alias: 'extendedOutputOne', propertyName: 'extendedOutputOne' },
+          { alias: 'extendedOutputTwo', propertyName: 'extendedOutputTwo' },
+        ],
+      });
+    });
+
+    it('returns extended inputs and outputs defined in the component metadata and with decorators', () => {
+      @Component({
+        selector: 'base-component',
+        template: '<div></div>',
+        inputs: ['baseInputOne', 'baseInputTwo'],
+        outputs: ['baseOutputOne', 'baseOutputTwo'],
+      })
+      class BaseComponent {
+        @Input() baseInput!: string;
+        @Output() baseOutput = new EventEmitter<string>();
+      }
+
+      @Component({
+        selector: 'my-component',
+        template: '<div></div>',
+        inputs: ['extendedInputOne', 'extendedInputTwo'],
+        outputs: ['extendedOutputOne', 'extendedOutputTwo'],
+      })
+      class TestComponent extends BaseComponent {
+        @Input() extendedInput!: string;
+        @Output() extendedOutput = new EventEmitter<string>();
+      }
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [
+          { alias: 'baseInput', propertyName: 'baseInput' },
+          { alias: 'baseInputOne', propertyName: 'baseInputOne' },
+          { alias: 'baseInputTwo', propertyName: 'baseInputTwo' },
+          { alias: 'extendedInput', propertyName: 'extendedInput' },
+          { alias: 'extendedInputOne', propertyName: 'extendedInputOne' },
+          { alias: 'extendedInputTwo', propertyName: 'extendedInputTwo' },
+        ],
+        outputs: [
+          { alias: 'baseOutput', propertyName: 'baseOutput' },
+          { alias: 'baseOutputOne', propertyName: 'baseOutputOne' },
+          { alias: 'baseOutputTwo', propertyName: 'baseOutputTwo' },
+          { alias: 'extendedOutput', propertyName: 'extendedOutput' },
+          { alias: 'extendedOutputOne', propertyName: 'extendedOutputOne' },
+          { alias: 'extendedOutputTwo', propertyName: 'extendedOutputTwo' },
+        ],
       });
     });
   });
