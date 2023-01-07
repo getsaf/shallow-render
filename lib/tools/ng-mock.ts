@@ -1,4 +1,4 @@
-import { PipeTransform, Type } from '@angular/core';
+import { EnvironmentProviders, PipeTransform, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { mockModule } from './mock-module';
@@ -27,7 +27,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
     return thing;
   }
 
-  let mock: NgMockable;
+  let mock!: NgMockable | EnvironmentProviders;
   try {
     if (reflect.isNgModule(thing) || isModuleWithProviders(thing)) {
       mock = mockModule(thing, setup);
@@ -43,7 +43,7 @@ export function ngMock<TThing extends NgMockable | NgMockable[]>(thing: TThing, 
               setup.withStructuralDirectives.get(thing) ||
               (setup.alwaysRenderStructuralDirectives && setup.withStructuralDirectives.get(thing) !== false),
           });
-      fixEmptySelector(thing, mock);
+      fixEmptySelector(thing, mock as Type<any>);
     } else {
       throw new DoNotKnowHowToMockError(thing);
     }

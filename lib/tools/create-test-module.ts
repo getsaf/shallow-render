@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, Provider, Type } from '@angular/core';
+import { EnvironmentProviders, NgModule, Provider, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
 import { TestSetup } from '../models/test-setup';
 import { getNgModuleAnnotations } from './get-ng-module-annotations';
@@ -12,7 +12,7 @@ export function createTestModule<TComponent>(
   testComponents: Type<any>[] = []
 ): AngularModule {
   let mod: Type<any>;
-  let additionalProviders: Provider[] = [];
+  let additionalProviders: (Provider | EnvironmentProviders)[] = [];
   if (isModuleWithProviders(setup.testModule)) {
     additionalProviders = setup.testModule.providers || additionalProviders;
     mod = setup.testModule.ngModule;

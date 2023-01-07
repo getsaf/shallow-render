@@ -8,6 +8,8 @@ import {
   TypeProvider,
   ValueProvider,
   Type,
+  ɵisEnvironmentProviders,
+  EnvironmentProviders,
 } from '@angular/core';
 import { reflect } from './reflect';
 
@@ -47,3 +49,9 @@ export function isPipeTransform(thing: any): thing is PipeTransform & Type<any> 
 export const isClass = (thing: any): thing is Type<any> => {
   return typeof thing === 'function';
 };
+
+/**
+ * Angular explicitly obscured the EnvironmentProviders type that require hard-casting to unbox
+ */
+export const isEnvironmentProviders = (thing: Provider | EnvironmentProviders): thing is EnvironmentProviders =>
+  ɵisEnvironmentProviders(thing as Provider);

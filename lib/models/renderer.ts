@@ -37,7 +37,7 @@ export class MissingTestComponentError extends CustomError {
   }
 }
 
-export class Renderer<TComponent> {
+export class Renderer<TComponent extends object> {
   constructor(private readonly _setup: TestSetup<TComponent>) {}
 
   private _createTemplateString(directive: Directive, bindings: any) {
@@ -65,7 +65,7 @@ export class Renderer<TComponent> {
     options?: Partial<RenderOptions<TBindings>>
   ): Promise<Rendering<TComponent, TBindings>>;
 
-  async render<TBindings>(
+  async render<TBindings extends TComponent>(
     templateOrOptions?: string | Partial<RenderOptions<TBindings>>,
     optionsOrUndefined?: Partial<RenderOptions<TBindings>>
   ) {
@@ -111,7 +111,7 @@ export class Renderer<TComponent> {
       imports: [createTestModule(this._setup, [this._setup.testComponentOrService, ComponentClass])],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(ComponentClass);
+    const fixture = TestBed.createComponent(ComponentClass as Type<TComponent>);
     const instance = this._getInstance(fixture);
 
     this._spyOnOutputs(instance);

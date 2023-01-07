@@ -1,11 +1,11 @@
-import { NgModule, Provider, SchemaMetadata, Type } from '@angular/core';
+import { EnvironmentProviders, NgModule, Provider, SchemaMetadata, Type } from '@angular/core';
 import { AngularModule } from '../models/angular-module';
 import { reflect } from './reflect';
 
 export interface NgModuleAnnotations extends NgModule {
   imports: (any[] | AngularModule)[];
   declarations: (any[] | Type<any>)[];
-  providers: Provider[];
+  providers: (Provider | EnvironmentProviders)[];
   exports: (Type<any> | any[])[];
   entryComponents: (any[] | Type<any>)[];
   schemas: SchemaMetadata[] | any[];
