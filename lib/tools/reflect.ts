@@ -50,6 +50,21 @@ const getAnnotation = <TType extends Directive | Component | Pipe | NgModule>(
   return null;
 };
 
+const resolveDirectiveInputsAndOutputs = (componentOrDirective: any) => {
+  const metadata = reflect.resolveDirective(componentOrDirective);
+  const interatorMap = [
+    { key: 'inputs', type: Input },
+    { key: 'outputs', type: Output },
+  ] as const;
+  return interatorMap.reduce<PropDecorators>(
+    (acc, { key, type }) => ({
+      ...acc,
+      ...metadata[key]?.reduce<PropDecorators>((acc2, name) => ({ ...acc2, [name]: [{ type }] }), {}),
+    }),
+    {}
+  );
+};
+
 export const reflect = {
   resolveComponent: (thing: any) => getAnnotation(Component, thing) || {},
   resolveDirective: (thing: any) => getAnnotation(Directive, thing) || {},
@@ -65,7 +80,12 @@ export const reflect = {
     let propDecorators: PropDecorators = {};
     let currentComponent = componentOrDirective;
     // Walk up the prototype tree to find inherited in/outputs
-    do propDecorators = { ...currentComponent.propDecorators, ...propDecorators };
+    do
+      propDecorators = {
+        ...currentComponent.propDecorators,
+        ...resolveDirectiveInputsAndOutputs(currentComponent),
+        ...propDecorators,
+      };
     while ((currentComponent = Object.getPrototypeOf(currentComponent)) && typeof currentComponent === 'function');
 
     return Object.entries(propDecorators).reduce<InputsAndOutputs>(
