@@ -15,7 +15,7 @@ import { createService } from './tools/create-service';
  * Test setup wrapper. This class tracks all the test module configurations including
  * mocks and providers. When the test setup is complete, you can render with the `render` method.
  */
-export class Shallow<TTestTarget> {
+export class Shallow<TTestTarget extends object> {
   readonly setup: TestSetup<TTestTarget>;
 
   /**
@@ -404,7 +404,7 @@ export class Shallow<TTestTarget> {
     renderOptions?: Partial<RenderOptions<TBindings>>
   ): Promise<Rendering<TTestTarget, TBindings>>;
 
-  async render<TBindings>(
+  async render<TBindings extends RecursivePartial<TTestTarget>>(
     htmlOrRenderOptions?: string | Partial<RenderOptions<TBindings>>,
     renderOptions?: Partial<RenderOptions<TBindings>>
   ) {

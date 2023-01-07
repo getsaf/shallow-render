@@ -1,4 +1,13 @@
-import { APP_INITIALIZER, Provider, InjectionToken, TypeProvider, ValueProvider } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  Provider,
+  InjectionToken,
+  TypeProvider,
+  ValueProvider,
+  EnvironmentProviders,
+  ɵInternalEnvironmentProviders,
+  makeEnvironmentProviders,
+} from '@angular/core';
 import { mockProviderClass } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import {
@@ -8,6 +17,7 @@ import {
   isTypeProvider,
   isValueProvider,
   isPipeTransform,
+  isEnvironmentProviders,
 } from './type-checkers';
 
 const getProvide = (provider: Provider) => {
@@ -34,11 +44,25 @@ const recursiveFindProvider = (haystack: Provider[], needle: Provider): Provider
 
 export function mockProvider(providerToMock: TypeProvider, setup: TestSetup<any>): ValueProvider | TypeProvider;
 export function mockProvider<TProvider extends Provider>(providerToMock: TProvider, setup: TestSetup<any>): TProvider;
-export function mockProvider(providerToMock: Provider, setup: TestSetup<any>): Provider {
+export function mockProvider(
+  providerToMock: Provider | EnvironmentProviders,
+  setup: TestSetup<any>
+): Provider | EnvironmentProviders;
+export function mockProvider(
+  providerToMock: Provider | EnvironmentProviders,
+  setup: TestSetup<any>
+): Provider | EnvironmentProviders {
+  if (isEnvironmentProviders(providerToMock)) {
+    return makeEnvironmentProviders(
+      (providerToMock as ɵInternalEnvironmentProviders).ɵproviders.map(p => mockProvider(p, setup))
+    );
+  }
+
   const provider = recursiveFindProvider(setup.providers, providerToMock) || providerToMock;
   if (Array.isArray(provider)) {
     return provider.map(p => mockProvider(p, setup)); // Recursion
-  } else if (isExistingProvider(provider)) {
+  }
+  if (isExistingProvider(provider)) {
     return provider;
   }
   const provide = isTypeProvider(provider) ? provider : provider.provide;

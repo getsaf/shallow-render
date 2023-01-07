@@ -1,7 +1,16 @@
-import { ExistingProvider, ValueProvider, InjectionToken, Pipe, PipeTransform } from '@angular/core';
+import {
+  ExistingProvider,
+  ValueProvider,
+  InjectionToken,
+  Pipe,
+  PipeTransform,
+  makeEnvironmentProviders,
+  ɵInternalEnvironmentProviders,
+} from '@angular/core';
 import { MockOfProvider } from '../models/mock-of-provider';
 import { TestSetup } from '../models/test-setup';
 import { mockProvider } from './mock-provider';
+import { isEnvironmentProviders } from './type-checkers';
 
 class FooService {
   foo = 'foo';
@@ -271,5 +280,16 @@ describe('mockPrivider', () => {
     const pipe = mockProvider(FooPipe, testSetup) as ValueProvider;
 
     expect(pipe.useValue.transform()).toBe('MOCKED FOO');
+  });
+
+  it('mocks EnvironmentProviders', () => {
+    testSetup.mocks.set(FooPipe, { transform: () => 'MOCKED FOO' });
+    const mocked = mockProvider(makeEnvironmentProviders([FooPipe]), testSetup) as ɵInternalEnvironmentProviders;
+
+    // Returned object is a *real* environment provider wrapper
+    expect(isEnvironmentProviders(mocked)).toBe(true);
+
+    const mockedFoo = mocked.ɵproviders[0] as ValueProvider;
+    expect(mockedFoo.useValue.transform()).toBe('MOCKED FOO');
   });
 });

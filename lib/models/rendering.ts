@@ -35,7 +35,7 @@ export interface RenderOptions<TBindings> {
  *
  * @link https://getsaf.github.io/shallow-render/#rendering
  */
-export class Rendering<TComponent, TBindings> {
+export class Rendering<TComponent extends object, TBindings> {
   constructor(
     public readonly fixture: ComponentFixture<any>,
     public readonly element: DebugElement,
