@@ -12,6 +12,7 @@ import { Rendering, RenderOptions } from './rendering';
 import { TestSetup } from './test-setup';
 import { mockStatics } from '../tools/mock-statics';
 import { injectRootProviders } from '../tools/inject-root-providers';
+import { ngMock } from '../tools/ng-mock';
 
 export class InvalidInputBindError extends CustomError {
   constructor(availableInputs: string[], key: string | symbol) {
@@ -107,9 +108,26 @@ export class Renderer<TComponent> {
       });
     }
 
-    await TestBed.configureTestingModule({
-      imports: [createTestModule(this._setup, [this._setup.testComponentOrService, ComponentClass])],
-    }).compileComponents();
+    if (resolvedTestComponent.standalone) {
+      const componentImports = reflect.resolveComponent(this._setup.testComponentOrService).imports;
+      // Standalone components may have their own imports
+      if (componentImports?.length) {
+        TestBed.overrideComponent(this._setup.testComponentOrService, {
+          set: {
+            imports: componentImports.flat().map(m => ngMock(m, this._setup)),
+          },
+        });
+      }
+      TestBed.configureTestingModule({
+        declarations: reflect.isStandalone(ComponentClass) ? [] : [ComponentClass],
+        imports: [this._setup.testComponentOrService, createTestModule(this._setup, [])],
+      });
+    } else {
+      TestBed.configureTestingModule({
+        imports: [createTestModule(this._setup, [this._setup.testComponentOrService, ComponentClass])],
+      });
+    }
+    await TestBed.compileComponents();
 
     const fixture = TestBed.createComponent(ComponentClass);
     const instance = this._getInstance(fixture);

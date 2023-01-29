@@ -165,9 +165,9 @@ export class Shallow<TTestTarget> {
   }
   private static readonly _alwaysWithStructuralDirectives = new Map<Type<any>, boolean>();
 
-  constructor(testComponentOrService: Type<TTestTarget>, testModule: AngularModule) {
+  constructor(testComponentOrService: Type<TTestTarget>, testModule?: AngularModule) {
     this.setup = new TestSetup(testComponentOrService, testModule);
-    this.setup.dontMock.push(testComponentOrService, ...Shallow._neverMock);
+    this.setup.dontMock.push(...Shallow._neverMock);
     this.setup.providers.unshift(...Shallow._alwaysProvide);
     this.setup.imports.push(...Shallow._alwaysImport);
     this.setup.alwaysRenderStructuralDirectives = Shallow._alwaysRenderStructuralDirectives;
