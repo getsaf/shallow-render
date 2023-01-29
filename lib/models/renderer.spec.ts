@@ -10,6 +10,8 @@ import {
   ViewContainerRef,
   InjectionToken,
   Injectable,
+  Pipe,
+  PipeTransform,
 } from '@angular/core';
 import { InvalidBindOnEntryComponentError, InvalidInputBindError, Renderer } from './renderer';
 import { TestSetup } from './test-setup';
@@ -111,28 +113,67 @@ describe('Renderer', () => {
     const { instance } = await renderer.render();
     instance.emitterWithoutOutputDecorator.emit('FOO');
 
-    // Spys have a `calls` property on them. This is the only way I know
-    // how to detect an existing spy.
-    expect((instance.emitterWithoutOutputDecorator.emit as jasmine.Spy).calls).not.toBeDefined();
+    expect(jest.isMockFunction(instance.emitterWithoutOutputDecorator.emit)).toBe(false);
   });
 
-  describe('with only template', () => {
-    it('wraps the rendering in a container', async () => {
-      const { fixture } = await renderer.render('<thing></thing>');
+  it('wraps standalone components in a container when it has a selector', async () => {
+    @Component({
+      standalone: true,
+      selector: 'my-standalone',
+      template: '<h1>Standalone</h1>',
+    })
+    class MyStandaloneComponent {}
 
-      expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
-    });
+    const { fixture } = await new Renderer(new TestSetup(MyStandaloneComponent)).render();
+
+    expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(MyStandaloneComponent);
   });
 
-  describe('with no arguments', () => {
-    it('wraps the rendering in a container', async () => {
-      const { fixture } = await renderer.render();
+  it('renders standalone components directly when it does not have a selector', async () => {
+    @Component({
+      standalone: true,
+      template: '<h1>Standalone</h1>',
+    })
+    class WithoutSelectorComponent {}
+    const { fixture } = await new Renderer(new TestSetup(WithoutSelectorComponent)).render();
 
-      expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
-    });
+    expect(fixture.debugElement.componentInstance).toBeInstanceOf(WithoutSelectorComponent);
   });
 
-  describe('with only renderOptions', () => {
+  it('mocks standalone component imports', async () => {
+    @Pipe({ name: 'myPipe', standalone: true })
+    class MyPipe implements PipeTransform {
+      transform(value: string) {
+        return `Pipe value: ${value}`;
+      }
+    }
+
+    @Component({
+      standalone: true,
+      template: '<h1>{{"Standalone" | myPipe}}</h1>',
+      imports: [MyPipe],
+    })
+    class WithoutSelectorComponent {}
+    const setup = new TestSetup(WithoutSelectorComponent);
+    setup.mockPipes.set(MyPipe, () => 'MOCK PIPE');
+    const { fixture } = await new Renderer(setup).render();
+
+    expect(fixture.debugElement.nativeElement.textContent).toBe('MOCK PIPE');
+  });
+
+  it('wraps the rendering in a container when rendered with a template', async () => {
+    const { fixture } = await renderer.render('<thing></thing>');
+
+    expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
+  });
+
+  it('wraps the rendering in a container when rendered with no arguments', async () => {
+    const { fixture } = await renderer.render();
+
+    expect(fixture.debugElement.children[0].componentInstance).toBeInstanceOf(TestComponent);
+  });
+
+  describe('render with only renderOptions', () => {
     it('wraps the rendering in a container', async () => {
       const { fixture } = await renderer.render({});
 

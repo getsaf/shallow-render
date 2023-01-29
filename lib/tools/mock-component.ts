@@ -9,12 +9,13 @@ export const mockComponent = <TComponent extends Type<any>>(
   component: TComponent,
   config?: { stubs?: object }
 ): TComponent => {
-  const { selector, exportAs } = reflect.resolveDirective(component);
+  const { selector, standalone, exportAs } = reflect.resolveComponent(component);
 
   @MockOf(component)
   @Component({
     selector,
     template: '<ng-content></ng-content>',
+    standalone,
     providers: [
       { provide: component, useExisting: forwardRef(() => MockComponent) },
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },

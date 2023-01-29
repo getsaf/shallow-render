@@ -57,6 +57,24 @@ describe('mockComponent', () => {
     expect(fixture.componentInstance.handleEvent).toHaveBeenCalledWith('bar');
   });
 
+  it('mocks standalone components', () => {
+    @Component({
+      standalone: true,
+      selector: 'my-standalone-component',
+      template: '<span>{{"foo" | my-pipe}}</span>',
+    })
+    class MyStandaloneComponent {}
+
+    const TestHost = testHost('<my-standalone-component>foo</my-standalone-component>');
+    const fixture = TestBed.configureTestingModule({
+      declarations: [TestHost],
+      imports: [mockComponent(MyStandaloneComponent)],
+    }).createComponent(TestHost);
+    const debugElement = fixture.debugElement.query(By.directive(MyStandaloneComponent));
+
+    expect(debugElement.nativeElement.textContent).toBe('foo');
+  });
+
   it('renders ng-content', () => {
     @Component({ selector: 'my-component' })
     class MyComponent {}

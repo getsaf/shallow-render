@@ -58,6 +58,29 @@ describe('reflect', () => {
     expect(reflect.isPipe(NonAngularClass)).toBe(false);
   });
 
+  it('identifies things that are marked as "standalone"', () => {
+    // Not standalone
+    expect(reflect.isStandalone(MyModule)).toBe(false);
+    expect(reflect.isStandalone(MyDirective)).toBe(false);
+    expect(reflect.isStandalone(MyComponent)).toBe(false);
+    expect(reflect.isStandalone(NonAngularClass)).toBe(false);
+
+    // Standalone things
+    @Component({ standalone: true })
+    class MyStandaloneComponent {}
+    expect(reflect.isStandalone(MyStandaloneComponent)).toBe(true);
+
+    @Directive({ standalone: true })
+    class MyStandaloneDirective {}
+    expect(reflect.isStandalone(MyStandaloneDirective)).toBe(true);
+
+    @Pipe({ name: 'standalone-pipe', standalone: true })
+    class MyStandalonePipe implements PipeTransform {
+      transform = () => 'test';
+    }
+    expect(reflect.isStandalone(MyStandalonePipe)).toBe(true);
+  });
+
   describe('getInputsAndOutputs', () => {
     it('gets inputs and outputs', () => {
       @Component({ selector: 'my-component', template: '<div></div>' })
