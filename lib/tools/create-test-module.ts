@@ -25,6 +25,7 @@ export function createTestModule<TComponent>(
     [...ngModule.declarations, ...setup.declarations].filter(d => d !== setup.testComponentOrService),
     setup
   );
+
   // Test Modules cannot directly define entryComponents. To work around this,
   // we create a new module which declares/exports all entryComponents and import
   // the module into the TestModule.

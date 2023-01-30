@@ -13,7 +13,7 @@ export const mockPipe = <TPipe extends Type<PipeTransform>>(
   }
 
   @MockOf(pipe)
-  @Pipe({ name: meta.name })
+  @Pipe({ name: meta.name, standalone: meta.standalone })
   class Mock implements PipeTransform {
     transform = transform;
   }
