@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "es2020"],
     "module": "commonjs",
-    "target": "es2020",
+    "target": "ES2015",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
