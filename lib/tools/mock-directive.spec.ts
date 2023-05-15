@@ -104,6 +104,25 @@ describe('mockDirective', () => {
     expect(fixture.debugElement.nativeElement.textContent).toBe('');
   });
 
+  it('mock standalone directive', () => {
+    @Directive({ selector: '[myDirective]', standalone: true })
+    class MyDirective {}
+
+    const TestHost = testHost('<div *myDirective>foo</div>');
+    const fixture = TestBed.configureTestingModule({
+      declarations: [TestHost],
+      imports: [mockDirective(MyDirective)],
+    }).createComponent(TestHost);
+    const instance = fixture.debugElement
+      .queryAllNodes(node => !!node.injector.get(MyDirective, false))[0]
+      .injector.get(MyDirective) as MockDirective;
+    instance.renderContents();
+    instance.clearContents();
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.nativeElement.textContent).toBe('');
+  });
+
   it('is exportedAs the same as the original directive', () => {
     @Directive({ selector: '[myDirective]', exportAs: 'myExport' })
     class MyDirective {}

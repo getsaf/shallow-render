@@ -15,8 +15,7 @@ export function mockDirective<TDirective extends Type<any>>(
   config?: { stubs?: object; renderContentsOnInit?: boolean }
 ): TDirective {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const { selector, exportAs } = reflect.resolveDirective(directive);
-
+  const { selector, exportAs, standalone } = reflect.resolveDirective(directive);
   @MockOf(directive)
   @Directive({
     selector: selector || `__${directive.name}-selector`,
@@ -25,6 +24,7 @@ export function mockDirective<TDirective extends Type<any>>(
       { provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true },
     ],
     exportAs,
+    standalone,
   })
   class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit {
     constructor(
