@@ -1,6 +1,6 @@
 {
   "name": "shallow-render",
-  "version": "15.0.2",
+  "version": "15.0.3",
   "description": "Shallow rendering test utility for Angular",
   "main": "dist/index.js",
   "files": [
