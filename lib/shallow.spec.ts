@@ -250,7 +250,7 @@ describe('Shallow', () => {
       };
 
       expect(() => new Shallow(MyTestComponent, MyTestModule).mockStatic(staticObject, { staticNumber: 999 })).toThrow(
-        new InvalidStaticPropertyMockError('staticNumber')
+        new InvalidStaticPropertyMockError('staticNumber'),
       );
     });
 
@@ -314,7 +314,7 @@ describe('Shallow', () => {
   describe('render', () => {
     it('can render with only HTML', async () => {
       const { instance } = await new Shallow(MyTestComponent, MyTestModule).render(
-        '<my-test-component></my-test-component>'
+        '<my-test-component></my-test-component>',
       );
 
       expect(instance).toBeInstanceOf(MyTestComponent);

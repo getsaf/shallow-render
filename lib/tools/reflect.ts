@@ -28,7 +28,7 @@ type PropDecorators = Record<
 const reflection = new ɵReflectionCapabilities();
 const getAnnotation = <TType extends Directive | Component | Pipe | NgModule>(
   type: Type<TType>,
-  thing: Type<any>
+  thing: Type<any>,
 ): TType | null => {
   const annotations = reflection.annotations(thing);
   // Try to find the nearest known Type annotation and make sure that this annotation is an
@@ -56,16 +56,13 @@ const resolveDirectiveInputsAndOutputs = (componentOrDirective: any) => {
     { key: 'inputs', type: Input },
     { key: 'outputs', type: Output },
   ] as const;
-  return interatorMap.reduce<PropDecorators>(
-    (acc, { key, type }) => {
-      const normalized = metadata[key]?.map(a => typeof a === 'string' ? {name: a} : a);
-      return ({
+  return interatorMap.reduce<PropDecorators>((acc, { key, type }) => {
+    const normalized = metadata[key]?.map(a => (typeof a === 'string' ? { name: a } : a));
+    return {
       ...acc,
-      ...normalized?.reduce<PropDecorators>((acc2 , i ) => ({ ...acc2, [i.name]: [{ type }] }), {}),
-    });
-  },
-    {}
-  );
+      ...normalized?.reduce<PropDecorators>((acc2, i) => ({ ...acc2, [i.name]: [{ type }] }), {}),
+    };
+  }, {});
 };
 
 export const reflect = {
@@ -113,7 +110,7 @@ export const reflect = {
         }
         return acc;
       },
-      { inputs: [], outputs: [] }
+      { inputs: [], outputs: [] },
     );
   },
 };

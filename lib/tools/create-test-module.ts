@@ -9,7 +9,7 @@ import { isModuleWithProviders } from './type-checkers';
 
 export function createTestModule<TComponent>(
   setup: TestSetup<TComponent>,
-  testComponents: Type<any>[] = []
+  testComponents: Type<any>[] = [],
 ): AngularModule {
   let mod: Type<any>;
   let additionalProviders: (Provider | EnvironmentProviders)[] = [];
@@ -23,7 +23,7 @@ export function createTestModule<TComponent>(
 
   const declarations = ngMock(
     [...ngModule.declarations, ...setup.declarations].filter(d => d !== setup.testComponentOrService),
-    setup
+    setup,
   );
 
   @NgModule({

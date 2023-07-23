@@ -4,7 +4,10 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 @Directive({ selector: '[showIfFoo]' })
 export class ShowIfFooDirective {
-  constructor(private readonly templateRef: TemplateRef<any>, private readonly viewContainer: ViewContainerRef) {}
+  constructor(
+    private readonly templateRef: TemplateRef<any>,
+    private readonly viewContainer: ViewContainerRef,
+  ) {}
 
   @Input() set showIfFoo(value: string) {
     this.viewContainer.clear();

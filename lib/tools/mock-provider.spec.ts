@@ -148,7 +148,7 @@ describe('mockPrivider', () => {
         { provide: STRING_TOKEN, useValue: 'ORIGINAL-STRING', multi: true },
         { provide: FUNCTION_TOKEN, useValue: () => 'ORIGINAL-FUNCTION', multi: true },
       ],
-      testSetup
+      testSetup,
     ) as any[];
 
     expect(providers[0].useValue).toBe('FOO');
@@ -170,7 +170,7 @@ describe('mockPrivider', () => {
         { provide: BOOLEAN_TOKEN, useValue: true },
         { provide: NUMBER_TOKEN, useValue: 42 },
       ],
-      testSetup
+      testSetup,
     ) as any[];
 
     expect(providers[0].useValue).toBe('');
@@ -188,7 +188,7 @@ describe('mockPrivider', () => {
         { provide: BOOLEAN_TOKEN, useValue: true },
         { provide: NUMBER_TOKEN, useValue: 42 },
       ],
-      testSetup
+      testSetup,
     ) as any[];
 
     expect(providers[0].useValue).toContain('MOCKED_INJECTION_TOKEN_VALUE');
@@ -255,7 +255,7 @@ describe('mockPrivider', () => {
         [[Baz]],
         { provide: TEST_TOKEN, useValue: 'MODULE PROVIDED VALUE' },
       ],
-      testSetup
+      testSetup,
     );
 
     // The result is that the structure matches the module's structure, but user

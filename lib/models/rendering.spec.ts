@@ -302,7 +302,7 @@ describe('Rendering', () => {
         element,
         instance,
         {},
-        testSetup
+        testSetup,
       );
       const found = findStructuralDirective(WillBeMockedStructuralDirective, {
         query: d => d.structuralDirectiveToMock === 'second-one',
@@ -319,7 +319,7 @@ describe('Rendering', () => {
         element,
         instance,
         {},
-        testSetup
+        testSetup,
       );
       const found = findStructuralDirective(WillBeMockedStructuralDirective);
       renderStructuralDirective(found[0]);
@@ -334,7 +334,7 @@ describe('Rendering', () => {
         element,
         instance,
         {},
-        testSetup
+        testSetup,
       );
       const found = findStructuralDirective(WillBeMockedStructuralDirective);
       renderStructuralDirective(found);
@@ -349,7 +349,7 @@ describe('Rendering', () => {
         element,
         instance,
         {},
-        testSetup
+        testSetup,
       );
       const found = findStructuralDirective(OtherDirective);
 

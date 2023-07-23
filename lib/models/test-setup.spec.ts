@@ -21,7 +21,7 @@ describe('TestSetup', () => {
 
   it('throws an error when a module is specified with a standalone component', () => {
     expect(() => new TestSetup(MyStandaloneComponent, class {})).toThrowError(
-      /Do not specify a module when testing .*\bstandalone\b/
+      /Do not specify a module when testing .*\bstandalone\b/,
     );
   });
 

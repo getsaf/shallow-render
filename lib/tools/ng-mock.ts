@@ -66,7 +66,7 @@ class MockError extends CustomError {
         thing?.name || thing
       }. Try skipping it with dontMock or neverMock.\n------------- MOCK ERROR -------------\n${
         error?.stack || error
-      }\n----------- END MOCK ERROR -----------`
+      }\n----------- END MOCK ERROR -----------`,
     );
   }
 }

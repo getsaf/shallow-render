@@ -262,7 +262,10 @@ describe('Renderer', () => {
     class IfOddDirective {
       private hasView = false;
 
-      constructor(private readonly _templateRef: TemplateRef<any>, private readonly _viewContainer: ViewContainerRef) {}
+      constructor(
+        private readonly _templateRef: TemplateRef<any>,
+        private readonly _viewContainer: ViewContainerRef,
+      ) {}
 
       @Input() set ifOdd(possiblyOdd: number) {
         const isOdd = possiblyOdd % 2 !== 0;

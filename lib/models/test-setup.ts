@@ -25,14 +25,14 @@ export class TestSetup<TTestTarget> {
 
   constructor(
     public readonly testComponentOrService: Type<TTestTarget>,
-    public readonly testModule: AngularModule = EmptyModule
+    public readonly testModule: AngularModule = EmptyModule,
   ) {
     const isStandalone = reflect.isStandalone(testComponentOrService);
     const hasModule = testModule !== EmptyModule;
 
     if (isStandalone && hasModule) {
       throw new Error(
-        `Do not specify a module when testing ${testComponentOrService.name} (because it is marked as "standalone")`
+        `Do not specify a module when testing ${testComponentOrService.name} (because it is marked as "standalone")`,
       );
     }
     if (!isStandalone && !hasModule) {
