@@ -317,7 +317,6 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [NormalComponent, EntryComponent],
-        entryComponents: [EntryComponent],
       })
       class EntryTestModule {}
 
@@ -350,7 +349,6 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [NormalComponent, EntryComponent, ChildComponent],
-        entryComponents: [EntryComponent],
       })
       class EntryTestModule {}
 
@@ -371,7 +369,6 @@ describe('Renderer', () => {
 
       @NgModule({
         declarations: [EntryComponent],
-        entryComponents: [EntryComponent],
       })
       class EntryTestModule {}
 

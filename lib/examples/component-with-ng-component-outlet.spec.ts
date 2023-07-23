@@ -30,7 +30,6 @@ class StepDisplayComponent {
 @NgModule({
   declarations: [StepDisplayComponent, StepComponent],
   providers: [StepService],
-  entryComponents: [StepComponent],
 })
 class StepModule {}
 //////////////////////////

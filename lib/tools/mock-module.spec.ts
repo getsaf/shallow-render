@@ -119,18 +119,6 @@ describe('mockModule', () => {
     expect(isMockOf(MockBar, BarComponent)).toBe(true);
   });
 
-  it('mocks entryComponents', () => {
-    const entryComponents = [FooComponent, BarComponent];
-    const {
-      annotations: {
-        entryComponents: [MockFoo, MockBar],
-      },
-    } = makeMock({ entryComponents });
-
-    expect(isMockOf(MockFoo, FooComponent)).toBe(true);
-    expect(isMockOf(MockBar, BarComponent)).toBe(true);
-  });
-
   it('mocks providers', () => {
     class FooService {}
     class BarService {}

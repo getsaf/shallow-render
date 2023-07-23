@@ -53,12 +53,11 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
 
   const modClass = mod as Type<any>;
 
-  const { imports, declarations, exports, entryComponents, providers, schemas } = getNgModuleAnnotations(modClass);
+  const { imports, declarations, exports,  providers, schemas } = getNgModuleAnnotations(modClass);
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
     declarations: ngMock(declarations, setup),
     exports: collapseModuleWithProviders(ngMock(exports, setup)),
-    entryComponents: ngMock(entryComponents, setup),
     providers: providers.map(p => mockProvider(p, setup)),
     schemas,
   };

@@ -26,17 +26,11 @@ export function createTestModule<TComponent>(
     setup
   );
 
-  // Test Modules cannot directly define entryComponents. To work around this,
-  // we create a new module which declares/exports all entryComponents and import
-  // the module into the TestModule.
-  const entryComponents = [...ngMock([...ngModule.entryComponents], setup), ...setup.declarations];
-
   @NgModule({
     imports: [...ngMock([...ngModule.imports, ...setup.imports], setup), CommonModule],
     declarations: [...declarations, ...testComponents],
-    entryComponents,
     providers: mockProvider([...setup.providers, ...ngModule.providers, ...additionalProviders], setup),
-    exports: [...declarations, ...entryComponents],
+    exports: declarations,
     schemas: ngModule.schemas || [],
   })
   class ShallowTestModule {}

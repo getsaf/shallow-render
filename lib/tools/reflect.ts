@@ -57,10 +57,13 @@ const resolveDirectiveInputsAndOutputs = (componentOrDirective: any) => {
     { key: 'outputs', type: Output },
   ] as const;
   return interatorMap.reduce<PropDecorators>(
-    (acc, { key, type }) => ({
+    (acc, { key, type }) => {
+      const normalized = metadata[key]?.map(a => typeof a === 'string' ? {name: a} : a);
+      return ({
       ...acc,
-      ...metadata[key]?.reduce<PropDecorators>((acc2, name) => ({ ...acc2, [name]: [{ type }] }), {}),
-    }),
+      ...normalized?.reduce<PropDecorators>((acc2 , i ) => ({ ...acc2, [i.name]: [{ type }] }), {}),
+    });
+  },
     {}
   );
 };

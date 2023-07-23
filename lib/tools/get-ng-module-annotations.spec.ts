@@ -11,7 +11,6 @@ describe('getNgModuleAnnotations', () => {
       providers: [],
       declarations: [],
       exports: [],
-      entryComponents: [],
       schemas: [],
     });
   });
@@ -22,7 +21,6 @@ describe('getNgModuleAnnotations', () => {
       providers: [class {}],
       declarations: [class {}],
       exports: [class {}],
-      entryComponents: [class {}],
       schemas: [class {}],
     };
     @NgModule(annotations)
