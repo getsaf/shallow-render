@@ -13,7 +13,7 @@ export function createContainer(template: string, bindings: any): Type<ShallowRe
         ProxyShallowContainerComponent.prototype,
         Object.keys(spies).reduce((acc, key) => {
           return { ...acc, [key]: { get: () => spies[key] } };
-        }, {})
+        }, {}),
       );
     }
   }

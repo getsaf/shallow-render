@@ -46,15 +46,15 @@ export function mockProvider(providerToMock: TypeProvider, setup: TestSetup<any>
 export function mockProvider<TProvider extends Provider>(providerToMock: TProvider, setup: TestSetup<any>): TProvider;
 export function mockProvider(
   providerToMock: Provider | EnvironmentProviders,
-  setup: TestSetup<any>
+  setup: TestSetup<any>,
 ): Provider | EnvironmentProviders;
 export function mockProvider(
   providerToMock: Provider | EnvironmentProviders,
-  setup: TestSetup<any>
+  setup: TestSetup<any>,
 ): Provider | EnvironmentProviders {
   if (isEnvironmentProviders(providerToMock)) {
     return makeEnvironmentProviders(
-      (providerToMock as ɵInternalEnvironmentProviders).ɵproviders.map(p => mockProvider(p, setup))
+      (providerToMock as ɵInternalEnvironmentProviders).ɵproviders.map(p => mockProvider(p, setup)),
     );
   }
 

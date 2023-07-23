@@ -39,7 +39,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
   if (Array.isArray(mod)) {
     return setup.mockCache.add(
       mod,
-      mod.map(i => mockModule(i, setup))
+      mod.map(i => mockModule(i, setup)),
     ) as TModule; // Recursion
   } else if (isModuleWithProviders(mod)) {
     // If we have a moduleWithProviders, make sure we return the same
@@ -53,7 +53,7 @@ export function mockModule<TModule extends AnyNgModule>(mod: TModule, setup: Tes
 
   const modClass = mod as Type<any>;
 
-  const { imports, declarations, exports,  providers, schemas } = getNgModuleAnnotations(modClass);
+  const { imports, declarations, exports, providers, schemas } = getNgModuleAnnotations(modClass);
   const mockedModule: NgModule = {
     imports: ngMock(imports, setup),
     declarations: ngMock(declarations, setup),

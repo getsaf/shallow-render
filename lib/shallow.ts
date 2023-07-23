@@ -68,7 +68,7 @@ export class Shallow<TTestTarget extends object> {
    */
   static alwaysMock<TProvider>(
     thing: Type<TProvider> | InjectionToken<TProvider>,
-    stubs: RecursivePartial<TProvider>
+    stubs: RecursivePartial<TProvider>,
   ): typeof Shallow {
     const mock = Shallow._alwaysMock.get(thing) || {};
     this._alwaysMock.set(thing, { ...mock, ...(stubs as object) });
@@ -175,7 +175,7 @@ export class Shallow<TTestTarget extends object> {
     Shallow._alwaysMockPipes.forEach((value, key) => this.setup.mockPipes.set(key, value));
     Shallow._alwaysReplaceModule.forEach((value, key) => this.setup.moduleReplacements.set(key, value));
     Shallow._alwaysWithStructuralDirectives.forEach((value, key) =>
-      this.setup.withStructuralDirectives.set(key, value)
+      this.setup.withStructuralDirectives.set(key, value),
     );
   }
 
@@ -378,7 +378,7 @@ export class Shallow<TTestTarget extends object> {
    */
   render<TBindings>(
     html: string,
-    renderOptions?: Partial<RenderOptions<TBindings>>
+    renderOptions?: Partial<RenderOptions<TBindings>>,
   ): Promise<Rendering<TTestTarget, TBindings>>;
 
   /**
@@ -401,12 +401,12 @@ export class Shallow<TTestTarget extends object> {
    * @link https://getsaf.github.io/shallow-render/#rendering
    */
   render<TBindings extends RecursivePartial<TTestTarget>>(
-    renderOptions?: Partial<RenderOptions<TBindings>>
+    renderOptions?: Partial<RenderOptions<TBindings>>,
   ): Promise<Rendering<TTestTarget, TBindings>>;
 
   async render<TBindings extends RecursivePartial<TTestTarget>>(
     htmlOrRenderOptions?: string | Partial<RenderOptions<TBindings>>,
-    renderOptions?: Partial<RenderOptions<TBindings>>
+    renderOptions?: Partial<RenderOptions<TBindings>>,
   ) {
     const renderer = new Renderer(this.setup);
     if (typeof htmlOrRenderOptions === 'string') {

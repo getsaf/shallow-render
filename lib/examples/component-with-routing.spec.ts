@@ -37,7 +37,7 @@ describe('component with routing', () => {
   beforeEach(() => {
     shallow = new Shallow(GoHomeLinkComponent, GoHomeModule).replaceModule(
       RouterModule,
-      RouterTestingModule.withRoutes(routes)
+      RouterTestingModule.withRoutes(routes),
     );
   });
 

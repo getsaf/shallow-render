@@ -44,7 +44,7 @@ describe('mockDirective', () => {
     }
 
     const TestHost = testHost(
-      '<div myDirective (myOutput)="handleEvent($event)" (withAlias)="handleEvent($event)"></div>'
+      '<div myDirective (myOutput)="handleEvent($event)" (withAlias)="handleEvent($event)"></div>',
     );
     const fixture = TestBed.configureTestingModule({
       declarations: [TestHost, mockDirective(MyDirective)],

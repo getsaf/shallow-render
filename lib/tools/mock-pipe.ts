@@ -5,7 +5,7 @@ import { MockOf } from './mock-of.directive';
 
 export const mockPipe = <TPipe extends Type<PipeTransform>>(
   pipe: TPipe,
-  transform: TPipe['prototype']['transform'] = () => undefined
+  transform: TPipe['prototype']['transform'] = () => undefined,
 ): TPipe => {
   const meta = reflect.resolvePipe(pipe);
   if (!meta) {

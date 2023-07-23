@@ -18,8 +18,8 @@ export class InvalidInputBindError extends CustomError {
   constructor(availableInputs: string[], key: string | symbol) {
     super(
       `Tried to bind to a property that is not marked as @Input: ${String(
-        key
-      )}\nAvailable input bindings: ${availableInputs}`
+        key,
+      )}\nAvailable input bindings: ${availableInputs}`,
     );
   }
 }
@@ -27,7 +27,7 @@ export class InvalidInputBindError extends CustomError {
 export class InvalidBindOnEntryComponentError extends CustomError {
   constructor(component: Type<any>) {
     super(
-      `Tried to bind @Inputs to component that has no selector (${component.name}). EntryComponents cannot have template-bound inputs.\nIf you need to set properties on an EntryComponent, you must set them on the \`instance\`.\nIf this is not meant to be an EntryComoponent, please add a selector in th component definition.\n\nFor more details see the docs:\nhttps://github.com/getsaf/shallow-render/wiki/FAQ#bindings-on-entrycomponents`
+      `Tried to bind @Inputs to component that has no selector (${component.name}). EntryComponents cannot have template-bound inputs.\nIf you need to set properties on an EntryComponent, you must set them on the \`instance\`.\nIf this is not meant to be an EntryComoponent, please add a selector in th component definition.\n\nFor more details see the docs:\nhttps://github.com/getsaf/shallow-render/wiki/FAQ#bindings-on-entrycomponents`,
     );
   }
 }
@@ -49,7 +49,7 @@ export class Renderer<TComponent extends object> {
           ...acc,
           [input.propertyName]: input.alias || input.propertyName,
         }),
-        {}
+        {},
       );
     const inputBindings = Object.keys(bindings)
       .map(key => `[${componentInputs[key]}]="${key}"`)
@@ -58,17 +58,17 @@ export class Renderer<TComponent extends object> {
   }
 
   render<TBindings extends RecursivePartial<TComponent>>(
-    options: Partial<RenderOptions<TBindings>>
+    options: Partial<RenderOptions<TBindings>>,
   ): Promise<Rendering<TComponent, TBindings>>;
 
   render<TBindings>(
     template?: string,
-    options?: Partial<RenderOptions<TBindings>>
+    options?: Partial<RenderOptions<TBindings>>,
   ): Promise<Rendering<TComponent, TBindings>>;
 
   async render<TBindings extends TComponent>(
     templateOrOptions?: string | Partial<RenderOptions<TBindings>>,
-    optionsOrUndefined?: Partial<RenderOptions<TBindings>>
+    optionsOrUndefined?: Partial<RenderOptions<TBindings>>,
   ) {
     const [template, options] =
       typeof templateOrOptions === 'string' ? [templateOrOptions, optionsOrUndefined] : [undefined, templateOrOptions];
@@ -94,7 +94,7 @@ export class Renderer<TComponent extends object> {
     const ComponentClass = resolvedTestComponent.selector
       ? createContainer(
           template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
-          finalOptions.bind
+          finalOptions.bind,
         )
       : this._setup.testComponentOrService;
 

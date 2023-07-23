@@ -7,7 +7,7 @@ import { NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/forms';
 
 export const mockComponent = <TComponent extends Type<any>>(
   component: TComponent,
-  config?: { stubs?: object }
+  config?: { stubs?: object },
 ): TComponent => {
   const { selector, standalone, exportAs } = reflect.resolveComponent(component);
 

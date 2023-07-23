@@ -23,7 +23,7 @@ class LabelTextComponent {
   constructor(
     @Inject(STYLE_TOKEN) public stylesToken: CustomStyles,
     @Inject(STRING_TOKEN) public stringToken: string,
-    @Inject(FUNCTION_TOKEN) public functionToken: () => string
+    @Inject(FUNCTION_TOKEN) public functionToken: () => string,
   ) {}
 }
 

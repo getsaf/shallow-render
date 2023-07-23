@@ -12,7 +12,7 @@ export type MockDirective = {
 
 export function mockDirective<TDirective extends Type<any>>(
   directive: TDirective,
-  config?: { stubs?: object; renderContentsOnInit?: boolean }
+  config?: { stubs?: object; renderContentsOnInit?: boolean },
 ): TDirective {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { selector, exportAs, standalone } = reflect.resolveDirective(directive);
@@ -29,7 +29,7 @@ export function mockDirective<TDirective extends Type<any>>(
   class MockDirective extends mockWithInputsOutputsAndStubs(directive, config?.stubs) implements OnInit {
     constructor(
       @Inject(ViewContainerRef) @Optional() private _viewContainer: ViewContainerRef,
-      @Inject(TemplateRef<any>) @Optional() private _template?: TemplateRef<any>
+      @Inject(TemplateRef<any>) @Optional() private _template?: TemplateRef<any>,
     ) {
       super();
     }

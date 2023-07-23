@@ -41,7 +41,7 @@ export class Rendering<TComponent extends object, TBindings> {
     public readonly element: DebugElement,
     public readonly instance: TComponent,
     public readonly bindings: TBindings,
-    private readonly _setup: TestSetup<TComponent>
+    private readonly _setup: TestSetup<TComponent>,
   ) {}
 
   readonly outputs: PickByType<TComponent, EventEmitter<any>> = outputProxy(this.instance);
@@ -160,7 +160,7 @@ export class Rendering<TComponent extends object, TBindings> {
    */
   readonly findDirective = <TDirective>(
     directive: Type<TDirective>,
-    options?: { query?: string }
+    options?: { query?: string },
   ): QueryMatch<TDirective> => {
     const directiveOrMock = this._setup.mockCache.find(directive) || directive;
     const foundElements =
@@ -225,7 +225,7 @@ export class Rendering<TComponent extends object, TBindings> {
    */
   readonly findStructuralDirective = <TDirective>(
     directiveClass: Type<TDirective>,
-    options?: { query?(d: TDirective): boolean }
+    options?: { query?(d: TDirective): boolean },
   ) =>
     createQueryMatch(
       this.fixture.debugElement
@@ -238,7 +238,7 @@ export class Rendering<TComponent extends object, TBindings> {
           } catch (e) {}
           return false;
         })
-        .map(node => node.injector.get<TDirective>(directiveClass))
+        .map(node => node.injector.get<TDirective>(directiveClass)),
     );
 
   /**
@@ -248,7 +248,7 @@ export class Rendering<TComponent extends object, TBindings> {
    */
   readonly renderStructuralDirective = (
     directiveClassOrObject: Type<any> | QueryMatch<any> | object,
-    renderContents = true
+    renderContents = true,
   ) => {
     const directives: Array<MockDirective> =
       typeof directiveClassOrObject === 'function'
@@ -265,7 +265,7 @@ export class Rendering<TComponent extends object, TBindings> {
       if (!('renderContents' in foundDirective)) {
         const directiveName = Object.getPrototypeOf(foundDirective).constructor.name;
         throw new Error(
-          `You may only manually render mocked directives with "renderStructuralDirective". Tried to render a structural directive (${directiveName}) but the directive is not mocked.`
+          `You may only manually render mocked directives with "renderStructuralDirective". Tried to render a structural directive (${directiveName}) but the directive is not mocked.`,
         );
       }
       if (renderContents) {

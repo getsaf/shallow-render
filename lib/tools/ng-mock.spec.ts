@@ -180,7 +180,7 @@ describe('ng-mock', () => {
     const mocked = ngMock(NoSelectorComponent, testSetup);
 
     await expect(TestBed.configureTestingModule({ declarations: [mocked] }).compileComponents()).resolves.toBe(
-      undefined
+      undefined,
     );
   });
 

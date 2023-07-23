@@ -14,7 +14,7 @@ export class PropertyNotMarkedAsOutputError extends CustomError {
   constructor(key: string | symbol | number, component: any) {
     super(
       `${String(key)} is not marked with the @Output() decorator. ` +
-        `Check that it is properly defined and set on the ${className(component)} class`
+        `Check that it is properly defined and set on the ${className(component)} class`,
     );
   }
 }
@@ -23,14 +23,14 @@ export class PropertyNotAnEventEmitterError extends CustomError {
   constructor(key: string | symbol | number, component: any) {
     super(
       `${String(key)} is not an instance of an EventEmitter. ` +
-        `Check that it is properly defined and set on the ${className(component)} class`
+        `Check that it is properly defined and set on the ${className(component)} class`,
     );
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const outputProxy = <TComponent extends Object>(
-  component: TComponent
+  component: TComponent,
 ): PickByType<TComponent, EventEmitter<any>> => {
   const outputs = reflect.getInputsAndOutputs(component.constructor).outputs.map(o => o.propertyName);
 
@@ -48,6 +48,6 @@ export const outputProxy = <TComponent extends Object>(
 
         return maybeOutput;
       },
-    }
+    },
   ) as any;
 };

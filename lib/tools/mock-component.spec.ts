@@ -44,7 +44,7 @@ describe('mockComponent', () => {
     }
 
     const TestHost = testHost(
-      '<my-component (myOutput)="handleEvent($event)" (withAlias)="handleEvent($event)"></my-component>'
+      '<my-component (myOutput)="handleEvent($event)" (withAlias)="handleEvent($event)"></my-component>',
     );
     const fixture = TestBed.configureTestingModule({
       declarations: [TestHost, mockComponent(MyComponent)],
