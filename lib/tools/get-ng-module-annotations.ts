@@ -7,7 +7,6 @@ export interface NgModuleAnnotations extends NgModule {
   declarations: (any[] | Type<any>)[];
   providers: (Provider | EnvironmentProviders)[];
   exports: (Type<any> | any[])[];
-  entryComponents: (any[] | Type<any>)[];
   schemas: SchemaMetadata[] | any[];
 }
 
@@ -17,9 +16,8 @@ export function getNgModuleAnnotations(ngModule: Type<any>): NgModuleAnnotations
     providers = [],
     declarations = [],
     exports = [],
-    entryComponents = [],
     schemas = [],
   } = reflect.resolveModule(ngModule) || {};
 
-  return { imports, providers, declarations, exports, entryComponents, schemas };
+  return { imports, providers, declarations, exports, schemas };
 }

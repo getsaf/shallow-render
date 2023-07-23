@@ -13,9 +13,9 @@ import {
 } from '@angular/core';
 import { reflect } from './reflect';
 
-export function isModuleWithProviders(thing: any): thing is ModuleWithProviders<any> {
+export function isModuleWithProviders(thing: unknown): thing is ModuleWithProviders<any> {
   const key: keyof ModuleWithProviders<any> = 'ngModule';
-  return typeof thing === 'object' && key in thing;
+  return !!thing && typeof thing === 'object' && key in thing;
 }
 
 export function isValueProvider(provider: Provider): provider is ValueProvider {
@@ -42,11 +42,11 @@ export function isTypeProvider(provider: Provider): provider is TypeProvider {
   return typeof provider === 'function';
 }
 
-export function isPipeTransform(thing: any): thing is PipeTransform & Type<any> {
+export function isPipeTransform(thing: unknown): thing is PipeTransform & Type<any> {
   return reflect.isPipe(thing);
 }
 
-export const isClass = (thing: any): thing is Type<any> => {
+export const isClass = (thing: unknown): thing is Type<any> => {
   return typeof thing === 'function';
 };
 
