@@ -254,8 +254,8 @@ export class Rendering<TComponent extends object, TBindings> {
       typeof directiveClassOrObject === 'function'
         ? this.findStructuralDirective<MockDirective>(directiveClassOrObject)
         : directiveClassOrObject.length
-        ? directiveClassOrObject
-        : [directiveClassOrObject];
+          ? directiveClassOrObject
+          : [directiveClassOrObject];
 
     if (!directives.length) {
       throw new Error(`Tried to render a structural directive but none were found.`);
