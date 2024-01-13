@@ -10,6 +10,7 @@ import './test-frameworks/shallow-matchers';
 import { AngularModule } from './models/angular-module';
 import { InvalidStaticPropertyMockError } from './tools/mock-statics';
 import { createService } from './tools/create-service';
+import { clearAngularCache } from './tools/clear-angular-cache';
 
 /**
  * Test setup wrapper. This class tracks all the test module configurations including
@@ -17,6 +18,14 @@ import { createService } from './tools/create-service';
  */
 export class Shallow<TTestTarget extends object> {
   readonly setup: TestSetup<TTestTarget>;
+
+  /**
+   * When `true`, Angular DepsTracker cache will be reset after
+   * each test.
+   *
+   * Defaults to `false` for `jest` runners.
+   */
+  static autoResetAngularCache: boolean = typeof jest === 'undefined';
 
   /**
    * Instruct *all* shallow-render tests to prevent mocking of a particular:
@@ -435,3 +444,13 @@ export class Shallow<TTestTarget extends object> {
 }
 
 Shallow.neverMock(CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, HAMMER_GESTURE_CONFIG);
+
+if (typeof jest === 'undefined') {
+  // Karma runs in one browser instance which can result in a buildup
+  // of mock test modules in the DepsTracker cache over the entire run.
+  afterEach(() => {
+    if (Shallow.autoResetAngularCache) {
+      clearAngularCache();
+    }
+  });
+}
