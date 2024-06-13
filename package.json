@@ -1,6 +1,6 @@
 {
   "name": "shallow-render",
-  "version": "17.0.1",
+  "version": "18.0.0",
   "description": "Shallow rendering test utility for Angular",
   "main": "dist/index.js",
   "files": [
@@ -49,34 +49,34 @@
   },
   "homepage": "https://github.com/getsaf/shallow-render#readme",
   "peerDependencies": {
-    "@angular/common": "17.x",
-    "@angular/compiler": "17.x",
-    "@angular/core": "17.x",
-    "@angular/forms": "17.x",
-    "@angular/platform-browser": "17.x"
+    "@angular/common": "18.x",
+    "@angular/compiler": "18.x",
+    "@angular/core": "18.x",
+    "@angular/forms": "18.x",
+    "@angular/platform-browser": "18.x"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.0.7",
-    "@angular-eslint/eslint-plugin": "^17.0.0",
-    "@angular-eslint/eslint-plugin-template": "^17.0.0",
-    "@angular/common": "^17.0.0",
-    "@angular/compiler": "^17.0.0",
-    "@angular/compiler-cli": "^17.0.0",
-    "@angular/core": "^17.0.0",
-    "@angular/forms": "^17.0.0",
-    "@angular/platform-browser": "^17.0.0",
-    "@angular/platform-browser-dynamic": "^17.0.0",
-    "@angular/router": "^17.0.0",
+    "@angular-devkit/build-angular": "^18.0.3",
+    "@angular-eslint/eslint-plugin": "^18.0.0",
+    "@angular-eslint/eslint-plugin-template": "^18.0.1",
+    "@angular/common": "^18.0.2",
+    "@angular/compiler": "^18.0.2",
+    "@angular/compiler-cli": "^18.0.2",
+    "@angular/core": "^18.0.2",
+    "@angular/forms": "^18.0.2",
+    "@angular/platform-browser": "^18.0.2",
+    "@angular/platform-browser-dynamic": "^18.0.2",
+    "@angular/router": "^18.0.2",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "eslint": "^8.45.0",
     "jest": "^29.6.1",
-    "jest-preset-angular": "^13.1.4",
+    "jest-preset-angular": "^14.1.0",
     "prettier": "^3.0.0",
     "rxjs": "~7.8.0",
     "ts-node": "^10.9.1",
-    "typescript": "~5.2.2",
-    "zone.js": "~0.14.2"
+    "typescript": "~5.4.2",
+    "zone.js": "~0.14.3"
   }
 }
