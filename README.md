@@ -26,7 +26,7 @@ Angular testing made easy with shallow rendering and easy mocking.
 ## Angular Version Support
 
 | Angular | shallow-render |
-|---------|----------------|
+| ------- | -------------- |
 | 18x     | 18x            |
 | 17x     | 17x            |
 | 16x     | 16x            |
