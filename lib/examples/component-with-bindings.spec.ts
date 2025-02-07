@@ -18,7 +18,7 @@ interface Person {
   `,
 })
 class BornInComponent implements OnChanges {
-  @Input() person!: Person;
+  @Input({ required: true }) person!: Person;
   @Output() selected = new EventEmitter<Person>();
 
   public ngOnChangesCount = 0;
