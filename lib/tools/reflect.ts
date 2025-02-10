@@ -94,13 +94,13 @@ export const reflect = {
     const getAlias = (input: { type: any; args?: any[] }, key: string) => {
       const firstArg = input.args?.[0];
       if (!firstArg) {
-        return key
+        return key;
       }
-      if (typeof firstArg === "string") {
+      if (typeof firstArg === 'string') {
         return firstArg;
       }
       return firstArg?.alias || key;
-    }
+    };
 
     return Object.entries(propDecorators).reduce<InputsAndOutputs>(
       (acc, [key, value]) => {

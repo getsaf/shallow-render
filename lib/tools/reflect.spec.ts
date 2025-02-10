@@ -97,14 +97,14 @@ describe('reflect', () => {
       @Component({ selector: 'my-component', template: '<div></div>' })
       class TestComponent {
         @Input() myInput!: string;
-        @Input({required: true}) myRequiredInput!: string;
+        @Input({ required: true }) myRequiredInput!: string;
         @Output() myOutput = new EventEmitter<string>();
       }
 
       expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
         inputs: [
           { alias: 'myInput', propertyName: 'myInput' },
-          { alias: 'myRequiredInput', propertyName: 'myRequiredInput' }
+          { alias: 'myRequiredInput', propertyName: 'myRequiredInput' },
         ],
         outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
       });
@@ -115,13 +115,13 @@ describe('reflect', () => {
       class TestComponent {
         myInput = input<string>();
         myRequiredInput = input.required<string>();
-       myOutput = output<string>();
+        myOutput = output<string>();
       }
 
       expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
         inputs: [
           { alias: 'myInput', propertyName: 'myInput' },
-          { alias: 'myRequiredInput', propertyName: 'myRequiredInput' }
+          { alias: 'myRequiredInput', propertyName: 'myRequiredInput' },
         ],
         outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
       });
@@ -154,14 +154,14 @@ describe('reflect', () => {
       @Component({ selector: 'my-component', template: '<div></div>' })
       class TestComponent {
         @Input('inputAlias') myInput!: string;
-        @Input({alias: 'requiredInputAlias', required: true}) myRequiredInput!: string;
+        @Input({ alias: 'requiredInputAlias', required: true }) myRequiredInput!: string;
         @Output('outputAlias') myOutput = new EventEmitter<string>();
       }
 
       expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
         inputs: [
           { alias: 'inputAlias', propertyName: 'myInput' },
-          { alias: 'requiredInputAlias', propertyName: 'myRequiredInput' }
+          { alias: 'requiredInputAlias', propertyName: 'myRequiredInput' },
         ],
         outputs: [{ alias: 'outputAlias', propertyName: 'myOutput' }],
       });

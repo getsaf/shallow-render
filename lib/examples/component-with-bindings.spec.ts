@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input,NgModule, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, input, Input, NgModule, OnChanges, Output } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
@@ -22,7 +22,7 @@ interface Person {
 })
 class BornInComponent implements OnChanges {
   @Input({ required: true }) person!: Person;
-  partner =  input.required<Person>();
+  partner = input.required<Person>();
   @Output() selected = new EventEmitter<Person>();
 
   public ngOnChangesCount = 0;
@@ -65,21 +65,21 @@ describe('component with bindings', () => {
   });
 
   it('emits the person when clicked', async () => {
-    const { find, outputs } = await shallow.render({ bind: { person, partner }});
+    const { find, outputs } = await shallow.render({ bind: { person, partner } });
     find('#personLabel').nativeElement.click();
 
     expect(outputs.selected.emit).toHaveBeenCalledWith(person);
   });
 
   it('emits the partner when clicked', async () => {
-    const { find, outputs } = await shallow.render({ bind: { person, partner }});
+    const { find, outputs } = await shallow.render({ bind: { person, partner } });
     find('#partnerLabel').nativeElement.click();
 
     expect(outputs.selected.emit).toHaveBeenCalledWith(partner);
   });
 
   it('displays the number of times the person was updated', async () => {
-    const { find, fixture, bindings } = await shallow.render({ bind: { person, partner }});
+    const { find, fixture, bindings } = await shallow.render({ bind: { person, partner } });
 
     expect(find('#ngOnChangesCount').nativeElement.textContent).toBe('1');
 
@@ -89,9 +89,9 @@ describe('component with bindings', () => {
     expect(find('#ngOnChangesCount').nativeElement.textContent).toBe('2');
   });
 
-  it('throws for missing required input signal', async  () => {
-    await expect(shallow.render({ bind: { person } }))
-      .rejects.toThrow('Input is required but no value is available yet.');
+  it('throws for missing required input signal', async () => {
+    await expect(shallow.render({ bind: { person } })).rejects.toThrow(
+      'Input is required but no value is available yet.',
+    );
   });
-
 });
