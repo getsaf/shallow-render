@@ -2,26 +2,26 @@ import { Component, Directive, NgModule } from '@angular/core';
 import { Shallow } from '../shallow';
 
 @Directive({
-  standalone: true,
   selector: '[myStandaloneDirective]',
 })
 class MyStandaloneDirective {}
 
 @Component({
+  standalone: false,
   selector: 'my-component',
   template: '<div *myStandaloneDirective></div>',
+  imports: [MyStandaloneDirective],
 })
 class MyComponent {}
 
 @NgModule({
-  declarations: [MyComponent],
   // Import the Standalone directive directly into the module
   imports: [MyStandaloneDirective],
 })
 class ModuleWithStandalone {}
 
 describe('standalone directive imported in a module', () => {
-  let shallow: Shallow<ModuleWithStandalone>;
+  let shallow: Shallow<MyComponent>;
 
   beforeEach(() => {
     shallow = new Shallow(MyComponent, ModuleWithStandalone);

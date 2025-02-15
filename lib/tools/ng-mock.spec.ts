@@ -15,7 +15,10 @@ import { ngMock } from './ng-mock';
 import * as mockDirectiveModule from './mock-directive';
 import { reflect } from './reflect';
 
-@Component({ template: '<label>foo</label>' })
+@Component({
+  standalone: false,
+  template: '<label>foo</label>',
+})
 class FooComponent {
   @Output() fooOutput = new EventEmitter<boolean>();
   doFoo() {
@@ -73,7 +76,11 @@ describe('ng-mock', () => {
     // and mock them as components, things break when the component is defined as
     // an entry component in a module
     @Directive()
-    @Component({ selector: 'dummy-selector', template: '' })
+    @Component({
+      standalone: false,
+      selector: 'dummy-selector',
+      template: '',
+    })
     class WithDirectiveAndComponentDecoratorsComponent {}
     const MockedCombo = ngMock(WithDirectiveAndComponentDecoratorsComponent, testSetup);
 
@@ -175,7 +182,10 @@ describe('ng-mock', () => {
   });
 
   it('works in TestBed and does not error when mocking a component without a selector', async () => {
-    @Component({ template: '' })
+    @Component({
+      standalone: false,
+      template: '',
+    })
     class NoSelectorComponent {}
     const mocked = ngMock(NoSelectorComponent, testSetup);
 

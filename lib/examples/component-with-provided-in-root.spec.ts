@@ -10,6 +10,7 @@ class RootService {
 }
 
 @Component({
+  standalone: false,
   selector: 'root-label',
   template: '<label>{{rootService.getRootName()}}</label>',
 })

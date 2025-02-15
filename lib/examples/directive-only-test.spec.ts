@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Directive({
+  standalone: false,
   selector: '[red]',
 })
 class RedDirective {

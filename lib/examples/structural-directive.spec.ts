@@ -2,7 +2,10 @@ import { Directive, Input, NgModule, TemplateRef, ViewContainerRef } from '@angu
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
-@Directive({ selector: '[showIfFoo]' })
+@Directive({
+  standalone: false,
+  selector: '[showIfFoo]',
+})
 export class ShowIfFooDirective {
   constructor(
     private readonly templateRef: TemplateRef<any>,

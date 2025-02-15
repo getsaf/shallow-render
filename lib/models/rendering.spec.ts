@@ -8,16 +8,19 @@ import { mockDirective } from '../tools/mock-directive';
 import '../test-frameworks/shallow-matchers';
 
 @Component({
+  standalone: false,
   template: '<outer></outer>',
 })
 class TestHostComponent {}
 
 @Directive({
+  standalone: false,
   selector: '[directive-to-mock]',
 })
 class WillBeMockedDirective {}
 
 @Directive({
+  standalone: false,
   selector: '[structuralDirectiveToMock]',
 })
 class WillBeMockedStructuralDirective {
@@ -27,11 +30,13 @@ class WillBeMockedStructuralDirective {
 }
 
 @Directive({
+  standalone: false,
   selector: '[test-directive]',
 })
 class TestDirective {}
 
 @Directive({
+  standalone: false,
   selector: '[other-directive]',
 })
 class OtherDirective {
@@ -39,6 +44,7 @@ class OtherDirective {
 }
 
 @Component({
+  standalone: false,
   selector: 'outer',
   template: `
     <div class="outer">
@@ -63,18 +69,21 @@ class OuterComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'inner',
   template: '<span test-directive>sub</span>',
 })
 class InnerComponent {}
 
 @Component({
+  standalone: false,
   selector: 'component-to-mock',
   template: '<span>this will not render<span>',
 })
 class WillBeMockedComponent {}
 
 @Component({
+  standalone: false,
   selector: 'other',
   template: '<span>other</span>',
 })

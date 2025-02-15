@@ -10,6 +10,7 @@ class EnvironmentService {
 }
 
 @Component({
+  standalone: false,
   selector: 'my-component',
   template: '<h1>{{envService.getValue()}}</h1>',
   providers: [],

@@ -2,10 +2,7 @@ import { Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Component Setup //////
-@Pipe({
-  standalone: true,
-  name: 'underline',
-})
+@Pipe({ name: 'underline' })
 class UnderlinePipe implements PipeTransform {
   transform(input: string) {
     return `__${input}__`;
@@ -13,7 +10,6 @@ class UnderlinePipe implements PipeTransform {
 }
 
 @Component({
-  standalone: true,
   selector: 'title-text',
   template: '<h4>{{label | underline}}</h4>',
   imports: [UnderlinePipe],

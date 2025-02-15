@@ -5,6 +5,7 @@ import { Shallow } from '../shallow';
 ////// Module Setup //////
 
 @Component({
+  standalone: false,
   selector: 'custom-form',
   template: '<input id="customInput" [(ngModel)]="text" />',
 })

@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   template: '<h1>Step</h1>',
   selector: 'step',
 })
@@ -16,6 +17,7 @@ class StepService {
 }
 
 @Component({
+  standalone: false,
   selector: 'step-display',
   template: `
     <div *ngFor="let step of stepService.getSteps()">
@@ -36,10 +38,18 @@ class StepModule {}
 
 describe('component with ngComponentOutlet and entry component', () => {
   let shallow: Shallow<StepDisplayComponent>;
-  @Component({ selector: 'dummy-step-one', template: '<i></i>' })
+  @Component({
+    standalone: false,
+    selector: 'dummy-step-one',
+    template: '<i></i>',
+  })
   class DummyStepOneComponent {}
 
-  @Component({ selector: 'dummy-step-two', template: '<i></i>' })
+  @Component({
+    standalone: false,
+    selector: 'dummy-step-two',
+    template: '<i></i>',
+  })
   class DummyStepTwoComponent {}
 
   beforeEach(() => {

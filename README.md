@@ -27,6 +27,7 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 | Angular | shallow-render |
 | ------- | -------------- |
+| 19x     | 19x            |
 | 18x     | 18x            |
 | 17x     | 17x            |
 | 16x     | 16x            |

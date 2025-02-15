@@ -1,35 +1,30 @@
-import { Component, Input, NgModule, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
-@Component({
-  selector: 'title-text',
-  template: '<h4>{{label | underline}}</h4>',
-})
-class TitleTextComponent {
-  @Input() label!: string;
-}
-
-@Pipe({
-  name: 'underline',
-})
+@Pipe({ name: 'underline' })
 class UnderlinePipe implements PipeTransform {
   transform(input: string) {
     return `__${input}__`;
   }
 }
 
-@NgModule({
-  declarations: [TitleTextComponent, UnderlinePipe],
+@Component({
+  selector: 'title-text',
+  template: '<h4>{{label | underline}}</h4>',
+  imports: [UnderlinePipe],
 })
-class TitleTextModule {}
+class TitleTextComponent {
+  @Input() label!: string;
+}
+
 //////////////////////////
 
 describe('simple component example', () => {
   let shallow: Shallow<TitleTextComponent>;
 
   beforeEach(() => {
-    shallow = new Shallow(TitleTextComponent, TitleTextModule);
+    shallow = new Shallow(TitleTextComponent);
   });
 
   it('displays text piped through the UnderlinePipe', async () => {

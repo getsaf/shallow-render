@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'list-item',
   template: '<li [class.bold]="active"><ng-content></ng-content></li>',
 })
@@ -17,6 +18,7 @@ class ListItemComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'list-container',
   template: '<ul><ng-content></ng-content></ul>',
 })

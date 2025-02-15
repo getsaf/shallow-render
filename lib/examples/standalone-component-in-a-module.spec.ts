@@ -14,7 +14,6 @@ class MyService {
 class MyServiceModule {}
 
 @Component({
-  standalone: true,
   selector: 'my-standalone',
   template: '<h1>It worked {{myService.getValue()}}</h1>',
   imports: [MyServiceModule],
@@ -24,6 +23,7 @@ class MyStandaloneComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'my-component',
   template: '<my-standalone></my-standalone>',
 })

@@ -95,6 +95,8 @@ export class Renderer<TComponent extends object> {
       ? createContainer(
           template || this._createTemplateString(resolvedTestComponent, finalOptions.bind),
           finalOptions.bind,
+          [this._setup.testComponentOrService],
+          resolvedTestComponent.standalone,
         )
       : this._setup.testComponentOrService;
 
@@ -108,7 +110,7 @@ export class Renderer<TComponent extends object> {
       });
     }
 
-    if (resolvedTestComponent.standalone) {
+    if (reflect.isStandalone(this._setup.testComponentOrService)) {
       const componentImports = reflect.resolveComponent(this._setup.testComponentOrService).imports;
       // Standalone components may have their own imports
       if (componentImports?.length) {
@@ -119,7 +121,6 @@ export class Renderer<TComponent extends object> {
         });
       }
       TestBed.configureTestingModule({
-        declarations: reflect.isStandalone(ComponentClass) ? [] : [ComponentClass],
         imports: [this._setup.testComponentOrService, createTestModule(this._setup, [])],
       });
     } else {

@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'name',
   template: '<label (click)="selected.emit(name)">{{name}}</label>',
 })

@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'heading',
   template: `
     <ng-container *ngIf="withTooltip">
@@ -18,6 +19,7 @@ class HeadingComponent {
 }
 
 @Directive({
+  standalone: false,
   selector: '[tooltip]',
 })
 class TooltipDirective {

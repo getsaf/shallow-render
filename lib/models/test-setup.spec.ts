@@ -3,13 +3,13 @@ import { TestSetup } from './test-setup';
 
 describe('TestSetup', () => {
   @Component({
+    standalone: false,
     selector: 'my-test-component',
     template: '<hr/>',
   })
   class MyTestComponent {}
 
   @Component({
-    standalone: true,
     selector: 'my-standalone-component',
     template: '<hr/>',
   })

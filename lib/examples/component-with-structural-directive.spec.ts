@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'heading',
   template: `
     <h1 *myStructuralDirective="'first'">Hi there!</h1>
@@ -12,6 +13,7 @@ import { Shallow } from '../shallow';
 class HeadingComponent {}
 
 @Directive({
+  standalone: false,
   selector: '[myStructuralDirective]',
 })
 class MyStructuralDirective {

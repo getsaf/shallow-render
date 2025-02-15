@@ -3,12 +3,14 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'list-container',
   template: '<ul><ng-content></ng-content></ul>',
 })
 class ListContainerComponent {}
 
 @Component({
+  standalone: false,
   selector: 'list-item',
   template: '<li [class.bold]="bold" (click)="selectItem.emit(true)"><ng-content></ng-content></li>',
 })
@@ -18,6 +20,7 @@ class ListItemComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'awesome-list',
   template: `
     <div id="chuck-report">Selected Chuck: {{ selected }}</div>

@@ -8,6 +8,7 @@ class BaseComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'test-component',
   template: `
     <label id="baseInput" (click)="baseOutput.emit(baseInput)">{{ baseInput }}</label>
