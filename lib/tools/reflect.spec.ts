@@ -1,6 +1,17 @@
 /* eslint-disable @angular-eslint/no-outputs-metadata-property */
 /* eslint-disable @angular-eslint/no-inputs-metadata-property */
-import { Component, Directive, EventEmitter, Input, NgModule, Output, Pipe, PipeTransform } from '@angular/core';
+import {
+  Component,
+  Directive,
+  EventEmitter,
+  Input,
+  NgModule,
+  Output,
+  Pipe,
+  PipeTransform,
+  input,
+  output,
+} from '@angular/core';
 import { reflect } from './reflect';
 describe('reflect', () => {
   @Directive({ selector: 'foo-directive' })
@@ -86,11 +97,32 @@ describe('reflect', () => {
       @Component({ selector: 'my-component', template: '<div></div>' })
       class TestComponent {
         @Input() myInput!: string;
+        @Input({ required: true }) myRequiredInput!: string;
         @Output() myOutput = new EventEmitter<string>();
       }
 
       expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
-        inputs: [{ alias: 'myInput', propertyName: 'myInput' }],
+        inputs: [
+          { alias: 'myInput', propertyName: 'myInput' },
+          { alias: 'myRequiredInput', propertyName: 'myRequiredInput' },
+        ],
+        outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
+      });
+    });
+
+    it('gets signal inputs and outputs', () => {
+      @Component({ selector: 'my-component', template: '<div></div>' })
+      class TestComponent {
+        myInput = input<string>();
+        myRequiredInput = input.required<string>();
+        myOutput = output<string>();
+      }
+
+      expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
+        inputs: [
+          { alias: 'myInput', propertyName: 'myInput' },
+          { alias: 'myRequiredInput', propertyName: 'myRequiredInput' },
+        ],
         outputs: [{ alias: 'myOutput', propertyName: 'myOutput' }],
       });
     });
@@ -122,11 +154,15 @@ describe('reflect', () => {
       @Component({ selector: 'my-component', template: '<div></div>' })
       class TestComponent {
         @Input('inputAlias') myInput!: string;
+        @Input({ alias: 'requiredInputAlias', required: true }) myRequiredInput!: string;
         @Output('outputAlias') myOutput = new EventEmitter<string>();
       }
 
       expect(reflect.getInputsAndOutputs(TestComponent)).toEqual({
-        inputs: [{ alias: 'inputAlias', propertyName: 'myInput' }],
+        inputs: [
+          { alias: 'inputAlias', propertyName: 'myInput' },
+          { alias: 'requiredInputAlias', propertyName: 'myRequiredInput' },
+        ],
         outputs: [{ alias: 'outputAlias', propertyName: 'myOutput' }],
       });
     });

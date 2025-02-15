@@ -91,13 +91,24 @@ export const reflect = {
       };
     while ((currentComponent = Object.getPrototypeOf(currentComponent)) && typeof currentComponent === 'function');
 
+    const getAlias = (input: { type: any; args?: any[] }, key: string) => {
+      const firstArg = input.args?.[0];
+      if (!firstArg) {
+        return key;
+      }
+      if (typeof firstArg === 'string') {
+        return firstArg;
+      }
+      return firstArg?.alias || key;
+    };
+
     return Object.entries(propDecorators).reduce<InputsAndOutputs>(
       (acc, [key, value]) => {
         const input = value.find(v => v.type === Input);
         if (input) {
           return {
             ...acc,
-            inputs: [...acc.inputs, { propertyName: key, alias: input.args?.[0] || key }],
+            inputs: [...acc.inputs, { propertyName: key, alias: getAlias(input, key) }],
           };
         }
 
@@ -105,7 +116,7 @@ export const reflect = {
         if (output) {
           return {
             ...acc,
-            outputs: [...acc.outputs, { propertyName: key, alias: output.args?.[0] || key }],
+            outputs: [...acc.outputs, { propertyName: key, alias: getAlias(output, key) }],
           };
         }
         return acc;
