@@ -10,6 +10,7 @@ import {
 import { Shallow } from '../shallow';
 
 @Component({
+  standalone: false,
   selector: 'foo',
   template: `
     <input id="name" type="text" [(ngModel)]="name" />
@@ -24,6 +25,7 @@ class FooComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'custom-input',
   template: '<div></div>',
   providers: [{ provide: NG_VALUE_ACCESSOR, useClass: DefaultValueAccessor, multi: true }],

@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormControlN
 import { Shallow } from '../shallow';
 
 @Component({
+  standalone: false,
   selector: 'foo',
   template: `
     <form [formGroup]="formGroup">
@@ -21,6 +22,7 @@ class FooComponent {
 }
 
 @Component({
+  standalone: false,
   selector: 'custom-input',
   template: '<div></div>',
 })

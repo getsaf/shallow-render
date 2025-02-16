@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'foo',
   template: '<label>foo</label>',
 })
@@ -15,6 +16,7 @@ class FooComponent {}
 class FooModule {}
 
 @Component({
+  standalone: false,
   selector: 'bar',
   template: '<label>bar</label>',
 })
@@ -27,6 +29,7 @@ class BarComponent {}
 class BarModule {}
 
 @Component({
+  standalone: false,
   selector: 'foo-bar',
   template: `
     <foo *ngIf="showFoo"></foo>

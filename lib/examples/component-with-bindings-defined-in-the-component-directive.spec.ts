@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'say-hello',
   template: `<label id="nameLabel" (click)="selected.emit(name)">Hello {{ name }}</label> `,
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property

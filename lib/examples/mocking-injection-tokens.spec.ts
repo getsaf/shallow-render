@@ -10,6 +10,7 @@ const STRING_TOKEN = new InjectionToken<string>('My string token');
 const FUNCTION_TOKEN = new InjectionToken<() => string>('My function token');
 
 @Component({
+  standalone: false,
   selector: 'label-text',
   template: `
     <span id="token-string">{{ stringToken }}</span>

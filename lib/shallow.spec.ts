@@ -17,12 +17,13 @@ class MyTestService {
   }
 }
 @Component({
+  standalone: false,
   selector: 'my-test-component',
   template: '<hr/>',
 })
 class MyTestComponent {}
 
-@Pipe({ name: 'myTestPipe' })
+@Pipe({ name: 'myTestPipe', standalone: false })
 class MyTestPipe implements PipeTransform {
   transform() {
     return { test: 'pipe' };

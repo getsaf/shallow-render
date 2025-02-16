@@ -10,6 +10,7 @@ class TitleService {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-title',
   template: '<h1>{{titleService.getTitle()}}</h1>',
 })

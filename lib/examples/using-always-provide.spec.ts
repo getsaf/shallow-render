@@ -29,6 +29,7 @@ class AppConfiguration {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-title',
   template: '<h1>{{config.title}}</h1>',
 })

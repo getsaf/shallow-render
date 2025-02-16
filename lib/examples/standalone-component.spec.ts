@@ -13,7 +13,6 @@ class MyService {
 class MyModule {}
 
 @Component({
-  standalone: true,
   selector: 'my-standalone',
   template: '<h1>It worked {{myService.getValue()}}</h1>',
   imports: [MyModule],

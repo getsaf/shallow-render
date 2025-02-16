@@ -31,6 +31,7 @@ const staticObject = {
 };
 
 @Component({
+  standalone: false,
   selector: 'thing',
   template: `
     <div>{{ myInput }}</div>
@@ -118,7 +119,6 @@ describe('Renderer', () => {
 
   it('wraps standalone components in a container when it has a selector', async () => {
     @Component({
-      standalone: true,
       selector: 'my-standalone',
       template: '<h1>Standalone</h1>',
     })
@@ -131,7 +131,6 @@ describe('Renderer', () => {
 
   it('renders standalone components directly when it does not have a selector', async () => {
     @Component({
-      standalone: true,
       template: '<h1>Standalone</h1>',
     })
     class WithoutSelectorComponent {}
@@ -141,7 +140,7 @@ describe('Renderer', () => {
   });
 
   it('mocks standalone component imports', async () => {
-    @Pipe({ name: 'myPipe', standalone: true })
+    @Pipe({ name: 'myPipe' })
     class MyPipe implements PipeTransform {
       transform(value: string) {
         return `Pipe value: ${value}`;
@@ -149,7 +148,6 @@ describe('Renderer', () => {
     }
 
     @Component({
-      standalone: true,
       template: '<h1>{{"Standalone" | myPipe}}</h1>',
       imports: [MyPipe],
     })
@@ -207,7 +205,7 @@ describe('Renderer', () => {
     });
 
     describe('without a selector defined on the component', () => {
-      @Component({ template: '<div>Without selector</div>' })
+      @Component({ standalone: false, template: '<div>Without selector</div>' })
       class WithoutSelectorComponent {}
 
       @NgModule({ declarations: [WithoutSelectorComponent] })
@@ -258,7 +256,7 @@ describe('Renderer', () => {
   });
 
   describe('structural directives', () => {
-    @Directive({ selector: '[ifOdd]' })
+    @Directive({ standalone: false, selector: '[ifOdd]' })
     class IfOddDirective {
       private hasView = false;
 
@@ -306,11 +304,13 @@ describe('Renderer', () => {
   describe('entry components', () => {
     it('allows rendering entryComponents with some module magic', async () => {
       @Component({
+        standalone: false,
         template: '<i class="my-entry">My Entry</i>',
       })
       class EntryComponent {}
 
       @Component({
+        standalone: false,
         selector: 'my-normal-component',
         template: '<i *ngComponentOutlet="entryComponentClass"></i>',
       })
@@ -332,17 +332,20 @@ describe('Renderer', () => {
 
     it('allows rendering entryComponents with dependencies', async () => {
       @Component({
+        standalone: false,
         selector: 'child-component',
         template: '<i class="my-child">My Dependency</i>',
       })
       class ChildComponent {}
 
       @Component({
+        standalone: false,
         template: '<i class="my-entry"><child-component></child-component></i>',
       })
       class EntryComponent {}
 
       @Component({
+        standalone: false,
         selector: 'normal-component',
         template: '<i *ngComponentOutlet="entryComponentClass"></i>',
       })
@@ -364,6 +367,7 @@ describe('Renderer', () => {
 
     it('does not allow bindings to be set for entry components', async () => {
       @Component({
+        standalone: false,
         template: '<i class="my-entry">My Entry</i>',
       })
       class EntryComponent {
@@ -388,6 +392,7 @@ describe('Renderer', () => {
 
     it('provides mocked things even if they are not in the module', async () => {
       @Component({
+        standalone: false,
         template: '<i>Booya</i>',
       })
       class BasicComponent {}

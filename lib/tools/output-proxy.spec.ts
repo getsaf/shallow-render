@@ -8,6 +8,7 @@ import {
 
 describe('outputProxy', () => {
   @Component({
+    standalone: false,
     selector: 'Foo',
     template: '<h1/>',
   })

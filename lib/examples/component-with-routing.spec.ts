@@ -11,6 +11,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'go-home-link',
   template: '<a (click)="goHome()">Go somewhere</a>',
 })

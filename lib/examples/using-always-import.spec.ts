@@ -16,6 +16,7 @@ class ServiceModule {}
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'color-label',
   template: '<label>{{redService.color()}}</label>',
 })

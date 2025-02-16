@@ -3,8 +3,14 @@ import { testFramework } from '../test-frameworks/test-framework';
 
 export class ShallowRenderContainer {}
 
-export function createContainer(template: string, bindings: any): Type<ShallowRenderContainer> {
-  @Component({ template })
+export function createContainer(
+  template: string,
+  bindings: any,
+  imports?: any[],
+  standalone?: boolean,
+): Type<ShallowRenderContainer> {
+  // eslint-disable-next-line @angular-eslint/prefer-standalone
+  @Component({ template, imports, standalone })
   class ProxyShallowContainerComponent extends ShallowRenderContainer {
     constructor() {
       super();

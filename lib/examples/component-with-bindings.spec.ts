@@ -9,6 +9,7 @@ interface Person {
 }
 
 @Component({
+  standalone: false,
   selector: 'born-in',
   template: `
     <label id="personLabel" (click)="selected.emit(person)">

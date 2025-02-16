@@ -5,7 +5,10 @@ import { By } from '@angular/platform-browser';
 
 describe('mockDirective', () => {
   it('mocks the correct selector', () => {
-    @Directive({ selector: '[myDirective]' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+    })
     class MyDirective {}
 
     const TestHost = testHost('<div myDirective></div>');
@@ -19,7 +22,10 @@ describe('mockDirective', () => {
   });
 
   it('mocks inputs', () => {
-    @Directive({ selector: '[myDirective]' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+    })
     class MyDirective {
       @Input() myInput!: string;
       @Input('withAlias') myAliasedInput!: string;
@@ -37,7 +43,10 @@ describe('mockDirective', () => {
   });
 
   it('mocks outputs', () => {
-    @Directive({ selector: '[myDirective]' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+    })
     class MyDirective {
       @Output() myOutput = new EventEmitter();
       @Output('withAlias') myAliasedOutput = new EventEmitter();
@@ -58,7 +67,10 @@ describe('mockDirective', () => {
   });
 
   it('does not render structural content by default', () => {
-    @Directive({ selector: '[myDirective]' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+    })
     class MyDirective {}
 
     const TestHost = testHost('<div *myDirective>foo</div>');
@@ -70,7 +82,10 @@ describe('mockDirective', () => {
   });
 
   it('renders structural content when renderContents() is called', () => {
-    @Directive({ selector: '[myDirective]' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+    })
     class MyDirective {}
 
     const TestHost = testHost('<div *myDirective>foo</div>');
@@ -87,7 +102,10 @@ describe('mockDirective', () => {
   });
 
   it('clears structural content when clearContent() is called', () => {
-    @Directive({ selector: '[myDirective]' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+    })
     class MyDirective {}
 
     const TestHost = testHost('<div *myDirective>foo</div>');
@@ -105,7 +123,7 @@ describe('mockDirective', () => {
   });
 
   it('mock standalone directive', () => {
-    @Directive({ selector: '[myDirective]', standalone: true })
+    @Directive({ selector: '[myDirective]' })
     class MyDirective {}
 
     const TestHost = testHost('<div *myDirective>foo</div>');
@@ -124,7 +142,11 @@ describe('mockDirective', () => {
   });
 
   it('is exportedAs the same as the original directive', () => {
-    @Directive({ selector: '[myDirective]', exportAs: 'myExport' })
+    @Directive({
+      standalone: false,
+      selector: '[myDirective]',
+      exportAs: 'myExport',
+    })
     class MyDirective {}
 
     const TestHost = testHost(`
@@ -142,7 +164,11 @@ describe('mockDirective', () => {
 });
 
 const testHost = (template: string) => {
-  @Component({ selector: 'test-host', template })
+  @Component({
+    standalone: false,
+    selector: 'test-host',
+    template,
+  })
   class TestHostComponent {
     handleEvent = jest.fn();
   }

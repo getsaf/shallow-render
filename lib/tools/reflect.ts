@@ -76,8 +76,17 @@ export const reflect = {
   isNgModule: (thing: any) => !!getAnnotation(NgModule, thing),
   isPipe: (thing: any): thing is PipeTransform => !!getAnnotation(Pipe, thing),
 
-  isStandalone: (thing: any): boolean =>
-    !!(getAnnotation(Directive, thing)?.standalone || getAnnotation(Pipe, thing)?.standalone),
+  isStandalone: (thing: any): boolean => {
+    const directiveResult = getAnnotation(Directive, thing);
+    if (directiveResult) {
+      return directiveResult.standalone ?? true;
+    }
+    const pipeResult = getAnnotation(Pipe, thing);
+    if (pipeResult) {
+      return pipeResult.standalone ?? true;
+    }
+    return false;
+  },
 
   getInputsAndOutputs(componentOrDirective: any): InputsAndOutputs {
     let propDecorators: PropDecorators = {};

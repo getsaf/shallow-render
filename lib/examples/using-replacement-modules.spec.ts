@@ -5,6 +5,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'service-response-label',
   template: '<label>{{labelText}}</label>',
 })

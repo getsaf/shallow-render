@@ -4,12 +4,14 @@ import { getNgModuleAnnotations } from './get-ng-module-annotations';
 import { InvalidModuleError, mockModule } from './mock-module';
 
 @Component({
+  standalone: false,
   selector: 'foo-component',
   template: '<div>FOO</div>',
 })
 class FooComponent {}
 
 @Component({
+  standalone: false,
   selector: 'bar-component',
   template: '<div>BAR</div>',
 })

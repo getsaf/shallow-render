@@ -9,6 +9,7 @@ interface MyEvent {
 }
 
 @Component({
+  standalone: false,
   selector: 'inner-component',
   template: '<p>Hello</p>',
 })
@@ -16,6 +17,7 @@ class InnerComponent {
   @Output() output = new EventEmitter<MyEvent>();
 }
 @Component({
+  standalone: false,
   selector: 'outer-component',
   template: '<inner-component (output)="outputHandler($event)"></inner-component>',
 })

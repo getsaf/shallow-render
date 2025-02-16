@@ -5,7 +5,10 @@ import { mockComponent } from './mock-component';
 
 describe('mockComponent', () => {
   it('mocks the correct selector', () => {
-    @Component({ selector: 'my-component' })
+    @Component({
+      standalone: false,
+      selector: 'my-component',
+    })
     class MyComponent {}
 
     const MyMock = mockComponent(MyComponent);
@@ -19,7 +22,10 @@ describe('mockComponent', () => {
   });
 
   it('mocks inputs', () => {
-    @Component({ selector: 'my-component' })
+    @Component({
+      standalone: false,
+      selector: 'my-component',
+    })
     class MyComponent {
       @Input() myInput!: string;
       @Input('withAlias') myAliasedInput!: string;
@@ -37,7 +43,10 @@ describe('mockComponent', () => {
   });
 
   it('mocks outputs', () => {
-    @Component({ selector: 'my-component' })
+    @Component({
+      standalone: false,
+      selector: 'my-component',
+    })
     class MyComponent {
       @Output() myOutput = new EventEmitter();
       @Output('withAlias') myAliasedOutput = new EventEmitter();
@@ -59,7 +68,6 @@ describe('mockComponent', () => {
 
   it('mocks standalone components', () => {
     @Component({
-      standalone: true,
       selector: 'my-standalone-component',
       template: '<span>{{"foo" | my-pipe}}</span>',
     })
@@ -76,7 +84,10 @@ describe('mockComponent', () => {
   });
 
   it('renders ng-content', () => {
-    @Component({ selector: 'my-component' })
+    @Component({
+      standalone: false,
+      selector: 'my-component',
+    })
     class MyComponent {}
 
     const TestHost = testHost('<my-component>foo</my-component>');
@@ -90,7 +101,11 @@ describe('mockComponent', () => {
 });
 
 const testHost = (template: string) => {
-  @Component({ selector: 'test-host', template })
+  @Component({
+    standalone: false,
+    selector: 'test-host',
+    template,
+  })
   class TestHostComponent {
     handleEvent = jest.fn();
   }

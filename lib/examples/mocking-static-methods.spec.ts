@@ -9,6 +9,7 @@ class Foo {
 ////// Module Setup //////
 
 @Component({
+  standalone: false,
   selector: 'foo',
   template: '<div>{{fooified}}</div>',
 })

@@ -3,6 +3,7 @@ import { Shallow } from '../shallow';
 
 ////// Module Setup //////
 @Component({
+  standalone: false,
   selector: 'big-text',
   template: '<h1><ng-content></ng-content></h1>',
 })
