@@ -7,6 +7,12 @@ Angular testing made easy with shallow rendering and easy mocking.
 
 ---
 
+# Looking For Help Maintaining This Library!
+
+Hey all, I do plan on continuing to update this library as Angular provides updates. This is not easy for me to do as I don't work with Angular in my current job.
+
+Any additonal support would be very appreciated! Please reach out if you want to be a help!
+
 ## Docs
 
 - [API Docs](https://getsaf.github.io/shallow-render)
