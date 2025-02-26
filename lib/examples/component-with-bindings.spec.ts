@@ -17,12 +17,18 @@ interface Person {
     <label id="partnerLabel" (click)="selected.emit(partner())">
       {{ partner().firstName }} {{ partner().lastName }} was born in {{ partner().birthDate.getFullYear() }}
     </label>
+    <div id="personAge">
+      {{age()}}
+    </div>
     <label id="ngOnChangesCount">{{ ngOnChangesCount }}</label>
   `,
 })
 class BornInComponent implements OnChanges {
   @Input({ required: true }) person!: Person;
   partner = input.required<Person>();
+  age = input<string, number>("Age not provided", {
+    transform: (value: number) => `${value} years old`
+  });
   @Output() selected = new EventEmitter<Person>();
 
   public ngOnChangesCount = 0;
@@ -58,10 +64,11 @@ describe('component with bindings', () => {
   };
 
   it('displays the name and year the person was born', async () => {
-    const { find } = await shallow.render({ bind: { person, partner } });
+    const { find } = await shallow.render({ bind: { person, partner, age: 17 } });
 
     expect(find('#personLabel').nativeElement.textContent).toContain('Brandon Domingue was born in 1982');
     expect(find('#partnerLabel').nativeElement.textContent).toContain('John Doe was born in 1990');
+    expect(find('#personAge').nativeElement.textContent).toContain('17 years old');
   });
 
   it('emits the person when clicked', async () => {
@@ -76,6 +83,15 @@ describe('component with bindings', () => {
     find('#partnerLabel').nativeElement.click();
 
     expect(outputs.selected.emit).toHaveBeenCalledWith(partner);
+  });
+
+  it('updates the age considering the transform function', async () => {
+    const { find, fixture, bindings } = await shallow.render({ bind: { person: person, partner: partner, age: 7 } });
+    bindings.age = 10;
+
+    fixture.detectChanges();
+
+    expect(find('#personAge').nativeElement.textContent).toContain('10 years old');
   });
 
   it('displays the number of times the person was updated', async () => {
