@@ -1,9 +1,10 @@
 import { Component, EventEmitter, output, Output } from '@angular/core';
 import {
-  outputProxy, OutputTypes,
+  outputProxy,
+  OutputTypes,
   PickByType,
   PropertyNotAnEventEmitterOrSignalOutputError,
-  PropertyNotMarkedAsOutputError
+  PropertyNotMarkedAsOutputError,
 } from './output-proxy';
 import { TestBed } from '@angular/core/testing';
 
@@ -23,10 +24,9 @@ describe('outputProxy', () => {
   let outputs: PickByType<FooComponent, OutputTypes>;
 
   beforeEach(async () => {
+    await TestBed.configureTestingModule({}).compileComponents();
 
-    await TestBed.configureTestingModule({}).compileComponents()
-
-    const fixture = TestBed.createComponent(FooComponent)
+    const fixture = TestBed.createComponent(FooComponent);
     component = fixture.componentInstance;
     outputs = outputProxy(component);
   });

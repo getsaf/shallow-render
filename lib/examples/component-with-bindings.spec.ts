@@ -26,8 +26,8 @@ interface Person {
 class BornInComponent implements OnChanges {
   @Input({ required: true }) person!: Person;
   partner = input.required<Person>();
-  age = input<string, number>("Age not provided", {
-    transform: (value: number) => `${value} years old`
+  age = input<string, number>('Age not provided', {
+    transform: (value: number) => `${value} years old`,
   });
   @Output() selectPerson = new EventEmitter<Person>();
   selectPartner = output<Person>();
@@ -95,7 +95,7 @@ describe('component with bindings', () => {
     expect(find('#personAge').nativeElement.textContent).toContain('8 years old');
 
     // way 2: Update using `setInput` function, similar as it's done with `ComponentRef.setInput`
-    fixture.componentInstance.setInput("age", 9);
+    fixture.componentInstance.setInput('age', 9);
     fixture.detectChanges();
     expect(find('#personAge').nativeElement.textContent).toContain('9 years old');
   });

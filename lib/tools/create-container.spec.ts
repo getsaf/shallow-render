@@ -31,7 +31,7 @@ describe('createContainerComponent', () => {
     const container: any = new Container();
 
     container.setInput('foo', 'fooo');
-    
+
     expect(container.foo).toBe('fooo');
   });
 });
