@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, NgModule, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, input, Input, NgModule, OnChanges, output, Output } from '@angular/core';
 import { Shallow } from '../shallow';
 
 ////// Module Setup //////
@@ -11,14 +11,14 @@ interface Person {
 @Component({
   selector: 'born-in',
   template: `
-    <label id="personLabel" (click)="selected.emit(person)">
+    <label id="personLabel" (click)="selectPerson.emit(person)">
       {{ person.firstName }} {{ person.lastName }} was born in {{ person.birthDate.getFullYear() }}
     </label>
-    <label id="partnerLabel" (click)="selected.emit(partner())">
+    <label id="partnerLabel" (click)="selectPartner.emit(partner())">
       {{ partner().firstName }} {{ partner().lastName }} was born in {{ partner().birthDate.getFullYear() }}
     </label>
     <div id="personAge">
-      {{age()}}
+      {{ age() }}
     </div>
     <label id="ngOnChangesCount">{{ ngOnChangesCount }}</label>
   `,
@@ -29,7 +29,8 @@ class BornInComponent implements OnChanges {
   age = input<string, number>("Age not provided", {
     transform: (value: number) => `${value} years old`
   });
-  @Output() selected = new EventEmitter<Person>();
+  @Output() selectPerson = new EventEmitter<Person>();
+  selectPartner = output<Person>();
 
   public ngOnChangesCount = 0;
 
@@ -75,14 +76,14 @@ describe('component with bindings', () => {
     const { find, outputs } = await shallow.render({ bind: { person, partner } });
     find('#personLabel').nativeElement.click();
 
-    expect(outputs.selected.emit).toHaveBeenCalledWith(person);
+    expect(outputs.selectPerson.emit).toHaveBeenCalledWith(person);
   });
 
   it('emits the partner when clicked', async () => {
     const { find, outputs } = await shallow.render({ bind: { person, partner } });
     find('#partnerLabel').nativeElement.click();
 
-    expect(outputs.selected.emit).toHaveBeenCalledWith(partner);
+    expect(outputs.selectPartner.emit).toHaveBeenCalledWith(partner);
   });
 
   it('updates the age considering the transform function', async () => {
