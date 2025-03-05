@@ -6,15 +6,21 @@ export class ShallowRenderContainer {}
 export function createContainer(template: string, bindings: any): Type<ShallowRenderContainer> {
   @Component({ template })
   class ProxyShallowContainerComponent extends ShallowRenderContainer {
+    bindings: any;
     constructor() {
       super();
       const spies = spyOnBindings(bindings);
+      this.bindings = spies;
       Object.defineProperties(
         ProxyShallowContainerComponent.prototype,
         Object.keys(spies).reduce((acc, key) => {
-          return { ...acc, [key]: { get: () => spies[key] } };
+          return { ...acc, [key]: { get: () => this.bindings[key] } };
         }, {}),
       );
+    }
+
+    setInput(name: string, value: any): void {
+      this.bindings[name] = value;
     }
   }
 

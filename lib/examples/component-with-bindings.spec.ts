@@ -87,11 +87,16 @@ describe('component with bindings', () => {
 
   it('updates the age considering the transform function', async () => {
     const { find, fixture, bindings } = await shallow.render({ bind: { person: person, partner: partner, age: 7 } });
-    bindings.age = 10;
 
+    // way 1: Update using the bindings
+    bindings.age = 8;
     fixture.detectChanges();
+    expect(find('#personAge').nativeElement.textContent).toContain('8 years old');
 
-    expect(find('#personAge').nativeElement.textContent).toContain('10 years old');
+    // way 2: Update using `setInput` function, similar as it's done with `ComponentRef.setInput`
+    fixture.componentInstance.setInput("age", 9);
+    fixture.detectChanges();
+    expect(find('#personAge').nativeElement.textContent).toContain('9 years old');
   });
 
   it('displays the number of times the person was updated', async () => {
