@@ -30,7 +30,7 @@ describe('createContainerComponent', () => {
     const Container = createContainer('', bindings);
     const container: any = new Container();
 
-    container.setInput('foo', 'fooo');
+    container.updateBinding('foo', 'fooo');
 
     expect(container.foo).toBe('fooo');
   });

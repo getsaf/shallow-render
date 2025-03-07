@@ -94,8 +94,8 @@ describe('component with bindings', () => {
     fixture.detectChanges();
     expect(find('#personAge').nativeElement.textContent).toContain('8 years old');
 
-    // way 2: Update using `setInput` function, similar as it's done with `ComponentRef.setInput`
-    fixture.componentInstance.setInput('age', 9);
+    // way 2: Update using `updateBinding` function, similar as it's done with `ComponentRef.updateBinding`
+    fixture.componentInstance.updateBinding('age', 9);
     fixture.detectChanges();
     expect(find('#personAge').nativeElement.textContent).toContain('9 years old');
   });
