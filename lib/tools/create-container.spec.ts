@@ -24,4 +24,14 @@ describe('createContainerComponent', () => {
     container.foo();
     expect(container.foo).toHaveBeenCalled();
   });
+
+  it('provides method to set the input', () => {
+    const bindings: any = { foo: 'foo', bar: 'bar' };
+    const Container = createContainer('', bindings);
+    const container: any = new Container();
+
+    container.updateBinding('foo', 'fooo');
+
+    expect(container.foo).toBe('fooo');
+  });
 });

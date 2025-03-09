@@ -1,7 +1,7 @@
-import { DebugElement, EventEmitter, Type, InjectionToken, AbstractType } from '@angular/core';
+import { DebugElement, Type, InjectionToken, AbstractType } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { outputProxy, PickByType } from '../tools/output-proxy';
+import { outputProxy, OutputTypes, PickByType } from '../tools/output-proxy';
 import { createQueryMatch, QueryMatch } from './query-match';
 import { TestSetup } from './test-setup';
 import { MockDirective } from '../tools/mock-directive';
@@ -44,7 +44,7 @@ export class Rendering<TComponent extends object, TBindings> {
     private readonly _setup: TestSetup<TComponent>,
   ) {}
 
-  readonly outputs: PickByType<TComponent, EventEmitter<any>> = outputProxy(this.instance);
+  readonly outputs: PickByType<TComponent, OutputTypes> = outputProxy(this.instance);
 
   /////////////////////////////////////////////////////////////////////////////
   // The following methods MUST be arrow functions so they can be deconstructured
