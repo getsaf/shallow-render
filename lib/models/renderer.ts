@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Type } from '@angular/core';
+import { Directive, EventEmitter, OutputEmitterRef, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { testFramework } from '../test-frameworks/test-framework';
@@ -145,7 +145,7 @@ export class Renderer<TComponent extends object> {
     const outputs = reflect.getInputsAndOutputs(this._setup.testComponentOrService).outputs;
     outputs.forEach(({ propertyName }) => {
       const value = (instance as any)[propertyName];
-      if (value && value instanceof EventEmitter) {
+      if (value && (value instanceof EventEmitter || value instanceof OutputEmitterRef)) {
         testFramework.spyOn(value, 'emit');
       }
     });

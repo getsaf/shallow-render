@@ -12,15 +12,20 @@ export function createContainer(
   // eslint-disable-next-line @angular-eslint/prefer-standalone
   @Component({ template, imports, standalone })
   class ProxyShallowContainerComponent extends ShallowRenderContainer {
+    private bindings: any;
     constructor() {
       super();
-      const spies = spyOnBindings(bindings);
+      this.bindings = spyOnBindings(bindings);
       Object.defineProperties(
         ProxyShallowContainerComponent.prototype,
-        Object.keys(spies).reduce((acc, key) => {
-          return { ...acc, [key]: { get: () => spies[key] } };
+        Object.keys(this.bindings).reduce((acc, key) => {
+          return { ...acc, [key]: { get: () => this.bindings[key] } };
         }, {}),
       );
+    }
+
+    updateBinding(name: string, value: any): void {
+      this.bindings[name] = value;
     }
   }
 
