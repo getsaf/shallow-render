@@ -33,6 +33,7 @@ Any additonal support would be very appreciated! Please reach out if you want to
 
 | Angular | shallow-render |
 | ------- | -------------- |
+| 20x     | 20x            |
 | 19x     | 19x            |
 | 18x     | 18x            |
 | 17x     | 17x            |
