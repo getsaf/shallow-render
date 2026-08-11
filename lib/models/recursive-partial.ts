@@ -5,7 +5,8 @@
 import { InputSignal, InputSignalWithTransform } from '@angular/core';
 
 export type RecursivePartial<T> = Partial<{
-  [key in keyof T]: T[key] extends InputSignal<infer U> | InputSignalWithTransform<any, infer U> // Handle signals like input() and input.required()
+  [key in keyof T]: T[key] extends
+    InputSignal<infer U> | InputSignalWithTransform<any, infer U> // Handle signals like input() and input.required()
     ? RecursivePartial<U> // Extract the type and recursively apply RecursivePartial
     : T[key] extends (...a: Array<infer U>) => any // Function-based properties (like methods or other signals)
       ? (...a: Array<U>) => RecursivePartial<ReturnType<T[key]>> | ReturnType<T[key]>

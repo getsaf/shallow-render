@@ -9,7 +9,6 @@ export function createContainer(
   imports?: any[],
   standalone?: boolean,
 ): Type<ShallowRenderContainer> {
-  // eslint-disable-next-line @angular-eslint/prefer-standalone
   @Component({ template, imports, standalone })
   class ProxyShallowContainerComponent extends ShallowRenderContainer {
     private bindings: any;

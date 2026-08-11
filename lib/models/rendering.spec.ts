@@ -133,7 +133,7 @@ describe('Rendering', () => {
     it('can be destructured', () => {
       const { find } = new Rendering(fixture, element, instance, {}, testSetup);
 
-      expect(() => find('some-css-selector')).not.toThrowError();
+      expect(() => find('some-css-selector')).not.toThrow();
     });
 
     it('throws an error when used to find the test component by CSS', () => {
@@ -363,7 +363,7 @@ describe('Rendering', () => {
       const found = findStructuralDirective(OtherDirective);
 
       // tslint:disable-next-line no-void-expression
-      expect(() => renderStructuralDirective(found)).toThrowError(/You may only manually.*OtherDirective/);
+      expect(() => renderStructuralDirective(found)).toThrow(/You may only manually.*OtherDirective/);
     });
   });
 

@@ -16,11 +16,11 @@ describe('TestSetup', () => {
   class MyStandaloneComponent {}
 
   it('throws an error when no module is specified with a non-standalone component', () => {
-    expect(() => new TestSetup(MyTestComponent)).toThrowError(/A module must be specified/);
+    expect(() => new TestSetup(MyTestComponent)).toThrow(/A module must be specified/);
   });
 
   it('throws an error when a module is specified with a standalone component', () => {
-    expect(() => new TestSetup(MyStandaloneComponent, class {})).toThrowError(
+    expect(() => new TestSetup(MyStandaloneComponent, class {})).toThrow(
       /Do not specify a module when testing .*\bstandalone\b/,
     );
   });

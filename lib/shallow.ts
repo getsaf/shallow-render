@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { InjectionToken, PipeTransform, Provider, Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { RecursivePartial } from './models/recursive-partial';
 import { Renderer } from './models/renderer';
 import { Rendering, RenderOptions } from './models/rendering';
@@ -97,7 +97,7 @@ export class Shallow<TTestTarget extends object> {
     this._alwaysMockPipes.set(pipe, transform);
     return this;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private static readonly _alwaysMockPipes = new Map<PipeTransform | Type<PipeTransform>, Function>();
 
   /**
@@ -443,7 +443,7 @@ export class Shallow<TTestTarget extends object> {
   }
 }
 
-Shallow.neverMock(CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, HAMMER_GESTURE_CONFIG);
+Shallow.neverMock(CommonModule, BrowserModule, FormsModule, ReactiveFormsModule);
 
 if (typeof jest === 'undefined') {
   // Karma runs in one browser instance which can result in a buildup

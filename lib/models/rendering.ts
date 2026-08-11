@@ -171,7 +171,7 @@ export class Rendering<TComponent extends object, TBindings> {
       .map(result => {
         try {
           return result.injector.get<TDirective>(directiveOrMock);
-        } catch (e) {
+        } catch {
           return undefined;
         }
       })
@@ -235,7 +235,7 @@ export class Rendering<TComponent extends object, TBindings> {
             if (instance) {
               return options && options.query ? options.query(instance) : true;
             }
-          } catch (e) {}
+          } catch {}
           return false;
         })
         .map(node => node.injector.get<TDirective>(directiveClass)),

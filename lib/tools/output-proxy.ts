@@ -30,7 +30,7 @@ export class PropertyNotAnEventEmitterOrSignalOutputError extends CustomError {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
 export const outputProxy = <TComponent extends Object>(component: TComponent): PickByType<TComponent, OutputTypes> => {
   const outputs = reflect.getInputsAndOutputs(component.constructor).outputs.map(o => o.propertyName);
 

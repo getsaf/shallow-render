@@ -61,7 +61,7 @@ describe('ng-mock', () => {
       throw new Error('BOOM');
     });
 
-    expect(() => ngMock(BadComponent, testSetup)).toThrowError(/Shallow.*BadComponent[\s\S]*BOOM/g);
+    expect(() => ngMock(BadComponent, testSetup)).toThrow(/Shallow.*BadComponent[\s\S]*BOOM/g);
   });
 
   it('mocks a component', () => {
